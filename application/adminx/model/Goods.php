@@ -121,7 +121,9 @@ class Goods extends Admin
     //添加更新数据
     public function saveData( $data )
     {
-        $data['shopName'] = db('Shop')->where('id',$data['shopID'])->value('name');
+        $shop = db('Shop')->where('id',$data['shopID'])->find();
+        $data['shopName'] = $shop['name'];
+        $data['cityID'] = $shop['cityID'];
         if( isset( $data['id']) && !empty($data['id'])) {
             $result = $this->edit( $data );
         } else {

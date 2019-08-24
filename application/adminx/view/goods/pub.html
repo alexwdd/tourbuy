@@ -28,10 +28,19 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">商家</label>
                     <div class="layui-input-inline">
-                        <select name="shopID" default="{$list.shopID}" lay-verify="required">
+                        <select name="shopID" default="{$list.shopID}" lay-verify="required" lay-filter="shop">
                             <option value="">请选择</option>
-                            <option value="0">自营</option>
                             {volist name="shop" id="vo"}
+                            <option value="{$vo.id}" data-city="{$vo.cityID}">{$vo.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">快递</label>
+                    <div class="layui-input-inline">
+                        <select name="expressID" id="expressID" default="{$list.expressID}" lay-verify="required" lay-verify="required">
+                            <option value="">请选择</option>
+                            {volist name="express" id="vo"}
                             <option value="{$vo.id}">{$vo.name}</option>
                             {/volist}
                         </select>
@@ -317,6 +326,24 @@ layui.config({
 
     $("html").css({"background":"#fff"});
     tinymce.init(tinyConfig);
+
+    form.on('select(shop)', function(data){
+        var cityID = data.elem[data.elem.selectedIndex].getAttribute('data-city');
+        _html = '<option value=""></option>';
+        if(cityID){
+            var data = {cityID:cityID};
+            $.post('{:url('goods/getExpress')}',data,function(res){                
+                for(var i=0; i<res.data.length; i++){
+                    _html += '<option value="'+res.data[i]['id']+'">'+res.data[i]['name']+'</option>';
+                }
+                $("#expressID").html(_html);
+                form.render();
+            },'json');
+        }
+        
+        //
+
+    });
 
     if(flag == 1){
         layer.alert("友情提示：该商品正在抢购活动中，修改价格会引起数据紊乱");
