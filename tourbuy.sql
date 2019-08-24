@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-08-24 08:30:23
+Date: 2019-08-24 16:58:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -277,8 +277,28 @@ CREATE TABLE `pm_city` (
 -- ----------------------------
 -- Records of pm_city
 -- ----------------------------
-INSERT INTO `pm_city` VALUES ('1', '阿德莱德', '1566486859', '1566486859');
-INSERT INTO `pm_city` VALUES ('2', '悉尼', '1566486870', '1566486870');
+INSERT INTO `pm_city` VALUES ('1', '阿德莱德', '1566486859', '1566615660');
+INSERT INTO `pm_city` VALUES ('2', '悉尼', '1566486870', '1566615951');
+
+-- ----------------------------
+-- Table structure for `pm_city_express`
+-- ----------------------------
+DROP TABLE IF EXISTS `pm_city_express`;
+CREATE TABLE `pm_city_express` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cityID` int(11) DEFAULT NULL,
+  `expressID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pm_city_express
+-- ----------------------------
+INSERT INTO `pm_city_express` VALUES ('10', '1', '3');
+INSERT INTO `pm_city_express` VALUES ('9', '1', '2');
+INSERT INTO `pm_city_express` VALUES ('8', '1', '1');
+INSERT INTO `pm_city_express` VALUES ('12', '2', '2');
+INSERT INTO `pm_city_express` VALUES ('11', '2', '1');
 
 -- ----------------------------
 -- Table structure for `pm_config`
@@ -460,6 +480,25 @@ INSERT INTO `pm_coupon_log` VALUES ('17', '2', '张小黑', '5', '测试一下',
 INSERT INTO `pm_coupon_log` VALUES ('19', '10002', '月明', '3', '新手券', '立减3元', '0.00', '3.00', '好贵不吃', '', '1239757623', '1', '1566293300', '1568809414', '1566217414');
 
 -- ----------------------------
+-- Table structure for `pm_express`
+-- ----------------------------
+DROP TABLE IF EXISTS `pm_express`;
+CREATE TABLE `pm_express` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `updateTime` int(11) DEFAULT NULL,
+  `createTime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pm_express
+-- ----------------------------
+INSERT INTO `pm_express` VALUES ('1', '澳邮', '1566610883', '1566610883');
+INSERT INTO `pm_express` VALUES ('2', '京东', '1566611032', '1566611032');
+INSERT INTO `pm_express` VALUES ('3', '中环', '1566611043', '1566611043');
+
+-- ----------------------------
 -- Table structure for `pm_fav`
 -- ----------------------------
 DROP TABLE IF EXISTS `pm_fav`;
@@ -595,6 +634,8 @@ CREATE TABLE `pm_goods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `shopID` int(11) NOT NULL,
   `shopName` varchar(200) NOT NULL,
+  `cityID` int(11) NOT NULL,
+  `expressID` int(11) NOT NULL,
   `fid` int(11) NOT NULL COMMENT '套餐对应的商品ID，0没有套餐',
   `cid` int(11) NOT NULL,
   `path` varchar(50) NOT NULL,
@@ -641,25 +682,25 @@ CREATE TABLE `pm_goods` (
 -- ----------------------------
 -- Records of pm_goods
 -- ----------------------------
-INSERT INTO `pm_goods` VALUES ('7', '0', '', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 三段 A2 Premium Toddler', 'A2 Premium Toddler Stage 3 900g', 'A3', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 三段：1岁', '/uploads/images/20190729/9609c47af27df3c4875605abde9ff4dc.jpg', null, '', '0', '2020/10', '30', '25.00', '31.00', '35.00', '31.00', '1.10', '1.10', '', '200', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1563703331', '1564397947');
-INSERT INTO `pm_goods` VALUES ('10', '0', '', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 二段 A2 Follow On Formula', 'A2 Follow On Formula Stage 2 900g', 'A2-2', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 二段：6-12月', '/uploads/images/20190729/e47cfa2678fc5785d957bb71e4e19f6e.jpg', null, '', '0', '2020/10', '30', '25.00', '29.00', '35.00', '3.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1564396584', '1564400836');
-INSERT INTO `pm_goods` VALUES ('9', '0', '', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 一段 A2 Infant Formula ', 'A2 Infant Formula Stage 1 900g', 'A1', '澳洲最佳奶粉推荐', '', 'A2 Platinum白金系列高端牛奶粉一段是专门为新生儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 一段：0-6月', '/uploads/images/20190729/a0312cfa0da34943a7898ee675267dd3.jpg', null, '', '0', '2020/10', '30', '25.00', '30.00', '35.00', '30.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564395464', '1564395640');
-INSERT INTO `pm_goods` VALUES ('11', '0', '', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 四段 A2 Junior Formula', 'A2 Junior Stage 4 900g', 'A4', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 四段：3岁', '/uploads/images/20190729/aa51a8e0127330992820424d3613f9db.jpg', null, '', '0', '2020/10', '34', '25.00', '34.00', '36.00', '34.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1564398209', '1564400855');
-INSERT INTO `pm_goods` VALUES ('12', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 一段 Aptamil Gold+ 1 Infant Formula', 'Aptamil Gold+ 1 Infant Formula 0-6 Months 900g', 'K1', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/0b2e9e8b22809180d74ab02aa7bae6ec.jpg', null, '', '0', '2020/10', '28', '25.00', '28.00', '35.00', '28.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564400481', '1564400496');
-INSERT INTO `pm_goods` VALUES ('13', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 二段 Aptamil Gold+ 2 Follow-On Formula', 'Aptamil Gold+ 2 Follow-On Formula 6-12 Months 900g', 'K2', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/88b995c3c31e9bd27f99690c5b8df15b.jpg', null, '', '0', '2020/10', '27', '25.00', '27.00', '30.00', '27.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564400592', '1564400592');
-INSERT INTO `pm_goods` VALUES ('14', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 三段 Aptamil Gold+ 3 Toddler', 'Aptamil Gold+ 3 Toddler Nutritional Supplement From 1 year 900g', 'K3', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/44e9f48967390b811d34b29ef63b1cc6.jpg', null, '', '0', '2020/10', '30', '22.00', '30.00', '36.00', '30.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1564400696', '1564400866');
-INSERT INTO `pm_goods` VALUES ('15', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 四段 Aptamil Gold+ 4 Junior', 'Aptamil Gold+ 4 Junior Nutritional Supplement From 2 years 900g', 'K4', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/0a9d834dbc1f306bd29cda25ad99bb7c.jpg', null, '', '0', '2020/10', '23', '20.00', '23.00', '25.00', '23.00', '1.10', '1.10', '', '1000', '999', '1', '2', '0', '0', '0', '0', '0', '1', '50', '1564400804', '1564402845');
-INSERT INTO `pm_goods` VALUES ('16', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 一段 Aptamil Profutura Infant Formula', 'Aptamil Profutura Infant Formula 0-6 months 900g', 'P1', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/01a8d0cc2d792ead23003d07e611fc43.jpg', null, '', '0', '2020/10', '36', '23.00', '36.00', '40.00', '36.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564401252', '1564401252');
-INSERT INTO `pm_goods` VALUES ('17', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 二段 Aptamil Profutura Follow On Formula', 'Aptamil Profutura Follow On Formula 6-12 months 900g', 'P2', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/7b270e564d908413b1d1869720bfacfb.jpg', null, '', '0', '2020/10', '36', '22.00', '36.00', '40.00', '36.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401367', '1564401381');
-INSERT INTO `pm_goods` VALUES ('18', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 三段 Aptamil Profutura Toddler ', 'Aptamil Profutura Toddler Nutritional Supplement From 1 year 900g', 'P3', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/812ed9ab28f0604af6a2045e43b71195.jpg', null, '', '0', '2020/10', '25', '20.00', '25.00', '30.00', '25.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401466', '1564401478');
-INSERT INTO `pm_goods` VALUES ('19', '0', '', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 四段 Aptamil Profutura Junior', 'Aptamil Profutura Junior Nutritional Supplement 900g', 'P4', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/e22295c6db7b698255173d0d76b0b569.jpg', null, '', '0', '2020/10', '280', '20.00', '28.00', '32.00', '28.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401569', '1565883828');
-INSERT INTO `pm_goods` VALUES ('20', '0', '', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 孕妇黄金素 180粒', 'Blackmores Pregnancy and Breastfeeding Gold 180 Capsules', 'BM黄金素', '皮肤急救法宝，强力补水', '', '新西兰原罐原装 官方正品 纯净A2蛋白质', '/uploads/images/20190729/63b7cacef160a2699898bda5c231b78f.jpg', null, '<p>11</p>\n<p><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN01kq0zC31fstjynm847_!!2555064063.jpg\" alt=\"2段_05.jpg\" /><br style=\"margin: 0px; padding: 0px; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" /><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN0156ddqR1fstj1c0Wx8_!!2555064063.jpg\" alt=\"2段_06.jpg\" /></p>\n<p>2222</p>', '0', '2020/10', '30', '20.00', '30.00', '35.00', '30.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564401969', '1565612731');
-INSERT INTO `pm_goods` VALUES ('21', '0', '', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 叶酸片500mcg 90粒', 'Blackmores Folate 500mcg 90 Tablets', 'BM叶酸90粒', '孕期好伴侣', '', '', '/uploads/images/20190729/2808f8c49bc8ef2211cdeb8942968a61.jpg', null, '', '0', '2020/10', '15', '10.00', '15.00', '18.00', '2.00', '0.20', '0.30', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564402099', '1564402099');
-INSERT INTO `pm_goods` VALUES ('22', '7', '测试店铺', '0', '20', '0-10-20-', '0', '', '15', '0', '12', 'Elevit 女士爱乐维 孕期维生素 100粒', 'Elevit Pregnancy Multivitamin Tablets 100 Pack （Export Only）', '爱乐维', '健康备孕 降低胎儿畸形', '', '', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', null, '', '0', '2020/10', '50', '30.00', '50.00', '60.00', '50.00', '0.50', '0.30', '19', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564402296', '1566489745');
-INSERT INTO `pm_goods` VALUES ('23', '7', '测试店铺', '0', '24', '0-4-24-', '0', '', '4', '0', '8', 'Swisse 高倍蜂胶2000mg 300粒', 'Swisse Ultiboost High Strength Propolis 2000mg 300 Capsules', 'SW蜂胶300粒', '液体黄金 澳洲蜂胶', '', '', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', null, '', '0', '2020/02/05', '25', '20.00', '25.00', '30.00', '0.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '1', '1', '0', '1', '50', '1564829689', '1566489738');
-INSERT INTO `pm_goods` VALUES ('24', '7', '测试店铺', '0', '15', '0-1-15-', '0', '', '1', '1', '4', 'NK 7009 ugg 雪地靴 豆豆鞋 薰衣草紫', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '15.00', '19.00', '2.00', '0.50', '0.70', '', '0', '980', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566489718');
-INSERT INTO `pm_goods` VALUES ('25', '7', '测试店铺', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '三件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '100.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '3', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566489718');
-INSERT INTO `pm_goods` VALUES ('26', '7', '测试店铺', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '六件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '180.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '6', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566489718');
+INSERT INTO `pm_goods` VALUES ('7', '7', '测试店铺', '1', '2', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 三段 A2 Premium Toddler', 'A2 Premium Toddler Stage 3 900g', 'A3', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 三段：1岁', '/uploads/images/20190729/9609c47af27df3c4875605abde9ff4dc.jpg', null, '', '0', '2020/10', '30', '25.00', '31.00', '35.00', '31.00', '1.10', '1.10', '', '200', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1563703331', '1564397947');
+INSERT INTO `pm_goods` VALUES ('10', '7', '测试店铺', '1', '2', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 二段 A2 Follow On Formula', 'A2 Follow On Formula Stage 2 900g', 'A2-2', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 二段：6-12月', '/uploads/images/20190729/e47cfa2678fc5785d957bb71e4e19f6e.jpg', null, '', '0', '2020/10', '30', '25.00', '29.00', '35.00', '3.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1564396584', '1564400836');
+INSERT INTO `pm_goods` VALUES ('9', '7', '测试店铺', '1', '1', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 一段 A2 Infant Formula ', 'A2 Infant Formula Stage 1 900g', 'A1', '澳洲最佳奶粉推荐', '', 'A2 Platinum白金系列高端牛奶粉一段是专门为新生儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 一段：0-6月', '/uploads/images/20190729/a0312cfa0da34943a7898ee675267dd3.jpg', null, '', '0', '2020/10', '30', '25.00', '30.00', '35.00', '30.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564395464', '1564395640');
+INSERT INTO `pm_goods` VALUES ('11', '7', '测试店铺', '1', '0', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 四段 A2 Junior Formula', 'A2 Junior Stage 4 900g', 'A4', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 四段：3岁', '/uploads/images/20190729/aa51a8e0127330992820424d3613f9db.jpg', null, '', '0', '2020/10', '34', '25.00', '34.00', '36.00', '34.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1564398209', '1564400855');
+INSERT INTO `pm_goods` VALUES ('12', '7', '测试店铺', '1', '2', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 一段 Aptamil Gold+ 1 Infant Formula', 'Aptamil Gold+ 1 Infant Formula 0-6 Months 900g', 'K1', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/0b2e9e8b22809180d74ab02aa7bae6ec.jpg', null, '', '0', '2020/10', '28', '25.00', '28.00', '35.00', '28.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564400481', '1564400496');
+INSERT INTO `pm_goods` VALUES ('13', '7', '测试店铺', '1', '3', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 二段 Aptamil Gold+ 2 Follow-On Formula', 'Aptamil Gold+ 2 Follow-On Formula 6-12 Months 900g', 'K2', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/88b995c3c31e9bd27f99690c5b8df15b.jpg', null, '', '0', '2020/10', '27', '25.00', '27.00', '30.00', '27.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564400592', '1564400592');
+INSERT INTO `pm_goods` VALUES ('14', '7', '测试店铺', '1', '1', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 三段 Aptamil Gold+ 3 Toddler', 'Aptamil Gold+ 3 Toddler Nutritional Supplement From 1 year 900g', 'K3', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/44e9f48967390b811d34b29ef63b1cc6.jpg', null, '', '0', '2020/10', '30', '22.00', '30.00', '36.00', '30.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1564400696', '1564400866');
+INSERT INTO `pm_goods` VALUES ('15', '7', '测试店铺', '1', '1', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 四段 Aptamil Gold+ 4 Junior', 'Aptamil Gold+ 4 Junior Nutritional Supplement From 2 years 900g', 'K4', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/0a9d834dbc1f306bd29cda25ad99bb7c.jpg', null, '', '0', '2020/10', '23', '20.00', '23.00', '25.00', '23.00', '1.10', '1.10', '', '1000', '999', '1', '2', '0', '0', '0', '0', '0', '1', '50', '1564400804', '1564402845');
+INSERT INTO `pm_goods` VALUES ('16', '7', '测试店铺', '1', '3', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 一段 Aptamil Profutura Infant Formula', 'Aptamil Profutura Infant Formula 0-6 months 900g', 'P1', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/01a8d0cc2d792ead23003d07e611fc43.jpg', null, '', '0', '2020/10', '36', '23.00', '36.00', '40.00', '36.00', '1.10', '1.10', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564401252', '1564401252');
+INSERT INTO `pm_goods` VALUES ('17', '7', '测试店铺', '1', '2', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 二段 Aptamil Profutura Follow On Formula', 'Aptamil Profutura Follow On Formula 6-12 months 900g', 'P2', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/7b270e564d908413b1d1869720bfacfb.jpg', null, '', '0', '2020/10', '36', '22.00', '36.00', '40.00', '36.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401367', '1564401381');
+INSERT INTO `pm_goods` VALUES ('18', '7', '测试店铺', '1', '1', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 三段 Aptamil Profutura Toddler ', 'Aptamil Profutura Toddler Nutritional Supplement From 1 year 900g', 'P3', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/812ed9ab28f0604af6a2045e43b71195.jpg', null, '', '0', '2020/10', '25', '20.00', '25.00', '30.00', '25.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401466', '1564401478');
+INSERT INTO `pm_goods` VALUES ('19', '7', '测试店铺', '1', '2', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 四段 Aptamil Profutura Junior', 'Aptamil Profutura Junior Nutritional Supplement 900g', 'P4', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/e22295c6db7b698255173d0d76b0b569.jpg', null, '', '0', '2020/10', '280', '20.00', '28.00', '32.00', '28.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401569', '1565883828');
+INSERT INTO `pm_goods` VALUES ('20', '7', '测试店铺', '1', '1', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 孕妇黄金素 180粒', 'Blackmores Pregnancy and Breastfeeding Gold 180 Capsules', 'BM黄金素', '皮肤急救法宝，强力补水', '', '新西兰原罐原装 官方正品 纯净A2蛋白质', '/uploads/images/20190729/63b7cacef160a2699898bda5c231b78f.jpg', null, '<p>11</p>\n<p><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN01kq0zC31fstjynm847_!!2555064063.jpg\" alt=\"2段_05.jpg\" /><br style=\"margin: 0px; padding: 0px; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" /><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN0156ddqR1fstj1c0Wx8_!!2555064063.jpg\" alt=\"2段_06.jpg\" /></p>\n<p>2222</p>', '0', '2020/10', '30', '20.00', '30.00', '35.00', '30.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564401969', '1565612731');
+INSERT INTO `pm_goods` VALUES ('21', '7', '测试店铺', '1', '2', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 叶酸片500mcg 90粒', 'Blackmores Folate 500mcg 90 Tablets', 'BM叶酸90粒', '孕期好伴侣', '', '', '/uploads/images/20190729/2808f8c49bc8ef2211cdeb8942968a61.jpg', null, '', '0', '2020/10', '15', '10.00', '15.00', '18.00', '2.00', '0.20', '0.30', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564402099', '1564402099');
+INSERT INTO `pm_goods` VALUES ('22', '7', '测试店铺', '1', '1', '0', '20', '0-10-20-', '0', '', '15', '0', '12', 'Elevit 女士爱乐维 孕期维生素 100粒', 'Elevit Pregnancy Multivitamin Tablets 100 Pack （Export Only）', '爱乐维', '健康备孕 降低胎儿畸形', '', '', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', null, '', '0', '2020/10', '50', '30.00', '50.00', '60.00', '50.00', '0.50', '0.30', '19', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564402296', '1566489745');
+INSERT INTO `pm_goods` VALUES ('23', '7', '测试店铺', '1', '1', '0', '24', '0-4-24-', '0', '', '4', '0', '8', 'Swisse 高倍蜂胶2000mg 300粒', 'Swisse Ultiboost High Strength Propolis 2000mg 300 Capsules', 'SW蜂胶300粒', '液体黄金 澳洲蜂胶', '', '', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', null, '', '0', '2020/02/05', '25', '20.00', '25.00', '30.00', '0.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '1', '1', '0', '1', '50', '1564829689', '1566489738');
+INSERT INTO `pm_goods` VALUES ('24', '7', '测试店铺', '1', '2', '0', '15', '0-1-15-', '0', '', '1', '1', '4', 'NK 7009 ugg 雪地靴 豆豆鞋 薰衣草紫', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '15.00', '19.00', '2.00', '0.50', '0.70', '', '0', '980', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566629782');
+INSERT INTO `pm_goods` VALUES ('25', '7', '测试店铺', '1', '2', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '三件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '100.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '3', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566629782');
+INSERT INTO `pm_goods` VALUES ('26', '7', '测试店铺', '1', '2', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '六件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '180.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '6', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566629782');
 
 -- ----------------------------
 -- Table structure for `pm_goods_cate`
@@ -983,7 +1024,7 @@ CREATE TABLE `pm_node` (
   KEY `pid` (`pid`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   KEY `name` (`name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=98 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_node
@@ -1069,6 +1110,7 @@ INSERT INTO `pm_node` VALUES ('93', '待支付', 'order/nopay', '1', '', '83', '
 INSERT INTO `pm_node` VALUES ('94', '商家管理', '', '1', '', '0', '1', 'layui-icon-group', '0', '50', '1');
 INSERT INTO `pm_node` VALUES ('95', '商家列表', 'shop', '1', '', '94', '2', '', '0', '50', '1');
 INSERT INTO `pm_node` VALUES ('96', '城市管理', 'city', '1', '', '94', '2', '', '0', '50', '1');
+INSERT INTO `pm_node` VALUES ('97', '快递管理', 'express', '1', '', '94', '2', '', '0', '50', '1');
 
 -- ----------------------------
 -- Table structure for `pm_onepage`
