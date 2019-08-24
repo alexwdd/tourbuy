@@ -1,0 +1,34 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">            
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('option/pubItem','cate='.$cate)}" topWidth="600px" topHeight="350px" topTitle="新增">添加</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('option/delItem')}">删除</button>
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('option/item','cate='.$cate)}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>    
+            <p field="id" title="ID" width="80"/> 
+            <p field="name" title="名称" width="200"/> 
+            <p field="value" title="值" width="200"/> 
+            <p field="ext" title="扩展字段" width="200"/> 
+            <p field="pinyin" title="拼音" width="200"/> 
+            <p field="sort" title="排序值" width="80"/>
+            <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="80"/>
+        </div>
+
+        <script type="text/html" id="barDemo">        
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('option/pubItem')}?id={{d.id}}" topWidth="600px" topHeight="350px" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
+        </script>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'],function(){
+
+});
+</script>

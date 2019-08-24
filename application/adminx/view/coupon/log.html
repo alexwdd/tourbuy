@@ -1,0 +1,54 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;"> 
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('coupon/create','couponID='.$couponID)}" topWidth="600px" topHeight="300px" topTitle="新增">创建</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('coupon/delLog')}" alert="1" alertMsg="删除后无法恢复，确定吗？">删除</button>
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('coupon/log','couponID='.$couponID)}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>                
+            <p field="id" title="ID" width="80"/>
+            <p title="状态" width="100" templet="#status"/>
+            <p field="code" title="编号" width="150"/>    
+            <p title="会员" width="180" templet="#member"/> 
+            <p field="useTime" title="使用时间" width="180"/>
+            <p field="endTime" title="到期时间" width="180"/>
+            <p field="createTime" title="创建时间" width="180"/>
+        </div>
+
+        <script type="text/html" id="member">                 
+            {{# if(d.memberID==0){ }}
+            -
+            {{# }else{ }}
+            ID:{{d.memberID}} 昵称：{{d.nickname}}
+            {{# } }}
+        </script>
+
+        <script type="text/html" id="goodsID">                   
+            {{# if(d.goodsID==''){ }}
+            全局使用
+            {{# }else{ }}
+            <span style="color:blue">指定商品</span>
+            {{# } }}
+        </script>
+
+        <script type="text/html" id="status">                   
+            {{# if(d.status==1){ }}
+            <span style="color:blue">已使用</span>
+            {{# }else{ }}
+            未使用
+            {{# } }}
+        </script>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'],function(){
+
+});
+</script>

@@ -1,0 +1,178 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商铺名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" value="{$list.name}" lay-verify="required" placeholder="请输入商铺名称" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">店招</label>
+        <div class="layui-input-inline" style="width:400px">
+            <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+            <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">城市</label>
+        <div class="layui-input-inline">
+            <select name="cityID" default="{$list.cityID}" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="city" id="vo"}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系人</label>
+        <div class="layui-input-inline">
+            <input type="text" name="linkman" value="{$list.linkman}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-inline">
+            <input type="text" name="tel" value="{$list.tel}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" value="{$list.address}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+    </div>
+
+    <div style="padding-left: 110px; clear: both; overflow: hidden; margin-bottom: 15px">
+        <div class="insert-img" id="insert-img">
+            {volist name="image" id="vo"}
+            <li><img src="{$vo}" /><input type="hidden" name="image[]" value="{$vo}" /><i class="layui-icon del-img-btn" data-url="{$vo}">&#x1006;</i></li>
+            {/volist}
+            <a href="javascript:;" class="insert-btn" id="upload-mult">+</a> 
+        </div>
+        <p style="font-size: 12px; color: #999; margin-top: 10px;">店铺照片</p>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">店铺介绍</label>
+        <div class="layui-input-block">
+            <textarea name="content" class="layui-textarea" placeholder="选填">{$list.content}</textarea>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">账户</label>
+        {empty name="list.id"}
+        <div class="layui-input-inline">
+            <input type="text" name="account" lay-verify="__username" class="layui-input">     
+        </div>
+        <div class="layui-form-mid layui-word-aux">登录账号</div>
+        {else/}
+        <div class="layui-form-mid">
+            <strong>{$list.account}</strong>
+        </div>
+        {/empty}
+    </div>
+    
+    {empty name="list.id"}
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" id="password" name="password" lay-verify="__password" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">重复密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="repassword" lay-verify="equals" equalsId="password" class="layui-input">
+        </div>
+    </div>
+    {else/}
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" id="password" name="password" lay-verify="_password" class="layui-input">
+        </div>
+        <p class="layui-form-mid layui-word-aux">不修改请留空</p>
+    </div>
+    {/empty}
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">发布商品</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="submit" value="1" title="启用" {php}if($list['submit']==1) echo 'checked';{/php}>
+            <input type="radio" name="submit" value="0" title="禁用" {php}if($list['submit']==0) echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">编辑资料</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="edit" value="1" title="启用" {php}if($list['edit']==1) echo 'checked';{/php}>
+            <input type="radio" name="edit" value="0" title="禁用" {php}if($list['edit']==0) echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="status" value="1" title="启用" {php}if($list['status']==1) echo 'checked';{/php}>
+            <input type="radio" name="status" value="0" title="禁用" {php}if($list['status']==0) echo 'checked';{/php}>
+        </div>
+    </div>    
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('shop/pub')}">
+    </div>
+    <input type="hidden" name="id" value="{$list.id}">
+</div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload'], function() {    
+    var $ = layui.$,
+        myupload = layui.myupload;
+
+    $("html").css({"background":"#fff"});
+
+    myupload.single({
+        elem : '#upload-single',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#picname'
+    }); 
+
+    myupload.mult({
+        elem : '#upload-mult',
+        url : '/adminx/upload/image.html',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120
+    });
+
+    //删除文件
+    $("body").on("click",".del-img-btn",function(){
+        let data = {path:$(this).attr("data-url")};
+        $.post("/adminx/admin/delfile.html",data);
+        $(this).parent().remove();
+    });
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    }) 
+})
+</script>

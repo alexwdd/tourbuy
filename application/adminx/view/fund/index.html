@@ -1,0 +1,26 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('fund/pub')}" topWidth="80%" topHeight="80%" topTitle="返利">返利</button>     
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>            
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('fund/index')}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>
+            <p field="id" title="ID" width="80"/>       
+            <p field="date" title="日期" width="100" />      
+            <p field="money" title="返利金额" width="150"/>            
+            <p field="createTime" title="创建日期" width="180" sort="true"/>
+        </div>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','table'],function(){
+    var form = layui.form, $ = layui.$;
+});
+</script>

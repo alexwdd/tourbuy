@@ -1,0 +1,155 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">
+            <button class="layui-btn layui-btn-sm layui-btn-normal cate-btn" url="{:url('goodsCate/pub',array('fid'=>0,'model'=>$model))}" topTitle="添加根栏目">添加根栏目</button>         
+        </div>
+
+        <table class="layui-table">
+            <colgroup>
+                <col width="80">
+                <col>
+                <col width="300">
+                <col width="100">                
+                <col width="100">                
+                <col width="100">                
+                <col width="100">            
+            </colgroup>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>名称</th>
+                <th>链接</th>
+                <th>排序</th>
+                <th>顶部推荐</th>
+                <th>底部推荐</th>
+                <th>操作</th>
+            </tr> 
+            </thead>
+            <tbody>
+                {volist name='list' id="vo"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td> {eq name="vo.fid" value="0"}<strong style="color:#000">{$vo.name}</strong>{else/}<span {$vo.style}>{$vo.name}</span>{/eq}</td>
+                    <td>{$vo.url}</td>
+                    <td>{$vo.sort}</td>
+                    <td>{eq name="vo.comm" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
+                    <td>{eq name="vo.comm1" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
+                    <td class="layui-form"><select lay-filter="cate-action" data-id="{$vo.id}" data-fid="{$vo.fid}">
+                        <option value="">操作</option>
+                        <option value="add">添加子栏目</option>
+                        <option value="edit">编辑</option>
+                        <option value="del">删除</option>
+                    </select></td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','form'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        form = layui.form;
+
+    $('.cate-btn').on('click', function() {
+        var refresh = 1;
+        top.layer.open({
+            type: 2,
+            title: $(this).attr('topTitle'),
+            content: $(this).attr('url'),
+            maxmin: true,
+            area: ["80%","80%"],
+            btn: ['确定'],
+            yes: function(index, layero) {
+                //点击确认触发 iframe 内容中的按钮提交
+                var submit = layero.find('iframe').contents().find("#lay-common-submit");
+                submit.click();
+            },
+            cancel:function(){
+                refresh = 0;
+            },
+            end:function(){
+                if(refresh==1) {
+                    window.location.reload();
+                }
+            }
+        });
+    });
+
+    form.on('select(cate-action)', function(obj) {
+        var id = $(obj.elem).attr("data-id");
+        var fid = $(obj.elem).attr("data-fid");
+        var action = obj.value; 
+        var refresh = 1;
+        if(action=='add'){
+            top.layer.open({
+                type: 2,
+                title: "添加子栏目",
+                content: "{:url('goodsCate/pub')}?model={$model}&fid="+id,
+                maxmin: true,
+                area: ["80%","80%"],
+                btn: ['确定'],
+                yes: function(index, layero) {
+                    //点击确认触发 iframe 内容中的按钮提交
+                    var submit = layero.find('iframe').contents().find("#lay-common-submit");
+                    submit.click();                      
+                },
+                cancel:function(){
+                    refresh = 0;
+                },
+                end:function(){
+                    if(refresh==1) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }else if(action=='edit'){
+            top.layer.open({
+                type: 2,
+                title: "编辑栏目",
+                content: "{:url('goodsCate/pub')}?model={$model}&id="+id+"&fid="+fid,
+                maxmin: true,
+                area: ["80%","80%"],
+                btn: ['确定'],
+                yes: function(index, layero) {
+                    //点击确认触发 iframe 内容中的按钮提交
+                    var submit = layero.find('iframe').contents().find("#lay-common-submit");
+                    submit.click();                      
+                },
+                cancel:function(){
+                    refresh = 0;
+                },
+                end:function(){
+                    if(refresh==1) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }else if(action=='del'){
+            admin.req({
+                url: "{:url('goodsCate/del')}",            
+                data: {id:id},
+                method:'post',
+                done: function(res) {
+                    //登入成功的提示与跳转
+                    layer.msg(res.msg, {
+                        offset: '15px',
+                        icon: 1,
+                        time: 1000
+                    }, function() {
+                        $(obj.elem).parent().parent().remove();                   
+                    });
+                }
+            });
+        }
+
+        $(obj.elem).val("");
+        form.render();
+    })
+})
+</script>

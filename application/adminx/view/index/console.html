@@ -1,0 +1,58 @@
+<style type="text/css">
+.item{background: #f2f2f2; clear: both; overflow: hidden; padding: 10px;}
+</style>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">统计</div>
+            <div class="layui-card-body">          
+                <div carousel-item>
+                    <ul class="layui-row layui-col-space10">
+                        <li class="layui-col-xs3">
+                            <div class="layadmin-backlog-body item">
+                              <h3>注册会员</h3>
+                              <p><cite>{$member}</cite></p>
+                            </div>
+                        </li>
+                        <li class="layui-col-xs3">
+                            <div class="layadmin-backlog-body item">
+                              <h3>商品总数</h3>
+                              <p><cite>{$article}</cite></p>
+                            </div>
+                        </li>
+                        <li class="layui-col-xs3">
+                            <div class="layadmin-backlog-body item">
+                              <h3>订单总数</h3>
+                              <p><cite>{$report}</cite></p>
+                            </div>
+                        </li>
+                        <li class="layui-col-xs3">
+                            <div class="layadmin-backlog-body item">
+                              <h3>今日交易</h3>
+                              <p><cite>{$comment}</cite></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>          
+            </div>
+        </div>
+
+        <div class="layui-card">
+            <div class="layui-card-header">概览</div>
+            <div class="layui-card-body">          
+                <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
+                    <div carousel-item id="LAY-index-dataview">
+                        <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index', 'console']);
+</script>

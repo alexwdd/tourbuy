@@ -1,0 +1,75 @@
+<div class="layui-card">
+    <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" name="keyword" autocomplete="off" placeholder="关键词" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-mid">分类</label>
+                <div class="layui-input-inline">
+                    <select name="path" id="path">
+                        <option value="">--请选择--</option>
+                        {volist name="cate" id="vo"}
+                        <option value='{$vo['path']}'>{php}
+                            for($i=0; $i<$vo['count']*2; $i++){
+                               echo '&nbsp;&nbsp;';            
+                            }
+                        {/php}{$vo['name']}</option>
+                        {/volist}
+                    </select>               
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">            
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('ad/pub')}" topWidth="80%" topHeight="80%" topTitle="新增">添加</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('ad/del')}">删除</button>
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('ad/index')}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>    
+            <p field="name" title="名称" width="200"/>        
+            <p title="图片" templet="#imageTpl" width="60"/>  
+            <p field="cate" title="分类" width="100"/>    
+            <p field="url" title="链接地址" width="300"/>   
+            <p field="sort" title="排序值" width="80"/>
+            <p field="createTime" title="发布日期" width="180" sort="true"/>
+            <p field="updateTime" title="更新日期" width="180" sort="true"/>
+            <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="80"/>
+        </div>
+
+        <script type="text/html" id="imageTpl">
+            {{# if(d.picname == ''){ }}
+            -
+            {{# }else{ }}
+            <a href="{{d.picname}}" target="_blank"><i class="layui-icon">&#xe64a;</i></a>
+            {{# } }}                
+        </script>
+
+        <script type="text/html" id="barDemo">        
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('ad/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
+        </script>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'],function(){
+
+});
+</script>

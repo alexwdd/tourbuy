@@ -1,0 +1,65 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">            
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('article/restore')}">还原</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('article/truedel')}" alert="1" alertMsg="删除后无法恢复，确定吗？">彻底删除</button>
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('article/trash')}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>    
+            <p field="title" title="标题" width="40%"/>       
+            <p field="cate" title="分类" width="100"/>    
+            <p field="editer" title="作者" width="80"/>   
+            <p field="hit" title="浏览量" width="80"/>     
+            <p field="sort" title="排序值" width="80"/>
+            <p title="属性" width="120" templet="#flagTpl"/>
+            <p field="createTime" title="发布日期" width="180" sort="true" formatType="yyyy-MM-dd"/>
+            <p field="updateTime" title="更新日期" width="180" sort="true"/>
+            <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="140"/>
+        </div>
+
+        <script type="text/html" id="flagTpl">
+            {{# if(d.flash == 1){ }}
+            <span style="color:green">幻</span>      
+            {{# } }}
+            {{# if(d.comm == 1){ }}
+            <span style="color:blue">荐</span>       
+            {{# } }}
+            {{# if(d.top == 1){ }}
+            <span style="color:#0099FF">顶</span>        
+            {{# } }}
+            {{# if(d.bold == 1){ }}
+            <span style="color:#black">粗</span>     
+            {{# } }}
+            {{# if(d.red == 1){ }}
+            <span style="color:red">红</span>        
+            {{# } }}                
+        </script>
+
+        <script type="text/html" id="barDemo">
+            <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="正常|草稿" lay-filter="status" {{ d.status == 1 ? 'checked' : ''}} />             
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('article/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
+        </script>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','table'],function(){
+    var form = layui.form, $ = layui.$;
+    //监听性别操作
+    form.on('switch(status)', function(obj){
+        url = '{:url('article/status')}';
+        var id = this.value;
+        var v = 0
+        if (obj.elem.checked){
+            v = 1;
+        } 
+        $.post(url, {id: this.value,field:"status",val:v});
+    });
+});
+</script>

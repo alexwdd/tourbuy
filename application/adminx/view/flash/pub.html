@@ -1,0 +1,72 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品名称</label>
+        <div class="layui-form-mid">
+            <strong>{$list.name}</strong>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">抢购日期</label>
+        <div class="layui-input-inline">
+            <input type="text" name="date" class="layui-input" id="date" placeholder=" - " lay-verify="required">
+        </div>
+
+        <label class="layui-form-label">每日限购</label>
+        <div class="layui-input-inline">
+            <input type="text" name="number" class="layui-input" lay-verify="required" value="999" placeholder="每日限购数量">
+        </div>
+    </div>
+
+    <table class="layui-table">        
+        <tbody id="packBox">
+            <tr>
+                <td>属性</td>
+                <td style="width:150px">原价</td>
+                <td style="width:150px">活动价</td>
+            </tr>
+            <tr>
+                <td>基本价</td>
+                <td>{$list.price}</td>
+                <td><input type="text" name="price" lay-verify="required" class="layui-input"></td>
+            </tr>
+            {volist name="spec" id="vo"}
+            <tr>
+                <td>{$vo.key_name}</td>
+                <td>{$vo.price}</td>
+                <td><input type="hidden" name="spec_id[]" value="{$vo.item_id}" lay-verify="required" class="layui-input"><input type="hidden" name="spec_name[]" value="{$vo.key_name}" lay-verify="required" class="layui-input"><input type="text" name="spec_price[]" lay-verify="required" class="layui-input"></td>
+            </tr>
+            {/volist}
+            {volist name="pack" id="vo"}
+            <tr>
+                <td>{$vo.name}</td>
+                <td>{$vo.price}</td>
+                <td><input type="hidden" name="pack_id[]" value="{$vo.id}" lay-verify="required" class="layui-input"><input type="hidden" name="pack_name[]" value="{$vo.name}" lay-verify="required" class="layui-input"><input type="text" name="pack_price[]" lay-verify="required" class="layui-input"></td>
+            </tr>
+            {/volist}
+        </tbody>
+    </table>
+    
+    
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('flash/pub')}">
+    </div>
+    <input type="hidden" name="goodsID" value="{$list.id}">
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','laydate'], function() {    
+    var $ = layui.$,laydate=layui.laydate;
+    $("html").css({"background":"#fff"});
+
+    laydate.render({
+        elem: '#date',
+        range: true
+    });
+})
+</script>

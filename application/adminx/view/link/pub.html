@@ -1,0 +1,74 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-inline">
+            
+            <select name="cid" id="cid" {gt name="list.cid" value="0"}default="{$list['cid']},{$list['path']}"{/gt} lay-verify="required">
+            <option value="">==请选择==</option>
+            {volist name="cate" id="vo"}
+            <option value="{$vo['id']},{$vo['path']}">{php}
+                for($i=0; $i<$vo['count']*2; $i++){
+                   echo '&nbsp;&nbsp;';            
+                }
+            {/php}{$vo['name']}</option>
+            {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" placeholder="名称" value="{$list.name}" lay-verify="required" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">URL</label>
+        <div class="layui-input-block">
+            <input type="text" name="url" lay-verify="required" value="{$list.url}" class="layui-input">
+        </div>
+    </div>  
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">图片地址</label>
+        <div class="layui-input-inline" style="width:400px">
+            <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline">
+            <input type="text" name="sort" class="layui-input" value="{$list['sort']|default=50}" placeholder="必填" lay-verify="number">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('link/pub')}">
+    </div>
+    <input type="hidden" name="id" value="{$list.id}">
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload'], function() {    
+    var $ = layui.$,
+        myupload = layui.myupload;
+    $("html").css({"background":"#fff"});
+    myupload.single({
+        elem : '#upload-single',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#picname'
+    });    
+})
+</script>

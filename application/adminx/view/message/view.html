@@ -1,0 +1,12 @@
+<div class="layui-card">
+    <div class="layui-card-header">{$list.title}，{$list.createTime}</div>
+    <div class="layui-card-body">{$list.content}</div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function() { 
+})
+</script>

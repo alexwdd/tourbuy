@@ -1,0 +1,26 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">月份</label>
+        <div class="layui-input-inline">
+            <input type="text" name="date" class="layui-input" id="date" placeholder="选择月份" lay-verify="required" readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('fund/pub')}">
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','laydate'], function() {    
+    var $ = layui.$,laydate=layui.laydate;
+    $("html").css({"background":"#fff"});
+
+    laydate.render({
+        elem: '#date',
+        type: 'month'
+    });
+})
+</script>

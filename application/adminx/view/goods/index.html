@@ -1,0 +1,117 @@
+<div class="layui-card">
+    <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" name="keyword" autocomplete="off" placeholder="商品名称" class="layui-input"/>
+                </div>
+            </div>
+            
+            <div class="layui-inline">
+                <label class="layui-form-mid">分类</label>
+                <div class="layui-input-inline">
+                    <select name="path" id="path">
+                        <option value="">--请选择--</option>
+                        {volist name="cate" id="vo"}
+                        <option value='{$vo['path']}'>{php}
+                            for($i=0; $i<$vo['count']*2; $i++){
+                               echo '&nbsp;&nbsp;';            
+                            }
+                        {/php}{$vo['name']}</option>
+                        {/volist}
+                    </select>               
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-mid">状态</label>
+                <div class="layui-input-inline">
+                    <select name="type">
+                        <option value="">--请选择--</option>
+                        <option value="1">显示</option>
+                        <option value="0">隐藏</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">            
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('goods/pub')}" topWidth="80%" topHeight="80%" topTitle="新增">添加</button>
+
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="selectOpen" data-tableId="lay-common-table" url="{:url('goods/push')}" topWidth="500px" topHeight="400px" topTitle="商品推送">推送</button>
+
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('goods/del')}">删除</button>
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('goods/index')}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>                
+            <p field="id" title="ID" width="80"/>
+            <p field="shopName" title="店铺" width="200"/>
+            <p field="name" title="名称" width="250"/>
+            <p field="en" title="英文" width="200"/>
+            <p field="short" title="短名称" width="150" templet="#short"/>
+            <p field="cate" title="分类" width="150"/>
+            <p field="brand" title="品牌" width="150"/>            
+            <p field="price" title="售价" width="80"/>
+            <p field="point" title="积分" width="80"/>
+            <p field="cutPrice" title="砍价" width="80"/>
+            <p field="inprice" title="进价" width="80"/>
+            <p field="marketPrice" title="市场价" width="80"/>
+            <p field="weight" title="重量" width="80"/>
+            <p field="stock" title="库存" width="100"/>
+            <p title="标签" width="90" templet="#flagTpl"/>
+            <p field="show" title="状态" width="60" templet="#goodsShow"/>
+            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="120"/>
+        </div>
+
+        <script type="text/html" id="flagTpl">
+            {{# if(d.flash == 1){ }}
+            <span style="color:green">抢</span>      
+            {{# } }}
+            {{# if(d.comm == 1){ }}
+            <span style="color:blue">荐</span>       
+            {{# } }}
+            {{# if(d.empty == 1){ }}
+            <span style="color:#0099FF">清</span>        
+            {{# } }}
+            {{# if(d.baoyou == 1){ }}
+            <span style="color:#black">邮</span>     
+            {{# } }}
+            {{# if(d.tehui == 1){ }}
+            <span style="color:red">惠</span>        
+            {{# } }}                
+        </script>
+
+        <script type="text/html" id="goodsShow">
+        {{# if(d.show==1){ }}
+        显示
+        {{# }else{ }}
+        <span style="color: #f00">隐藏</span>
+        {{# } }}
+        </script>
+
+        <script type="text/html" id="barDemo">        
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('goods/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('flash/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="添加到抢购" data-tableId="lay-common-table">抢购</a>
+        </script>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'],function(){
+
+});
+</script>

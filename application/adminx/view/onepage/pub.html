@@ -1,0 +1,53 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" value="{$list.title}" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">关键词</label>
+        <div class="layui-input-block">
+            <input type="text" name="keyword" class="layui-input" value="{$list['keyword']}" placeholder="选填">
+        </div>
+    </div>  
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea name="description" class="layui-textarea" placeholder="选填">{$list.description}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">正文</label>
+        <div class="layui-input-block">
+            <textarea name="content" id="container" lay-verify="content">{$list.content}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('onepage/pub')}">
+    </div>
+    <input type="hidden" name="id" value="{$list.id}">
+</div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','tinymce'], function() {    
+    var $ = layui.$,
+        myupload = layui.myupload,
+        tinyConfig = layui.tinymce;
+
+    $("html").css({"background":"#fff"});
+    tinymce.init(tinyConfig);
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    }) 
+})
+</script>

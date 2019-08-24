@@ -1,0 +1,39 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户组名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" lay-verify="required" value="{$list.name}" placeholder="请输入用户组名称" class="layui-input">       
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-inline">
+            <input type="text" id="remark" name="remark" value="{$list.remark}" lay-verify="required" placeholder="用户组的简单描述" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="status" value="1" title="开启" {php}if($list['status']=='1')echo 'checked';{/php}>
+            <input type="radio" name="status" value="0" title="关闭" {php}if($list['status']=='0')echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('role/pub')}">
+    </div>
+    <input type="hidden" name="id" value="{$list.id}">
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function() {    
+    var $ = layui.$;
+    $("html").css({"background":"#fff"});
+})
+</script>

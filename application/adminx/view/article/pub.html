@@ -1,0 +1,155 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" value="{$list.title}" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">短标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="short" placeholder="短标题 选填" value="{$list.short}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-inline">
+            <select name="cid" id="cid" {gt name="list.cid" value="0"}default="{$list['cid']},{$list['path']}"{/gt} lay-verify="required">
+            <option value="">==请选择==</option>
+            {volist name="cate" id="vo"}
+            <option value="{$vo['id']},{$vo['path']}">{php}
+                for($i=0; $i<$vo['count']*2; $i++){
+                   echo '&nbsp;&nbsp;';            
+                }
+            {/php}{$vo['name']}</option>
+            {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">站外链接</label>
+        <div class="layui-input-block">
+            <input type="text" name="url" lay-verify="_url" value="{$list.url}" class="layui-input" placeholder="选填">
+        </div>
+    </div>  
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">缩略图</label>
+        <div class="layui-inline">
+            <img class="thumb" id="picname_src" src="{eq name="list.picname" value=""}{:RES}/image/image.jpg{else/}{$list.picname}{/eq}" />
+            <input type="hidden" name="picname" id="picname" value="{$list.picname}" />
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+            <input type="button" value="删除" class="layui-btn layui-btn-small" onclick="delImage('picname')"/>
+        </div>
+        <div class="layui-inline">
+            <input type="checkbox" lay-skin="primary" name="exp" id="exp" value="1" title="以正文第一张为缩略图">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">属性</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="flash" id="flash" lay-skin="primary" value="1" title="幻灯" {php}if($list['flash']=='1')echo 'checked';{/php}>
+            <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>
+            <input type="checkbox" name="top" value="1" lay-skin="primary" title="置顶" {php}if($list['top']=='1')echo 'checked';{/php}>
+            <input type="checkbox" name="bold" value="1" lay-skin="primary" title="加粗" {php}if($list['bold']=='1')echo 'checked';{/php}>
+            <input type="checkbox" name="red" value="1" lay-skin="primary" title="套红" {php}if($list['red']=='1')echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">发布日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="createTime" value="{$list['createTime']}" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input lay-date" readonly="readonly" />
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">来源</label>
+            <div class="layui-input-block">
+                <input type="text" name="from" autocomplete="off" class="layui-input" value="{$list['from']}" placeholder="选填"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">作者</label>
+            <div class="layui-input-block">
+                <input type="text" name="author" autocomplete="off" class="layui-input" value="{$list['author']}" placeholder="选填"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">关键词</label>
+        <div class="layui-input-block">
+            <input type="text" name="keyword" class="layui-input" value="{$list['keyword']}" placeholder="选填">
+        </div>
+    </div>  
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline">
+            <input type="text" name="sort" id="sort" value="{$list['sort']|default=50}" class="layui-input">
+        </div>
+
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+            {empty name="list.id"}
+            <input type="checkbox" lay-verify="required" lay-filter="status" name="status" value="1" lay-skin="switch" lay-text="发布|草稿" checked/>
+            {else/}
+            <input type="checkbox" lay-verify="required" lay-filter="status" name="status" value="1" lay-skin="switch" lay-text="发布|草稿" {eq name="list.status" value="1"}checked{/eq}/>
+            {/empty}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea name="intr" class="layui-textarea" placeholder="选填">{$list.intr}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">正文</label>
+        <div class="layui-input-block">
+            <textarea name="content" id="container" lay-verify="content">{$list.content}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('article/pub')}">
+    </div>
+    <input type="hidden" name="id" value="{$list.id}">
+</div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload','tinymce'], function() {    
+    var $ = layui.$,
+        myupload = layui.myupload,
+        tinyConfig = layui.tinymce;
+
+    $("html").css({"background":"#fff"});
+    tinymce.init(tinyConfig);
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    })
+
+    myupload.single({
+        elem : '#upload-single',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#picname'
+    });    
+})
+</script>

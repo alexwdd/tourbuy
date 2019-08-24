@@ -1,0 +1,180 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form">
+            <div class="layui-tab" style="margin-bottom: 10px">
+                <ul class="layui-tab-title">
+                    {foreach name="group_list" item="vo" key="k"}
+                        <a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'member'"}class="layui-this"{/if}>{$vo}</li></a>
+                    {/foreach}
+                </ul>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">会员注册</label>
+                <div class="layui-input-block">             
+                    <input type="radio" name="isReg" value="1" title="开启" <?php if($config['isReg']==='1')echo 'checked'; ?>>   
+                    <input type="radio" name="isReg" value="0" title="关闭" <?php if($config['isReg']==='0')echo 'checked'; ?>>           
+                </div>
+            </div>            
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">搜索热词</label>
+                <div class="layui-input-block">
+                    <input type="text" name="hotkey" value="{$config.hotkey}" class="layui-input">
+                    <p>多个用逗号分隔</p>
+                </div>  
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">抢购时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="flashTime" value="{$config.flashTime}" class="layui-input">
+                </div>  
+                <div class="layui-form-mid layui-word-aux">24小时制，如8:00-12:00</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">每日签到</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="sign" value="{$config.sign}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">每日签到送多少积分</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">注册赠送</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="register" value="{$config.register}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">注册赠送多少积分</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">1澳元=</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="buy" value="{$config.buy}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">返利基金</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">达到</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jifen1" value="{$config.jifen1}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">积分，返利</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="back1" value="{$config.back1}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">%</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">达到</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jifen2" value="{$config.jifen2}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">积分，返利</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="back2" value="{$config.back2}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">%</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">达到</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jifen3" value="{$config.jifen3}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">积分，返利</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="back3" value="{$config.back3}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">%</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">达到</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jifen4" value="{$config.jifen4}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">积分，返利</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="back4" value="{$config.back4}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">%</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">达到</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jifen5" value="{$config.jifen5}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">积分，返利</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="back5" value="{$config.back5}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">%</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">砍价</label>
+                <div class="layui-input-block">             
+                    <input type="radio" name="isCut" value="1" title="开启" <?php if($config['isCut']==='1')echo 'checked'; ?>>   
+                    <input type="radio" name="isCut" value="0" title="关闭" <?php if($config['isCut']==='0')echo 'checked'; ?>>           
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">订单保留</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="orderTime" value="{$config.orderTime}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">未支付订单最多保留几个小时</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">砍价范围</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="min" value="{$config.min}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">-</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="max" value="{$config.max}" lay-verify="required" class="layui-input">
+                </div>                
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">砍价限时</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="hour" value="{$config.hour}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">小时，多少个小时后砍价结束</div>
+            </div>            
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">素材转发</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="shareMax" value="{$config.shareMax}" lay-verify="required" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">每日积分上限</div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <button class="layui-btn" lay-submit lay-filter="lay-common-submit"  url="{:url('Setting/insert')}">保存</button>
+            </div>
+            <input type="hidden" name="inc_type" value="{$inc_type}">
+        </form>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function() {    
+
+})
+</script>

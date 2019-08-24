@@ -1,0 +1,32 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">            
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('onepage/pub')}" topWidth="80%" topHeight="80%" topTitle="新增">添加</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('onepage/del')}">删除</button>
+        </div>
+
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('onepage/index')}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>                
+            <p field="id" title="ID" width="80"/>
+            <p field="title" title="名称" width="300"/>
+            <p field="createTime" title="添加日期" width="180"/>
+            <p field="updateTime" title="更新日期" width="180"/>
+            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
+        </div>
+
+        <script type="text/html" id="barDemo">        
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('onepage/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
+        </script>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'],function(){
+
+});
+</script>

@@ -1,0 +1,594 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list">
+
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">通用信息</li>
+            <li>商品相册</li>
+            <li>套餐</li>
+            <li>参数规格</li>
+            <!-- <li id="goodsTab">关联商品</li>  -->
+        </ul>
+        <div class="layui-tab-content">
+            <!--基本信息-->
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="{$list.name}" lay-verify="required" placeholder="请输入商品名称" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">英文名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="en" value="{$list.en}" lay-verify="required" placeholder="请输入英文名称" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商家</label>
+                    <div class="layui-input-inline">
+                        <select name="shopID" default="{$list.shopID}" lay-verify="required">
+                            <option value="">请选择</option>
+                            <option value="0">自营</option>
+                            {volist name="shop" id="vo"}
+                            <option value="{$vo.id}">{$vo.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">短名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="short" value="{$list.short}" lay-verify="required" placeholder="20个字内" maxlength="20" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label">特色描述</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="say" value="{$list.say}" placeholder="15个字内" maxlength="15" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">关键词</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" value="{$list.keyword}" class="layui-input">
+                    </div>
+                </div>  
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="intr" value="{$list.intr}" placeholder="一句话描述商品" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">封面</label>
+                    <div class="layui-input-inline" style="width:400px">
+                        <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
+                    </div>
+                    <div class="layui-inline">
+                        <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+                        <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类一</label>
+                    <div class="layui-input-inline">
+                        <select name="cid" id="cid" {gt name="list.cid" value="0"}default="{$list['cid']},{$list['path']}"{/gt} lay-verify="required">
+                        <option value="">请选择</option>
+                        {volist name="cate" id="vo"}
+                        <option value="{$vo['id']},{$vo['path']}">{php}
+                            for($i=0; $i<$vo['count']*2; $i++){
+                               echo '&nbsp;&nbsp;';            
+                            }
+                        {/php}{$vo['name']}</option>
+                        {/volist}
+                        </select>
+                    </div>
+                    <label class="layui-form-label">分类二</label>
+                    <div class="layui-input-inline">
+                        <select name="cid1" id="cid1" {gt name="list.cid1" value="0"}default="{$list['cid1']},{$list['path1']}"{/gt}>
+                        <option value="">请选择</option>
+                        {volist name="cate" id="vo"}
+                        <option value="{$vo['id']},{$vo['path']}">{php}
+                            for($i=0; $i<$vo['count']*2; $i++){
+                               echo '&nbsp;&nbsp;';            
+                            }
+                        {/php}{$vo['name']}</option>
+                        {/volist}
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sort" id="sort" value="{$list.sort|default=50}" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">品牌</label>
+                    <div class="layui-input-inline">
+                        <select name="brandID" default="{$list.brandID}" lay-verify="required">
+                            <option value="">请选择</option>
+                            {volist name="brand" id="vo"}
+                            <option value="{$vo.id}">{$vo.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标签</label>
+                    <div class="layui-input-block">  
+                        <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>
+                        <input type="checkbox" name="baoyou" value="1" lay-skin="primary" title="包邮" {php}if($list['baoyou']=='1')echo 'checked';{/php}>
+                        <input type="checkbox" name="empty" value="1" lay-skin="primary" title="清仓" {php}if($list['empty']=='1')echo 'checked';{/php}>
+                        <input type="checkbox" name="flash" value="1" lay-skin="primary" title="抢购" {php}if($list['flash']=='1')echo 'checked';{/php}>
+                        <input type="checkbox" name="tehui" value="1" lay-skin="primary" title="特惠" {php}if($list['tehui']=='1')echo 'checked';{/php}>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="show" value="1" title="显示" {php}if($list['show']==1) echo 'checked';{/php}>
+                        <input type="radio" name="show" value="0" title="隐藏" {php}if($list['show']==0) echo 'checked';{/php}>
+                    </div>
+                </div>      
+
+                <div class="layui-form-item"> 
+                    <label class="layui-form-label">售价</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="price" id="price" value="{$list.price}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>
+
+                    <label class="layui-form-label">砍价</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="cutPrice" id="cutPrice" value="{$list.cutPrice|default=0}" autocomplete="off" class="layui-input" placeholder="0不允许砍价" lay-verify="required"/>
+                    </div>
+
+                    <label class="layui-form-label">积分</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="point" id="point" value="{$list.point}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>                    
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">市场价</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="marketPrice" id="marketPrice" value="{$list.marketPrice}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>
+
+                    <label class="layui-form-label">进价</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="inprice" value="{$list.inprice}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品重量</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>
+
+                    <label class="layui-form-label">物流重量</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">保质期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="endDate" id="endDate" value="{$list.endDate}" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label">初始销量</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sellNumber" value="{$list.sellNumber|default=0}" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label">库存</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="stock" id="stock" value="{$list.stock|default=999}" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单品数量</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="number" id="number" value="{$list.number|default=1}" class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">正文</label>
+                    <div class="layui-input-block">
+                        <textarea name="content" id="container" lay-verify="content">{$list.content}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!--相册-->
+            <div class="layui-tab-item">
+                <div class="insert-img" id="insert-img">
+                    {volist name="image" id="vo"}
+                    <li><img src="{$vo}" /><input type="hidden" name="image[]" value="{$vo}" /><i class="layui-icon del-img-btn" data-url="{$vo}">&#x1006;</i></li>
+                    {/volist}
+                    <a href="javascript:;" class="insert-btn" id="upload-mult">+</a> 
+                </div>              
+            </div>
+            
+            <!--套餐-->
+            <div class="layui-tab-item">                
+                <table class="layui-table">        
+                    <tbody id="packBox">
+                        <tr>
+                            <td><b>名称</b></td>
+                            <td style="width: 80px"><b>价格</b></td>
+                            <td style="width: 80px"><b>砍价</b></td>
+                            <td style="width: 80px"><b>单品数量</b></td>
+                            <td style="width: 60px"><a href="javascript:void(0)" class="layui-btn layui-btn-normal layui-btn-xs" id="addBtn">添加</a></td>
+                        </tr>
+                        {volist name="pack" id="vo"}
+                        <tr>                        
+                        <td><input type="hidden" name="pack_id[]" value="{$vo.id}"><input type="text" name="pack_name[]" value="{$vo.name}" lay-verify="required" class="layui-input"></td> 
+                        <td><input type="text" name="pack_price[]" value="{$vo.price}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
+                        <td><input type="text" name="pack_cutPrice[]" value="{$vo.cutPrice}" lay-verify="required" placeholder="0不允许砍价" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
+                        <td><input type="text" name="pack_number[]" value="{$vo.number}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td> 
+                        <td><a href="javascript:void(0)" onclick="delSpec(this)" data-id="{$vo.id}" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
+                        </tr>
+                        {/volist}
+                    </tbody>
+                </table>
+            </div>
+
+            <!--参数规格-->
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品模型</label>
+                    <div class="layui-input-inline">
+                        <select name="modelID" id="modelID" default="{$list.modelID}" lay-filter="goodsModel">
+                            <option value="">无</option>
+                            {volist name="model" id="vo"}
+                            <option value="{$vo.id}">{$vo.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-row">
+                    <div class="layui-col-md12" id="ajax_spec_data" style="padding-right:20px"></div>
+                </div>
+            </div>
+            
+            <!--关联商品-->
+            <div class="layui-tab-item">
+                <div class="layui-row layui-col-space5">
+                    <div class="layui-col-md12">                        
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" id="keyword" name="keyword" autocomplete="off" placeholder="名称" class="layui-input"/>
+                            </div>
+                            <div class="layui-inline">
+                                <button class="layui-btn" type="button" id="goods-search">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <table id="goodsTable" lay-filter="goodsTable"></table>
+                    </div>
+                    <div class="layui-col-md6">
+                        <table id="resultTable" lay-filter="resultTable"></table>                     
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('goods/pub')}">
+    </div>
+    <input type="hidden" name="id" id="id" value="{$list.id}">
+    <input type="hidden" name="linkIds" id="linkIds" value="{$list.linkIds}">
+</div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload','form','tinymce','table'], function() {    
+    var flag = {$flag};
+    var $ = layui.$,
+        table = layui.table,
+        form = layui.form,
+        upload = layui.upload,
+        myupload = layui.myupload,
+        tinyConfig = layui.tinymce,
+        goods = {$linkGoods};
+
+    $("html").css({"background":"#fff"});
+    tinymce.init(tinyConfig);
+
+    if(flag == 1){
+        layer.alert("友情提示：该商品正在抢购活动中，修改价格会引起数据紊乱");
+    }
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    })
+
+    myupload.single({
+        elem : '#upload-single',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#picname'
+    }); 
+
+    myupload.mult({
+        elem : '#upload-mult',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120
+    });   
+
+    //删除文件
+    $("body").on("click",".del-img-btn",function(){
+        let data = {path:$(this).attr("data-url")};
+        $.post("{:url('admin/delFile')}",data);
+        $(this).parent().remove();
+    });
+
+    //商品套餐
+    $("#addBtn").click(function(){
+        $.get('{:url('goods/getPack')}',function(res){
+            $("#packBox").append(res);
+            form.render();
+        })
+    })
+
+    function delPack(obj){
+        id = $(obj).attr("data-id");    
+        $(obj).parent().parent().remove();
+        $.post('{:url('goods/delPack')}',{'id':id});
+    }
+    //套餐end
+
+    //参数规格start
+    form.on('select(goodsModel)', function(data){
+        var goods_id = '{$list.id}';
+        var spec_type = data.value;
+        $.ajax({
+            type: 'GET',
+            data: {
+                goods_id: goods_id,
+                spec_type: spec_type
+            },
+            url: "{:url('Goods/ajaxGetSpecSelect')}",
+            success: function(data) {
+                $("#ajax_spec_data").html(data);
+                form.render();  
+                ajaxGetSpecInput(); // 触发完  马上触发 规格输入框
+            }
+        });
+        $("#ajax_spec_data").on("click", ".specBtn", function() {
+            if ($(this).hasClass("layui-btn-primary")){
+                $(this).removeClass("layui-btn-primary");
+            }else{
+                $(this).addClass("layui-btn-primary");
+            }
+            ajaxGetSpecInput();
+        })
+    });
+
+    {gt name="list['modelID']" value="0"}
+    $(function(){
+        var goods_id = '{$list.id}';
+        var spec_type = '{$list.modelID}';
+        $.ajax({
+            type: 'GET',
+            data: {
+                goods_id: goods_id,
+                spec_type: spec_type
+            },
+            url: "{:url('Goods/ajaxGetSpecSelect')}",
+            success: function(data) {
+                $("#ajax_spec_data").html(data);
+                form.render();  
+                ajaxGetSpecInput(); // 触发完  马上触发 规格输入框
+            }
+        });
+        $("#ajax_spec_data").on("click", ".specBtn", function() {
+            if ($(this).hasClass("layui-btn-primary")){
+                $(this).removeClass("layui-btn-primary");
+            }else{
+                $(this).addClass("layui-btn-primary");
+            }
+            ajaxGetSpecInput();
+        })    
+    });
+    {/gt}   
+    
+
+    function ajaxGetSpecInput(){
+        var spec_arr = {};// 用户选择的规格数组       
+        // 选中了哪些属性
+        $("#specBox button").each(function(){
+            if(!$(this).hasClass('layui-btn-primary')){
+                var spec_id = $(this).attr('data-spec_id');
+                var item_id = $(this).attr('data-item_id');
+                if(!spec_arr.hasOwnProperty(spec_id))
+                    spec_arr[spec_id] = [];
+                spec_arr[spec_id].push(item_id);
+                //console.log(spec_arr);
+            }       
+        });
+        ajaxGetSpecInput2(spec_arr); // 显示下面的输入框    
+    }
+
+    function ajaxGetSpecInput2(spec_arr){
+        var goods_id = $("input[name='id']").val();
+        var price = $("#price").val();
+        $.ajax({
+            type:'POST',
+            data:{spec_arr:spec_arr,goods_id:goods_id,price:price},
+            url:"{:url('Goods/ajaxGetSpecInput')}",
+            success:function(data){ 
+                $("#goods_spec_table2").html('').append(data);
+                hbdyg();  // 合并单元格       
+                form.render();      
+                //渲染上传
+                upload.render({
+                    elem: '.upBtn',
+                    url: '{:url('upload/image')}',
+                    acceptMime:'image/*',
+                    exts:'jpg|png|gif|jpeg',
+                    size:5120,
+                    before: function(obj) {
+                        layer.load(2); //上传loading
+                    },
+                    done: function(res) {
+                        layer.closeAll(); //关闭loading
+                        //如果上传失败
+                        if (res.code != 1) {
+                            return layer.msg(res.msg);
+                        }
+                        //上传成功后，返回文件路径
+                        thisBtn = this.item;
+                        thisBtn.parent().parent().find("input").val(res.data.url);
+                    },
+                    error: function() {
+                    }
+                });
+            }
+        });
+        
+    }
+
+    // 合并单元格
+    function hbdyg() {
+        var tab = document.getElementById("spec_input_tab"); //要合并的tableID
+        var maxCol = 2, val, count, start;  //maxCol：合并单元格作用到多少列  
+        if (tab != null) {
+            for (var col = maxCol - 1; col >= 0; col--) {
+                count = 1;
+                val = "";
+                for (var i = 0; i < tab.rows.length; i++) {
+                    if (val == tab.rows[i].cells[col].innerHTML) {
+                        count++;
+                    } else {
+                        if (count > 1) { //合并
+                            start = i - count;
+                            tab.rows[start].cells[col].rowSpan = count;
+                            for (var j = start + 1; j < i; j++) {
+                                tab.rows[j].cells[col].style.display = "none";
+                            }
+                            count = 1;
+                        }
+                        val = tab.rows[i].cells[col].innerHTML;
+                    }
+                }
+                if (count > 1) { //合并，最后几行相同的情况下
+                    start = i - count;
+                    tab.rows[start].cells[col].rowSpan = count;
+                    for (var j = start + 1; j < i; j++) {
+                        tab.rows[j].cells[col].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
+    //参数规格end
+
+    //监听行单击事件（单击事件为：rowDouble）
+    table.on('row(goodsTable)', function(obj){
+        var data = obj.data;
+        for (var i = 0; i < goods.length; i++) {
+            if(data.id == goods[i]['id']){
+                return false;
+            }       
+        }
+        goods.push(data);
+        setData();
+    });
+
+    //监听行工具事件
+    table.on('tool(resultTable)', function(obj){
+        var data = obj.data;        
+        if(obj.event === 'del'){
+            temp = [];
+            for (var i = 0; i < goods.length; i++) {
+                if(data.id != goods[i]['id']){
+                    temp.push(goods[i]);
+                }
+            }
+            goods = temp;
+            setData();
+        }
+    });
+
+    function getData(){
+        table.render({
+            elem: '#goodsTable',
+            url: '{:url('goods/index')}', //数据接口
+            method:'post',
+            where: {goods_id:'{$list.id}',keyword:$("#keyword").val()},
+            page: true, //开启分页
+            cols: [[ //表头
+                {field: 'picname', title: '图片' , width: 80 , templet:'#imageTpl'},
+                {field: 'name', title: '名称'},
+            ]]
+        });
+    };
+
+    function setData(){
+        var ids = '';
+        for (var i = 0; i<goods.length; i++) {
+            if(i == 0){
+                ids = goods[i]['id'];
+            }else{
+                ids += ','+goods[i]['id'];
+            }
+        }
+        $("#linkIds").val(ids);
+        table.render({
+            elem: '#resultTable',
+            data:goods,
+            cols: [[ //表头
+                {field: 'picname', title: '图片' , width: 80 , templet:'#imageTpl'},
+                {field: 'name', title: '名称',width:400},
+                {fixed: 'right', title:'操作', toolbar: '#barDemo', width:60},
+            ]]
+        });
+    };
+
+    $("#goodsTab").click(function(){
+        setData();
+        getData();
+    });
+
+    $("#goods-search").click(function(){
+        var keyword = $("#keyword").val();
+        if(keyword!=''){
+            getData();
+        }
+    })  
+})
+</script>
+<script type="text/html" id="imageTpl">
+    <img src="{{d.picname}}" style="height: 40px;" />
+</script>
+<script type="text/html" id="barDemo">
+    <a href="javascript:void(0)" lay-event="del" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-delete"></i></a>
+</script>

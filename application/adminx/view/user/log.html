@@ -1,0 +1,47 @@
+<div class="layui-card">
+    <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-mid">用户</label>
+                <div class="layui-input-inline">
+                    <select name="uid">
+                        <option value="">请选择</option>
+                        {volist name="user" id="vo"}
+                        <option value="{$vo.id}">{$vo.name}</option>
+                        {/volist}
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="layui-card-body">
+        <div style="padding-bottom: 10px;">            
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('user/delog')}">删除</button>
+        </div>
+        <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('user/log')}" lay-filter="lay-common-table"></table>
+        <div class="fsDatagridCols">
+            <p checkbox="true"/>                
+            <p field="username" title="用户名" width="200"/>
+            <p field="loginTime" title="登录时间" width="200"/>
+            <p field="loginIP" title="登录IP" width="200"/>
+        </div>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'],function(){
+
+});
+</script>

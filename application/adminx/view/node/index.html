@@ -1,0 +1,197 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <fieldset class="layui-elem-field">
+                    <legend>菜单</legend>
+                    <div class="layui-field-box">
+                        <div class="node-select">
+                            <div class="bd" id="node1">
+                            {volist name="node" id="vo"}
+                            <li data-id="{$vo.id}" data-level="1">{$vo.name}</li>
+                            {/volist}
+                            </div>
+                            <div class="fd">
+                                <button class="layui-btn layui-btn-sm actionBtn" data-type="add" url="{:url('node/pub')}" title="添加菜单" data-level="1">添加</button>
+                                <button class="layui-btn layui-btn-sm actionBtn" data-type="edit" url="{:url('node/pub')}" title="编辑菜单" data-level="1">编辑</button>
+                                <button class="layui-btn layui-btn-sm actionBtn" url="{:url('node/del')}" data-type="del" data-level="1">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-md4">
+                <fieldset class="layui-elem-field">
+                    <legend>控制器</legend>
+                    <div class="layui-field-box">
+                        <div class="node-select">
+                            <div class="bd" id="node2"></div>
+                            <div class="fd">
+                                <button class="layui-btn layui-btn-sm actionBtn" data-type="add" url="{:url('node/pub')}" title="添加控制器" data-level="2">添加</button>
+                                <button class="layui-btn layui-btn-sm actionBtn" data-type="edit" url="{:url('node/pub')}" title="编辑控制器" data-level="2">编辑</button>
+                                <button class="layui-btn layui-btn-sm actionBtn" url="{:url('node/del')}" data-type="del" data-level="2">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-md4">
+                <fieldset class="layui-elem-field">
+                    <legend>方法</legend>
+                    <div class="layui-field-box">
+                        <div class="node-select">
+                            <div class="bd" id="node3"></div>
+                            <div class="fd">
+                                <button class="layui-btn layui-btn-sm actionBtn" data-type="add" url="{:url('node/pub')}" title="添加方法" data-level="3">添加</button>
+                                <button class="layui-btn layui-btn-sm actionBtn" data-type="edit" url="{:url('node/pub')}" title="编辑方法" data-level="3">编辑</button>
+                                <button class="layui-btn layui-btn-sm actionBtn" url="{:url('node/del')}" data-type="del" data-level="3">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','form'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        form = layui.form;
+
+    $('.node-select').on('click','li', function() {
+        $(this).parent().find('li').removeClass("active");
+        $(this).addClass("active");
+        var level = parseInt($(this).attr("data-level"));
+        var pid = $(this).attr("data-id");
+        if(level<3){
+            getChild(pid,level+1);
+        }
+    });
+
+    $('.actionBtn').click(function() {
+        var that = $(this);
+        var action = that.attr("data-type");
+        var url = that.attr("url");
+        var level = parseInt(that.attr("data-level"));
+        var pid = 0;
+        if($("#node"+(level-1)).length>0){
+            $("#node"+(level-1)+" li").each(function(){
+                if($(this).hasClass("active")){
+                    pid = $(this).attr("data-id");
+                }
+            })
+            if(pid==0){
+                layer.alert("请选择父节点");return false;
+            }
+        }        
+        var refresh = 1;
+        if(action=='add'){
+            top.layer.open({
+                type: 2,
+                title: that.attr('title'),
+                content: url+"&pid="+pid+"&level="+level,
+                maxmin: true,
+                area: ["80%","80%"],
+                btn: ['确定'],
+                yes: function(index, layero) {
+                    //点击确认触发 iframe 内容中的按钮提交
+                    var submit = layero.find('iframe').contents().find("#lay-common-submit");
+                    submit.click();                      
+                },
+                cancel:function(){
+                    refresh = 0;
+                },
+                end:function(){
+                    if(refresh==1) {
+                        getChild(pid,level);
+                    }
+                }
+            });
+        }else if(action=='edit'){
+            var id = 0;
+            var that = {};
+            $("#node"+level+" li").each(function(){
+                if($(this).hasClass("active")){
+                    id = $(this).attr("data-id");
+                    that = $(this);
+                }
+            })
+            if(id==0){
+                layer.alert("请选择要编辑的项目");
+                return false;
+            }
+            top.layer.open({
+                type: 2,
+                title: that.attr('title'),
+                content: url+"?id="+id+"&pid="+pid+"&level="+level,
+                maxmin: true,
+                area: ["80%","80%"],
+                btn: ['确定'],
+                yes: function(index, layero) {
+                    //点击确认触发 iframe 内容中的按钮提交
+                    var submit = layero.find('iframe').contents().find("#lay-common-submit");
+                    submit.click();                      
+                },
+                cancel:function(){
+                    refresh = 0;
+                },
+                end:function(){
+                    if(refresh==1) {
+                        getChild(pid,level);
+                    }
+                }
+            });
+        }else if(action=='del'){
+            var id = 0;
+            var that = {};
+            $("#node"+level+" li").each(function(){
+                if($(this).hasClass("active")){
+                    id = $(this).attr("data-id");
+                    that = $(this);
+                }
+            })
+            if(id==0){
+                layer.alert("请选择要删除的项目");
+                return false;
+            }
+            admin.req({
+                url: url,            
+                data: {id:id},
+                method:'post',
+                done: function(res) {
+                    that.remove();
+                    $("#node"+(level+1)).html("");
+                    $("#node"+(level+2)).html("");
+                }
+            });
+        }        
+    });
+
+    function getChild(pid,level){
+        var next =  parseInt(level)+1;
+        $("#node"+level).html('<i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>');
+        admin.req({
+            url: "{:url('node/getchild')}",            
+            data: {pid:pid},
+            method:'post',
+            done: function(res) {
+                _html = '';
+                layui.each(res.data, function(index,o){
+                    if(level>1){
+                        _html += '<li data-id="'+o.id+'" data-level="'+level+'">'+o.name+'('+o.value+')</li>';
+                    }else{
+                        _html += '<li data-id="'+o.id+'" data-level="'+level+'">'+o.name+'</li>';
+                    }                    
+                })
+                $("#node"+level).html(_html);
+                $("#node"+next).html("");
+            }
+        });
+    }
+})
+</script>
