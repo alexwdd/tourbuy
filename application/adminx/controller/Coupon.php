@@ -25,6 +25,10 @@ class Coupon extends Admin {
 					$this->error('信息不存在');
 				}		
 			}
+
+            $shop = db("Shop")->field('id,name,cityID')->select();
+            $this->assign('shop', $shop);
+
 			$this->assign('list', $list);
             return view();
         }
@@ -51,6 +55,7 @@ class Coupon extends Admin {
             $list = db('Coupon')->where('id',$couponID)->find();
             for($i=0; $i<$number; $i++){
                 $data = [
+                    'shopID'=>$list['shopID'],
                     'memberID'=>0,
                     'nickname'=>'',
                     'couponID'=>$couponID,

@@ -68,7 +68,7 @@ class Wechat extends Common {
                         $result = model('Member')->wechat($data);
                         if ($result['code']==1) { 
                             $user = db("Member")->field('nickname,headimg,token')->where('id',$result['msg'])->find();
-                            $this->createCoupon($user);
+                            $this->autoCoupon($user);
                             returnJson(1,'success',['token'=>$user['token']]);
                         }else{
                             returnJson(0,$result['msg']);

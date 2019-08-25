@@ -425,6 +425,7 @@ class Account extends Auth {
                 }
 
                 $data = [
+                    'shopID'=>$list['shopID'],
                     'memberID'=>$this->user['id'],
                     'nickname'=>$this->user['nickname'],
                     'couponID'=>$couponID,

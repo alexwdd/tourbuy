@@ -31,7 +31,7 @@ class Member extends Admin
         $firstRow = $pageSize*($pageNum-1); 
         $list = $this->where($map)->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
         if($list) {
-            $list = collection($list)->toArray();
+            $list = collection($list)->toArray();            
         }
         $result = array(
             'code'=>0,

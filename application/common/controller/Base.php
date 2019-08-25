@@ -26,49 +26,32 @@ class Base extends Controller {
         $finance = db('Finance');
         $map['memberID'] = $userid;
         $list = $finance->field('type,money')->where($map)->select(); 
-        $signPoint = 0;
         $buyPoint = 0;
-        $inMoney = 0;
-        $outMoney = 0;
-        $inFund = 0;
-        $outFund = 0;
-        $fundToMoney = 0;
-        $clearJifen = 0;
+        $tuijianPoint = 0;
+        $outPoint = 0;
+        $clearPoint = 0;
 
         foreach ($list as $key => $value) {
             if ($value['type']==1) {
-                $signPoint += $value['money'];
-            }
-            if ($value['type']==2) {
                 $buyPoint += $value['money'];
             }
+            if ($value['type']==2) {
+                $tuijianPoint += $value['money'];
+            }
             if ($value['type']==3) {
-                $inMoney += $value['money'];
+                $outPoint += $value['money'];
             } 
             if ($value['type']==4) {
-                $outMoney += $value['money'];
+                $clearPoint += $value['money'];
             }  
-            if ($value['type']==5) {
-                $inFund += $value['money'];
-            }  
-            if ($value['type']==6) {
-                $outFund += $value['money'];
-            }  
-            if ($value['type']==7) {
-                $fundToMoney += $value['money'];
-            } 
-            if ($value['type']==8) {
-                $clearJifen += $value['money'];
-            } 
         }
 
-        $point = $signPoint + $buyPoint - $clearJifen;
-        $money = $inMoney + $fundToMoney - $outMoney;
-        $fund = $inFund - $outFund;
+        $point = $buyPoint + $tuijianPoint - $outPoint - $clearJifen;
+        if($point<0){
+            $point=0;
+        }
         return array(       
-            'point' => $point,
-            'money'=>$money,
-            'fund'=>$fund
+            'point' => $point
         );
     }
 
@@ -320,6 +303,7 @@ class Base extends Controller {
         foreach ($coupon as $key => $value) {
             for ($i=0; $i < $value['number']; $i++) { 
                 $temp = [
+                    'shopID'=>$value['shopID'],
                     'memberID'=>$user['id'],
                     'nickname'=>$user['nickname'],
                     'couponID'=>$value['id'],

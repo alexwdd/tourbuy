@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-08-24 16:58:53
+Date: 2019-08-25 23:31:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -329,7 +329,7 @@ INSERT INTO `pm_config` VALUES ('10', 'description', '途买商城', 'basic', ''
 INSERT INTO `pm_config` VALUES ('11', 'qrcode', '', 'basic', '');
 INSERT INTO `pm_config` VALUES ('19', 'mobile', '#', 'basic', '');
 INSERT INTO `pm_config` VALUES ('12', 'address', '#', 'basic', '');
-INSERT INTO `pm_config` VALUES ('13', 'tel', '0371-23190228', 'basic', '');
+INSERT INTO `pm_config` VALUES ('13', 'tel', '010-23190228', 'basic', '');
 INSERT INTO `pm_config` VALUES ('15', 'qq', '1826366140', 'basic', '');
 INSERT INTO `pm_config` VALUES ('16', 'keywords', '途买商城', 'basic', '');
 INSERT INTO `pm_config` VALUES ('18', 'title', '途买商城', 'basic', '');
@@ -410,6 +410,8 @@ INSERT INTO `pm_config` VALUES ('131', 'OMI_KEY', '547e766b244a4e7eb24fee84a1e28
 DROP TABLE IF EXISTS `pm_coupon`;
 CREATE TABLE `pm_coupon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shopID` int(11) NOT NULL,
+  `shopName` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
   `desc` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
   `register` int(11) NOT NULL,
@@ -428,8 +430,8 @@ CREATE TABLE `pm_coupon` (
 -- ----------------------------
 -- Records of pm_coupon
 -- ----------------------------
-INSERT INTO `pm_coupon` VALUES ('3', '新手券', '立减50元', '1', '0', '50', '1', '1', '30', '', '使用说明啊啊啊', '1565831354', '1551964995');
-INSERT INTO `pm_coupon` VALUES ('5', '测试一下', '满50元立减5元', '0', '50', '5', '0', '1', '30', '', '', '1565799188', '1565698449');
+INSERT INTO `pm_coupon` VALUES ('3', '0', '', '新手券', '立减50元', '1', '0', '50', '1', '1', '30', '', '使用说明啊啊啊', '1565831354', '1551964995');
+INSERT INTO `pm_coupon` VALUES ('5', '7', '测试店铺', '测试一下', '满50元立减5元', '0', '50', '5', '0', '1', '30', '', '', '1566741166', '1565698449');
 
 -- ----------------------------
 -- Table structure for `pm_coupon_goods`
@@ -452,6 +454,7 @@ CREATE TABLE `pm_coupon_goods` (
 DROP TABLE IF EXISTS `pm_coupon_log`;
 CREATE TABLE `pm_coupon_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shopID` int(11) DEFAULT NULL,
   `memberID` int(11) DEFAULT NULL,
   `nickname` varchar(200) DEFAULT NULL,
   `couponID` int(11) DEFAULT NULL,
@@ -472,12 +475,12 @@ CREATE TABLE `pm_coupon_log` (
 -- ----------------------------
 -- Records of pm_coupon_log
 -- ----------------------------
-INSERT INTO `pm_coupon_log` VALUES ('18', '2', '张小黑', '3', '新手券', '立减50元', '0.00', '50.00', null, '', '1277665138', '0', '0', '1568423272', '1565831272');
-INSERT INTO `pm_coupon_log` VALUES ('14', '0', '', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '', '1264725452', '0', '0', '0', '1565798942');
-INSERT INTO `pm_coupon_log` VALUES ('15', '0', '', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '', '1189652748', '0', '0', '0', '1565798942');
-INSERT INTO `pm_coupon_log` VALUES ('16', '10002', '月明', '5', '测试一下', '满50元立减5元', '50.00', '5.00', '好吃不贵', '', '1355403368', '1', '1566291433', '1568823326', '1565798942');
-INSERT INTO `pm_coupon_log` VALUES ('17', '2', '张小黑', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '240', '1039757623', '0', '0', '1568391156', '1565799156');
-INSERT INTO `pm_coupon_log` VALUES ('19', '10002', '月明', '3', '新手券', '立减3元', '0.00', '3.00', '好贵不吃', '', '1239757623', '1', '1566293300', '1568809414', '1566217414');
+INSERT INTO `pm_coupon_log` VALUES ('18', null, '2', '张小黑', '3', '新手券', '立减50元', '0.00', '50.00', null, '', '1277665138', '0', '0', '1568423272', '1565831272');
+INSERT INTO `pm_coupon_log` VALUES ('14', null, '0', '', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '', '1264725452', '0', '0', '0', '1565798942');
+INSERT INTO `pm_coupon_log` VALUES ('15', null, '0', '', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '', '1189652748', '0', '0', '0', '1565798942');
+INSERT INTO `pm_coupon_log` VALUES ('16', null, '10002', '月明', '5', '测试一下', '满50元立减5元', '50.00', '5.00', '好吃不贵', '', '1355403368', '1', '1566291433', '1568823326', '1565798942');
+INSERT INTO `pm_coupon_log` VALUES ('17', null, '2', '张小黑', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '240', '1039757623', '0', '0', '1568391156', '1565799156');
+INSERT INTO `pm_coupon_log` VALUES ('19', null, '10002', '月明', '3', '新手券', '立减3元', '0.00', '3.00', '好贵不吃', '', '1239757623', '1', '1566293300', '1568809414', '1566217414');
 
 -- ----------------------------
 -- Table structure for `pm_express`
@@ -559,26 +562,11 @@ CREATE TABLE `pm_finance` (
   `extend2` int(11) NOT NULL,
   `createTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_finance
 -- ----------------------------
-INSERT INTO `pm_finance` VALUES ('1', '2', '1', '2', '1', '10.00', '0.00', '0.00', '07-23签到，奖励10积分。', '0', '0', '1563892114');
-INSERT INTO `pm_finance` VALUES ('2', '2', '1', '2', '1', '10.00', '0.00', '0.00', '08-06签到，奖励10积分。', '0', '0', '1565097687');
-INSERT INTO `pm_finance` VALUES ('3', '1', '1', '1', '3', '100.00', '0.00', '0.00', '账户充值100元', '0', '0', '1565104138');
-INSERT INTO `pm_finance` VALUES ('4', '2', '1', '1', '3', '10.00', '0.00', '0.00', '账户充值10元', '0', '0', '1565104250');
-INSERT INTO `pm_finance` VALUES ('5', '1', '1', '1', '3', '20.00', '0.00', '0.00', '账户充值20元', '0', '0', '1565278286');
-INSERT INTO `pm_finance` VALUES ('6', '1', '1', '1', '7', '50.00', '0.00', '0.00', '2019-08返利余额50元', '0', '0', '1565839224');
-INSERT INTO `pm_finance` VALUES ('7', '2', '1', '1', '7', '50.00', '0.00', '0.00', '2019-08返利余额50元', '0', '0', '1565839224');
-INSERT INTO `pm_finance` VALUES ('8', '1', '1', '1', '7', '50.00', '0.00', '0.00', '2019-08返利余额50元', '0', '0', '1565839249');
-INSERT INTO `pm_finance` VALUES ('9', '2', '1', '1', '7', '50.00', '0.00', '0.00', '2019-08返利余额50元', '0', '0', '1565839249');
-INSERT INTO `pm_finance` VALUES ('10', '1', '1', '1', '7', '2000.00', '0.00', '0.00', '2019-08返利余额2000元', '0', '0', '1565839509');
-INSERT INTO `pm_finance` VALUES ('11', '2', '1', '1', '7', '2000.00', '0.00', '0.00', '2019-08返利余额2000元', '0', '0', '1565839509');
-INSERT INTO `pm_finance` VALUES ('12', '2', '1', '1', '8', '20.00', '0.00', '0.00', '2019-09每月积分清零', '0', '0', '1565839927');
-INSERT INTO `pm_finance` VALUES ('13', '10002', '2', '10002', '2', '10.00', '0.00', '10.00', '购买商品，获得10积分', '22', '0', '1566398081');
-INSERT INTO `pm_finance` VALUES ('14', '10002', '2', '10002', '5', '180.00', '0.00', '180.00', '购买商品，获得$180.00返利基金', '22', '0', '1566398081');
-INSERT INTO `pm_finance` VALUES ('15', '10002', '2', '10002', '3', '5.00', '0.00', '5.00', '取消订单，退还账户余额$5.00，订单号：19082123201862', '0', '0', '1566401851');
 
 -- ----------------------------
 -- Table structure for `pm_flash`
@@ -696,11 +684,11 @@ INSERT INTO `pm_goods` VALUES ('18', '7', '测试店铺', '1', '1', '0', '16', '
 INSERT INTO `pm_goods` VALUES ('19', '7', '测试店铺', '1', '2', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 四段 Aptamil Profutura Junior', 'Aptamil Profutura Junior Nutritional Supplement 900g', 'P4', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/e22295c6db7b698255173d0d76b0b569.jpg', null, '', '0', '2020/10', '280', '20.00', '28.00', '32.00', '28.00', '1.10', '1.10', '', '100', '999', '1', '0', '1', '1', '0', '0', '0', '1', '50', '1564401569', '1565883828');
 INSERT INTO `pm_goods` VALUES ('20', '7', '测试店铺', '1', '1', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 孕妇黄金素 180粒', 'Blackmores Pregnancy and Breastfeeding Gold 180 Capsules', 'BM黄金素', '皮肤急救法宝，强力补水', '', '新西兰原罐原装 官方正品 纯净A2蛋白质', '/uploads/images/20190729/63b7cacef160a2699898bda5c231b78f.jpg', null, '<p>11</p>\n<p><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN01kq0zC31fstjynm847_!!2555064063.jpg\" alt=\"2段_05.jpg\" /><br style=\"margin: 0px; padding: 0px; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" /><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN0156ddqR1fstj1c0Wx8_!!2555064063.jpg\" alt=\"2段_06.jpg\" /></p>\n<p>2222</p>', '0', '2020/10', '30', '20.00', '30.00', '35.00', '30.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564401969', '1565612731');
 INSERT INTO `pm_goods` VALUES ('21', '7', '测试店铺', '1', '2', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 叶酸片500mcg 90粒', 'Blackmores Folate 500mcg 90 Tablets', 'BM叶酸90粒', '孕期好伴侣', '', '', '/uploads/images/20190729/2808f8c49bc8ef2211cdeb8942968a61.jpg', null, '', '0', '2020/10', '15', '10.00', '15.00', '18.00', '2.00', '0.20', '0.30', '', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564402099', '1564402099');
-INSERT INTO `pm_goods` VALUES ('22', '7', '测试店铺', '1', '1', '0', '20', '0-10-20-', '0', '', '15', '0', '12', 'Elevit 女士爱乐维 孕期维生素 100粒', 'Elevit Pregnancy Multivitamin Tablets 100 Pack （Export Only）', '爱乐维', '健康备孕 降低胎儿畸形', '', '', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', null, '', '0', '2020/10', '50', '30.00', '50.00', '60.00', '50.00', '0.50', '0.30', '19', '100', '999', '1', '0', '0', '1', '0', '0', '0', '1', '50', '1564402296', '1566489745');
-INSERT INTO `pm_goods` VALUES ('23', '7', '测试店铺', '1', '1', '0', '24', '0-4-24-', '0', '', '4', '0', '8', 'Swisse 高倍蜂胶2000mg 300粒', 'Swisse Ultiboost High Strength Propolis 2000mg 300 Capsules', 'SW蜂胶300粒', '液体黄金 澳洲蜂胶', '', '', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', null, '', '0', '2020/02/05', '25', '20.00', '25.00', '30.00', '0.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '1', '1', '0', '1', '50', '1564829689', '1566489738');
-INSERT INTO `pm_goods` VALUES ('24', '7', '测试店铺', '1', '2', '0', '15', '0-1-15-', '0', '', '1', '1', '4', 'NK 7009 ugg 雪地靴 豆豆鞋 薰衣草紫', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '15.00', '19.00', '2.00', '0.50', '0.70', '', '0', '980', '1', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566629782');
-INSERT INTO `pm_goods` VALUES ('25', '7', '测试店铺', '1', '2', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '三件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '100.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '3', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566629782');
-INSERT INTO `pm_goods` VALUES ('26', '7', '测试店铺', '1', '2', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '六件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '180.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '6', '0', '0', '0', '0', '0', '0', '1', '50', '1565322339', '1566629782');
+INSERT INTO `pm_goods` VALUES ('22', '7', '测试店铺', '1', '1', '0', '20', '0-10-20-', '0', '', '15', '0', '12', 'Elevit 女士爱乐维 孕期维生素 100粒', 'Elevit Pregnancy Multivitamin Tablets 100 Pack （Export Only）', '爱乐维', '健康备孕 降低胎儿畸形', '', '', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', null, '', '0', '2020/10', '50', '30.00', '50.00', '60.00', '50.00', '0.50', '0.30', '19', '100', '999', '1', '0', '0', '1', '0', '0', '0', '0', '50', '1564402296', '1566739614');
+INSERT INTO `pm_goods` VALUES ('23', '7', '测试店铺', '1', '1', '0', '24', '0-4-24-', '0', '', '4', '0', '8', 'Swisse 高倍蜂胶2000mg 300粒', 'Swisse Ultiboost High Strength Propolis 2000mg 300 Capsules', 'SW蜂胶300粒', '液体黄金 澳洲蜂胶', '', '', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', null, '', '0', '2020/02/05', '25', '20.00', '25.00', '30.00', '0.00', '0.50', '0.60', '', '100', '999', '1', '0', '0', '1', '1', '1', '0', '0', '50', '1564829689', '1566739589');
+INSERT INTO `pm_goods` VALUES ('24', '7', '测试店铺', '1', '2', '0', '15', '0-1-15-', '0', '', '1', '1', '4', 'NK 7009 ugg 雪地靴 豆豆鞋 薰衣草紫', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '15.00', '19.00', '2.00', '0.50', '0.70', '', '0', '980', '1', '0', '0', '0', '0', '0', '0', '0', '50', '1565322339', '1566739566');
+INSERT INTO `pm_goods` VALUES ('25', '7', '测试店铺', '1', '2', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '三件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '100.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '3', '0', '0', '0', '0', '0', '0', '0', '50', '1565322339', '1566739566');
+INSERT INTO `pm_goods` VALUES ('26', '7', '测试店铺', '1', '2', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '六件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '0', '', '10', '10.00', '180.00', '19.00', '0.00', '0.50', '0.70', '', '0', '980', '6', '0', '0', '0', '0', '0', '0', '0', '50', '1565322339', '1566739566');
 
 -- ----------------------------
 -- Table structure for `pm_goods_cate`
@@ -905,6 +893,8 @@ CREATE TABLE `pm_member` (
   `mobile` varchar(50) NOT NULL,
   `password` varchar(32) NOT NULL COMMENT '登录密码',
   `nickname` varchar(100) NOT NULL,
+  `tjID` int(11) NOT NULL,
+  `tjName` varchar(100) NOT NULL,
   `name` varchar(30) NOT NULL,
   `sn` varchar(50) NOT NULL,
   `wechat` varchar(50) NOT NULL,
@@ -920,9 +910,8 @@ CREATE TABLE `pm_member` (
 -- ----------------------------
 -- Records of pm_member
 -- ----------------------------
-INSERT INTO `pm_member` VALUES ('10000', '1212121212', '', '', '张小黑1', '', '', '', '111111111', '0', 'f1e1e857c5d3cb398dbef234f465320bdcba2ef7', '1566359606', '1563767300', '127.0.0.1');
-INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1568902862', '1563767631', '127.0.0.1');
-INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '', '', '月明', '', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1568998804', '1566188328', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '0', '', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1568902862', '1563767631', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '', '', '月明', '0', '', '', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1568998804', '1566188328', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for `pm_member_code`
@@ -1105,7 +1094,7 @@ INSERT INTO `pm_node` VALUES ('88', '已发货', 'order/fahuo', '1', '', '83', '
 INSERT INTO `pm_node` VALUES ('89', '交易关闭', 'order/close', '1', '', '83', '3', '', '0', '50', '1');
 INSERT INTO `pm_node` VALUES ('90', '包裹定位', 'baoguo', '1', '', '73', '2', '', '0', '50', '1');
 INSERT INTO `pm_node` VALUES ('91', '基金返利', 'fund', '1', '', '73', '2', '', '0', '50', '0');
-INSERT INTO `pm_node` VALUES ('92', '财务明细', 'finance', '1', '', '73', '2', '', '0', '50', '0');
+INSERT INTO `pm_node` VALUES ('92', '财务明细', 'finance', '1', '', '73', '2', '', '0', '50', '1');
 INSERT INTO `pm_node` VALUES ('93', '待支付', 'order/nopay', '1', '', '83', '3', '', '0', '10', '1');
 INSERT INTO `pm_node` VALUES ('94', '商家管理', '', '1', '', '0', '1', 'layui-icon-group', '0', '50', '1');
 INSERT INTO `pm_node` VALUES ('95', '商家列表', 'shop', '1', '', '94', '2', '', '0', '50', '1');
