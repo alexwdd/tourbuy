@@ -54,9 +54,6 @@ class Goods extends Admin
     public function setCommAttr(){        
         if(input('post.comm')==''){return 0;}else{return 1;}
     }
-    public function setEmptyAttr(){        
-        if(input('post.empty')==''){return 0;}else{return 1;}
-    }
     public function setBaoyouAttr(){        
         if(input('post.baoyou')==''){return 0;}else{return 1;}
     }
@@ -182,7 +179,6 @@ class Goods extends Admin
                 $keyArr .= $k.',';
                 // 批量添加数据
                 $v['price'] = trim($v['price']);
-                $v['cutPrice'] = trim($v['cutPrice']);
                 $store_count = $v['store_count'] = trim($v['store_count']); // 记录商品总库存
                 $v['weight'] = trim($v['weight']);
                 $data = [
@@ -190,7 +186,6 @@ class Goods extends Admin
                     'key' => $k,
                     'key_name' => $v['key_name'],
                     'price' => $v['price'],
-                    'cutPrice' => $v['cutPrice'],
                     'store_count' => $v['store_count'],
                     'weight' => $v['weight'],
                     'spec_img' => $v['spec_img'],
@@ -213,7 +208,6 @@ class Goods extends Admin
             $pack_id = input("post.pack_id/a");
             $pack_name = input("post.pack_name/a");
             $pack_price = input("post.pack_price/a");
-            $pack_cutPrice = input("post.pack_cutPrice/a");
             $pack_number = input("post.pack_number/a");
             $pack_data = [];
             for ($i=0; $i <count($pack_name) ; $i++) { 
@@ -222,7 +216,6 @@ class Goods extends Admin
                     $temp['fid'] = $goods_id;
                     $temp['name'] = $pack_name[$i];
                     $temp['price'] = $pack_price[$i];       
-                    $temp['cutPrice'] = $pack_cutPrice[$i];                
                     $temp['number'] = $pack_number[$i];
                     array_push($pack_data,$temp);
                     if (!empty($pack_id[$i])) {

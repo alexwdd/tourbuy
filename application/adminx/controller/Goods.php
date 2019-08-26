@@ -65,10 +65,6 @@ class Goods extends Admin
                 $express = db("Express")->where('id','in',$expressID)->select();
                 $this->assign('express',$express);
 
-                if($list['linkIds']!=''){
-                    $ids = explode(",",$list['linkIds']);
-                    $linkGoods = db('Goods')->where('id','in',$ids)->select();                    
-                }
                 if ($list['image']) {
                     $image = explode(",", $list['image']);
                 } else {
@@ -105,8 +101,9 @@ class Goods extends Admin
             $shop = db("Shop")->field('id,name,cityID')->select();
             $this->assign('shop', $shop);
 
+            $this->assign('type',config('BAOGUO_TYPE'));
+
             $this->assign('list', $list);
-            $this->assign('linkGoods',json_encode($linkGoods));
 
             return view();
         }
@@ -261,7 +258,6 @@ class Goods extends Admin
             $str .=" <td>{$spec[$v]}</td>";
         }    
         $str .="<td>价格</td>
-               <td>砍价</td>
                <td>库存</td>
                <td>重量(kg)</td>
                <td>规格图片</td>
@@ -284,7 +280,6 @@ class Goods extends Admin
             $keyGoodsSpecPrice[$item_key]['store_count'] ? false : $keyGoodsSpecPrice[$item_key]['store_count'] = 0; //库存默认为0
 
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][price]' value='{$keyGoodsSpecPrice[$item_key][price]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][cutPrice]' value='{$keyGoodsSpecPrice[$item_key][cutPrice]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][store_count]' value='{$keyGoodsSpecPrice[$item_key][store_count]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";            
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][weight]' value='{$keyGoodsSpecPrice[$item_key][weight]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/><input type='hidden' name='item[$item_key][key_name]' value='$item_name' /></td>";
             $str .="<td><div class='layui-inline' style='width:300px'><input class='layui-input' name='item[$item_key][spec_img]' value='{$keyGoodsSpecPrice[$item_key][spec_img]}'/></div> <div class='layui-inline'><button type='button' class='layui-btn upBtn'>上传</button></div></td>";

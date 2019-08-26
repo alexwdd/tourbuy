@@ -2,7 +2,6 @@
 <tr>    
     <td><input type="text" name="pack_name[]" lay-verify="required" class="layui-input"></td>
     <td><input type="text" name="pack_price[]" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
-    <td><input type="text" name="pack_cutPrice[]" lay-verify="required" placeholder="0不允许砍价" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
     <td><input type="text" name="pack_number[]" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
     <td><a href="javascript:void(0)" onclick="delSpec(this)" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
 </tr>

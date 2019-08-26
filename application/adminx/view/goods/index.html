@@ -64,10 +64,8 @@
             <p field="cate" title="分类" width="150"/>
             <p field="brand" title="品牌" width="150"/>            
             <p field="price" title="售价" width="80"/>
-            <p field="point" title="积分" width="80"/>
-            <p field="cutPrice" title="砍价" width="80"/>
             <p field="inprice" title="进价" width="80"/>
-            <p field="marketPrice" title="市场价" width="80"/>
+            <p field="point" title="积分" width="80"/> 
             <p field="weight" title="重量" width="80"/>
             <p field="stock" title="库存" width="100"/>
             <p title="标签" width="90" templet="#flagTpl"/>            
@@ -80,9 +78,6 @@
             {{# } }}
             {{# if(d.comm == 1){ }}
             <span style="color:blue">荐</span>       
-            {{# } }}
-            {{# if(d.empty == 1){ }}
-            <span style="color:#0099FF">清</span>        
             {{# } }}
             {{# if(d.baoyou == 1){ }}
             <span style="color:#black">邮</span>     
