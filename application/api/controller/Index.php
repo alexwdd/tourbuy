@@ -29,7 +29,7 @@ class Index extends Common
                 $push[$key]['goods'] = [];
                 $goodsID = db('GoodsPush')->where('cateID',$value['value'])->order('updateTime desc')->value('goodsID');
                 if ($goodsID) {
-                    $goods = db("Goods")->field('id,name,picname,price,marketPrice,say')->where('id',$goodsID)->find();
+                    $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$goodsID)->find();
                     if ($goods) {
                         $goods['picname'] = getThumb($goods["picname"],400,400);
                         $goods['picname'] = getRealUrl($goods['picname']);
@@ -40,16 +40,12 @@ class Index extends Common
             }
 
             //推荐
-            $commend = db("Goods")->field('id,name,picname,say,price,marketPrice,comm')->where('comm',1)->order('sort asc,id desc')->limit(20)->select();
+            $commend = db("Goods")->field('id,name,picname,say,price,comm')->where('comm',1)->order('sort asc,id desc')->limit(20)->select();
             foreach ($commend as $key => $value) {
                 $value['picname'] = getThumb($value["picname"],400,400);
                 $commend[$key]['picname'] = getRealUrl($value['picname']);
                 $commend[$key]['rmb'] = round($value['price']*$this->rate,2);
             }
-
-            unset($map);
-            $map['comm1'] = 1;
-            $bottomCate = db("GoodsCate")->field('id,name,path')->where($map)->order('sort asc')->select();
    
             //今日抢购
             $flash = [];
@@ -61,10 +57,9 @@ class Index extends Common
             foreach ($flash as $key => $value) {
                 unset($flash[$key]['spec']);
                 unset($flash[$key]['pack']);
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice')->where('id',$value['goodsID'])->find();
+                $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$value['goodsID'])->find();
                 $flash[$key]['name'] = $goods['name'];
                 $flash[$key]['picname'] = getRealUrl($goods['picname']);
-                $flash[$key]['marketPrice'] = $goods['marketPrice'];
                 $flash[$key]['rmb'] = round($value['price']*$this->rate,2);
             }
 
@@ -73,7 +68,6 @@ class Index extends Common
             returnJson(1,'success',[
             	'ad'=>$ad,
             	'category'=>$cate,
-                'bottomCate'=>$bottomCate,
                 'push'=>$push,
                 'commend'=>$commend,
                 'flash'=>$flash,

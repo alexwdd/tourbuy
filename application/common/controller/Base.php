@@ -237,21 +237,7 @@ class Base extends Controller {
         if (cache("rate")) {
             return cache("rate");
         }else{
-            require_once EXTEND_PATH.'omipay/OmiPayApi.php';
-            require_once EXTEND_PATH.'omipay/OmiPayData.php';
-            $domain = 'AU';
-            // 设置'CN'为访问国内的节点 ,设置为'AU'为访问香港的节点
-            $input = new \OmiPayExchangeRate();
-            $input -> setMerchantNo(config('omipay.mchID'));
-            $input -> setSercretKey(config('omipay.key'));
-            $input -> setPlatform("设置查询平台'WECHATPAY/ALIPAY'");
-            $omipay = new \OmiPayApi();
-            $res = $omipay->exchangeRate($input,$domain);
-            if ($res['success']) {
-                $rate = number_format($res['rate'],4);
-            }else{
-                $rate = 0;
-            }
+            $rate = 4.921;
             cache("rate",$rate,3600);
             return $rate;
         }        

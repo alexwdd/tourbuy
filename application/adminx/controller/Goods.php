@@ -139,6 +139,8 @@ class Goods extends Admin
             db("Goods")->whereIn('fid', $id)->delete(); //套餐表
             db("Goods")->whereIn('id', $id)->delete(); //商品表
             db("GoodsSpecPrice")->whereIn('goods_id', $id)->delete(); //商品属性
+            db('GoodsPush')->whereIn('goodsID', $id)->delete();
+            db('Flash')->whereIn('goodsID', $id)->delete();
             $this->success("操作成功");
         }
     }

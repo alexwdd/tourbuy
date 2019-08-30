@@ -32,6 +32,20 @@ class Cart extends Auth {
     }
 
     //获取选中商品价格
+    public function getNumber(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            if($this->user['id']>0){
+                $map['memberID'] = $this->user['id'];
+                $cartNumber = db("Cart")->where($map)->count();
+            }else{
+                $cartNumber = 0;
+            }
+            returnJson(1,'success',['cartNumber'=>$cartNumber]);
+        }
+    }
+
+    //获取选中商品价格
     public function getPrice(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
