@@ -269,7 +269,7 @@
                         <td><input type="hidden" name="pack_id[]" value="{$vo.id}"><input type="text" name="pack_name[]" value="{$vo.name}" lay-verify="required" class="layui-input"></td> 
                         <td><input type="text" name="pack_price[]" value="{$vo.price}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>  
                         <td><input type="text" name="pack_number[]" value="{$vo.number}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td> 
-                        <td><a href="javascript:void(0)" onclick="delSpec(this)" data-id="{$vo.id}" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
+                        <td><a href="javascript:void(0)" data-id="{$vo.id}" class="layui-btn layui-btn-primary layui-btn-xs del-pack-btn"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
                         </tr>
                         {/volist}
                     </tbody>
@@ -394,11 +394,12 @@ layui.config({
         })
     })
 
-    function delPack(obj){
-        id = $(obj).attr("data-id");    
-        $(obj).parent().parent().remove();
-        $.post('{:url('goods/delPack')}',{'id':id});
-    }
+    $("body").on("click",".del-pack-btn",function(){
+        $(this).parent().parent().remove();
+        let data = {id:$(this).attr("data-id")};
+        $.post("{:url('goods/delPack')}",data);
+        $(this).parent().remove();
+    });
     //套餐end
 
     //参数规格start
