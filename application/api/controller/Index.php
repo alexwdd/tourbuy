@@ -27,16 +27,17 @@ class Index extends Common
             $push = db('OptionItem')->field('value,name,ext')->where('cate',1)->select();
             foreach ($push as $key => $value) {
                 $push[$key]['goods'] = [];
-                $goodsID = db('GoodsPush')->where('cateID',$value['value'])->order('updateTime desc')->value('goodsID');
-                if ($goodsID) {
-                    $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$goodsID)->find();
-                    if ($goods) {
+                $ids = db('GoodsPush')->field('goodsID')->where('cateID',$value['value'])->order('updateTime desc')->limit(6)->select();
+                if($ids){                    
+                    foreach ($ids as $k => $val) {
+                        $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$val['goodsID'])->find();                
                         $goods['picname'] = getThumb($goods["picname"],400,400);
                         $goods['picname'] = getRealUrl($goods['picname']);
                         $goods['rmb'] = round($goods['price']*$this->rate,2);
-                        $push[$key]['goods'] = $goods;
-                    }                    
-                }                
+                        array_push($push[$key]['goods'],$goods);
+                     
+                    }
+                }
             }
 
             //推荐
@@ -48,19 +49,32 @@ class Index extends Common
             }
    
             //今日抢购
-            $flash = [];
+            $flashGoods = [];
             foreach ($this->flash as $key => $value) {
                 if($key<15){
-                    array_push($flash,$value);
+                    array_push($flashGoods,$value);
                 }
             }
-            foreach ($flash as $key => $value) {
-                unset($flash[$key]['spec']);
-                unset($flash[$key]['pack']);
+            $flash = [];
+            $q = [];
+            $i = 1;
+            foreach ($flashGoods as $key => $value) {
+                unset($flashGoods[$key]['spec']);
+                unset($flashGoods[$key]['pack']);
                 $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$value['goodsID'])->find();
-                $flash[$key]['name'] = $goods['name'];
-                $flash[$key]['picname'] = getRealUrl($goods['picname']);
-                $flash[$key]['rmb'] = round($value['price']*$this->rate,2);
+                $flashGoods[$key]['name'] = $goods['name'];
+                $goods['picname'] = getThumb($goods["picname"],400,400);
+                $flashGoods[$key]['picname'] = getRealUrl($goods['picname']);
+                $flashGoods[$key]['rmb'] = round($value['price']*$this->rate,2);
+                array_push($q,$flashGoods[$key]);
+                if ($i%3==0) {
+                    array_push($flash,$q);
+                    $q = [];
+                }
+                $i++;
+            }
+            if (count($q)>0) {
+                array_push($flash,$q);
             }
 
             $flashTime = checkFlashTime($config['flashTime']);
