@@ -62,6 +62,7 @@ class Index extends Common
                 unset($flashGoods[$key]['spec']);
                 unset($flashGoods[$key]['pack']);
                 $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$value['goodsID'])->find();
+                $flashGoods[$key]['marketPrice'] = $goods['price'];
                 $flashGoods[$key]['name'] = $goods['name'];
                 $goods['picname'] = getThumb($goods["picname"],400,400);
                 $flashGoods[$key]['picname'] = getRealUrl($goods['picname']);

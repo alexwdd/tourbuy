@@ -179,7 +179,7 @@ class Goods extends Common {
                 $next = 0;
             }
 
-            $list = $obj->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,name,picname,price,say,marketPrice,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
                 $list[$key]['rmb'] = round($value['price']*$this->rate,2);
@@ -229,7 +229,7 @@ class Goods extends Common {
             }
             
             foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
+                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
 
                 unset($list[$key]['goodsID']);
                 $goods['picname'] = getRealUrl($goods['picname']);
@@ -289,7 +289,7 @@ class Goods extends Common {
             }
             
             foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();             
+                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();             
                 $sellNumber = $this->getFlashNumber($value['goodsID']);
 
                 $list[$key]['per'] = floor(($sellNumber/$value['number'])*100);
@@ -297,7 +297,6 @@ class Goods extends Common {
                 $list[$key]['marketPrice'] = $goods['marketPrice'];
                 $list[$key]['say'] = $goods['say'];
                 $list[$key]['comm'] = $goods['comm'];
-                $list[$key]['empty'] = $goods['empty'];
                 $list[$key]['tehui'] = $goods['tehui'];
                 $list[$key]['flash'] = $goods['flash'];
                 $list[$key]['baoyou'] = $goods['baoyou'];
@@ -322,11 +321,11 @@ class Goods extends Common {
             }
             $map['id'] = $goodsID;
             $map['show'] = 1;
-            $list = db('Goods')->field('id,fid,name,picname,price,marketPrice,comm,empty,tehui,flash,baoyou')->where($map)->find();
+            $list = db('Goods')->field('id,fid,name,picname,price,comm,tehui,flash,baoyou')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }
-            
+            $list['marketPrice'] = $list['price'];
             $list['picname'] = getThumb($list["picname"],200,200);
             $list['picname'] = getRealUrl($list['picname']);
             //参数规格
@@ -362,10 +361,11 @@ class Goods extends Common {
             }
             $map['id'] = $goodsID;
             $map['show'] = 1;
-            $list = db('Goods')->field('id,fid,name,picname,image,price,marketPrice,point,content,say,intr')->where($map)->find();
+            $list = db('Goods')->field('id,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }
+            $list['marketPrice'] = $list['price'];
             $list['picname'] = getThumb($list["picname"],200,200);
             $list['picname'] = getRealUrl($list['picname']);
 

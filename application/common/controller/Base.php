@@ -94,9 +94,7 @@ class Base extends Controller {
         //是否今日抢购
         if($flash = $this->checkInFlash($fid,$flashArr)){
             $sellNumber = $this->getFlashNumber($goods['goodsID']);
-            $per = ($sellNumber/$flash['number'])*100;
-            $per = 100;
-            
+            $per = ($sellNumber/$flash['number'])*100;          
             if($per>100){
                 $per = 100;
             }
@@ -104,10 +102,8 @@ class Base extends Controller {
             $flash['spec'] = unserialize($flash['spec']);
             $flash['pack'] = unserialize($flash['pack']);            
             $goods['isFlash'] = 1;
-
             if($per<100){
-                $goods['price'] = $flash['price'];
-
+                $goods['price'] = $flash['price']; 
                 foreach ($flash['pack'] as $key => $value) {
                     foreach ($pack as $k => $val) {
                         if($val['id'] == $value['packID']){
@@ -126,7 +122,7 @@ class Base extends Controller {
             }
         }else{
             $goods['isFlash'] = 0;
-        }
+        }   
         foreach ($spec as $key => $value) {
             $spec[$key]['rmb'] =  round($this->rate*$value['price'],1);            
         }
