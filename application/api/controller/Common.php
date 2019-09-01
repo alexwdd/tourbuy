@@ -30,12 +30,25 @@ class Common extends Base {
         }
 
         //今日抢购的商品
-        unset($map);
-        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
-        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
-        $map['startDate'] = array('elt',$beginToday);
-        $map['endDate'] = array('egt',$endToday);
-        $this->flash = db("Flash")->cache(true,60)->field('goodsID,number,price,spec,pack')->where($map)->order('endDate asc')->select();
+        if(cache('flash')){
+            $this->flash = cache('flash');
+        }else{
+            unset($map);
+            $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
+            $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+            $map['startDate'] = array('elt',$beginToday);
+            $map['endDate'] = array('egt',$endToday);
+            $flash = db("Flash")->field('goodsID,number,price,spec,pack')->where($map)->order('endDate asc')->select();
+            cache('flash',$flash,60);
+            $this->flash = $flash;
+
+            unset($map);
+            $map['endDate'] = array('lt',time());
+            $goodsID = db("Flash")->where($map)->column('goodsID');
+            $where['id'] = array('in',$goodsID);
+            $where['fid'] = array('in',$goodsID);
+            db("Goods")->whereOr($where)->setField('flash',0);
+        }
     }
 
     /*public function base64ToImg($path , $name , $data){

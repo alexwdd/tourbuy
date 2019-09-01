@@ -3,22 +3,27 @@ namespace app\adminx\controller;
 
 class Flash extends Admin {
 
-	#列表
-	public function index() {
-		if (request()->isPost()) {
-			$result = model('Flash')->getList();
-			echo json_encode($result);
-    	}else{
-	    	return view();
-    	}
-	}
+    #列表
+    public function index() {
+        if (request()->isPost()) {
+            $result = model('Flash')->getList();
+            echo json_encode($result);
+        }else{
+            return view();
+        }
+    }
 
-	#添加
+    #添加
     public function pub() {
         if(request()->isPost()){
             $data = input('post.');
             db('Flash')->where('goodsID',$data['goodsID'])->delete();
             $result = model('Flash')->add( $data );
+            if($result['code']==1){
+                $map['id'] = $data['goodsID'];
+                $map['fid'] = $data['goodsID'];
+                db("Goods")->whereOr($map)->setField("flash",1);
+            }
             return $result;
         }else{
             $id = input('get.id');
@@ -41,18 +46,22 @@ class Flash extends Admin {
         }
     }
 
-	#删除
-	public function del() {
-		$id = explode(",",input('post.id'));
-		if (count($id)==0) {
-			$this->error('请选择要删除的数据');
-		}else{
-			if(model('Flash')->del($id)){
-				$this->success("操作成功");
-			}else{
-				$this->error('操作失败');
-			}
-		}
-	}
+    #删除
+    public function del() {
+        $id = explode(",",input('post.id'));
+        if (count($id)==0) {
+            $this->error('请选择要删除的数据');
+        }else{
+            if(model('Flash')->del($id)){
+                $goodsID = db("Flash")->where('id','in',$id)->column('goodsID');
+                $map['id'] = array('in',$goodsID);
+                $map['fid'] = array('in',$goodsID);
+                db("Goods")->whereOr($map)->setField("flash",0);
+                $this->success("操作成功");
+            }else{
+                $this->error('操作失败');
+            }
+        }
+    }
 }
 ?>

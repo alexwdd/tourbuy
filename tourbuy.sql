@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-08-26 13:58:58
+Date: 2019-09-02 00:00:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -224,7 +224,7 @@ CREATE TABLE `pm_cart` (
   `trueNumber` int(11) NOT NULL COMMENT '真实商品数量比如2个3件的套餐就显示6',
   `typeID` int(11) NOT NULL COMMENT '包裹类型',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_cart
@@ -399,7 +399,7 @@ INSERT INTO `pm_config` VALUES ('124', 'price3', '6', 'kuaidi', null);
 INSERT INTO `pm_config` VALUES ('125', 'inprice3', '5.6', 'kuaidi', null);
 INSERT INTO `pm_config` VALUES ('126', 'otherPrice3', '2', 'kuaidi', null);
 INSERT INTO `pm_config` VALUES ('127', 'file', '', 'basic', null);
-INSERT INTO `pm_config` VALUES ('128', 'flashTime', '8:00-12:00', 'member', null);
+INSERT INTO `pm_config` VALUES ('128', 'flashTime', '8:00-22:59', 'member', null);
 INSERT INTO `pm_config` VALUES ('129', 'isCut', '1', 'member', null);
 INSERT INTO `pm_config` VALUES ('130', 'OMI_ID', '501039', 'omi', null);
 INSERT INTO `pm_config` VALUES ('131', 'OMI_KEY', '547e766b244a4e7eb24fee84a1e28fd2', 'omi', null);
@@ -585,13 +585,13 @@ CREATE TABLE `pm_flash` (
   `number` int(11) NOT NULL,
   `createTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_flash
 -- ----------------------------
 INSERT INTO `pm_flash` VALUES ('12', '15', '9', 'A2铂金 一段 A2 Infant Formula ', '26', 'a:0:{}', 'a:0:{}', '1564329600', '1567094399', '999', '1564396835');
-INSERT INTO `pm_flash` VALUES ('14', '20', '22', 'Elevit 女士爱乐维 孕期维生素 100粒', '45', 'a:0:{}', 'a:0:{}', '1564329600', '1567267199', '999', '1564402417');
+INSERT INTO `pm_flash` VALUES ('19', '10', '22', 'Elevit 女士爱乐维 孕期维生素 100粒', '45', 'a:0:{}', 'a:0:{}', '1567267200', '1567871999', '999', '1567340460');
 INSERT INTO `pm_flash` VALUES ('15', '16', '17', '爱他美白金 二段 Aptamil Profutura Follow On Formula', '35', 'a:0:{}', 'a:0:{}', '1564329600', '1567267199', '999', '1564402509');
 INSERT INTO `pm_flash` VALUES ('16', '10', '20', 'Blackmores澳佳宝 孕妇黄金素 180粒', '28', 'a:0:{}', 'a:0:{}', '1564502400', '1567267199', '999', '1564829065');
 INSERT INTO `pm_flash` VALUES ('18', '4', '23', 'Swisse 高倍蜂胶2000mg 300粒', '23', 'a:0:{}', 'a:0:{}', '1564502400', '1567180799', '999', '1564829752');
@@ -683,8 +683,8 @@ INSERT INTO `pm_goods` VALUES ('18', '7', '测试店铺', '1', '1', '0.00', '0',
 INSERT INTO `pm_goods` VALUES ('19', '7', '测试店铺', '1', '2', '0.00', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美白金 四段 Aptamil Profutura Junior', 'Aptamil Profutura Junior Nutritional Supplement 900g', 'P4', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/e22295c6db7b698255173d0d76b0b569.jpg', null, '', '2020/10', '280', '0', '20.00', '28.00', '32.00', '28.00', '0.00', '1.10', '1.10', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564401569', '1565883828');
 INSERT INTO `pm_goods` VALUES ('20', '7', '测试店铺', '1', '1', '0.00', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 孕妇黄金素 180粒', 'Blackmores Pregnancy and Breastfeeding Gold 180 Capsules', 'BM黄金素', '皮肤急救法宝，强力补水', '', '新西兰原罐原装 官方正品 纯净A2蛋白质', '/uploads/images/20190729/63b7cacef160a2699898bda5c231b78f.jpg', null, '<p>11</p>\n<p><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN01kq0zC31fstjynm847_!!2555064063.jpg\" alt=\"2段_05.jpg\" /><br style=\"margin: 0px; padding: 0px; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" /><img class=\"img-ks-lazyload\" style=\"margin: 0px; padding: 0px; border: 0px; animation: 350ms linear 0ms 1 normal both running ks-fadeIn; opacity: 1; vertical-align: top; max-width: 100%; float: none; color: #404040; font-family: tahoma, arial, 宋体, sans-serif; font-size: 14px; background-color: #ffffff;\" src=\"https://img.alicdn.com/imgextra/i1/2555064063/O1CN0156ddqR1fstj1c0Wx8_!!2555064063.jpg\" alt=\"2段_06.jpg\" /></p>\n<p>2222</p>', '2020/10', '30', '0', '20.00', '30.00', '35.00', '30.00', '0.00', '0.50', '0.60', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564401969', '1565612731');
 INSERT INTO `pm_goods` VALUES ('21', '7', '测试店铺', '1', '2', '0.00', '0', '19', '0-10-19-', '0', '', '4', '0', '9', 'Blackmores澳佳宝 叶酸片500mcg 90粒', 'Blackmores Folate 500mcg 90 Tablets', 'BM叶酸90粒', '孕期好伴侣', '', '', '/uploads/images/20190729/2808f8c49bc8ef2211cdeb8942968a61.jpg', null, '', '2020/10', '15', '0', '10.00', '15.00', '18.00', '2.00', '0.00', '0.20', '0.30', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564402099', '1564402099');
-INSERT INTO `pm_goods` VALUES ('22', '7', '测试店铺', '1', '1', '0.00', '0', '20', '0-10-20-', '0', '', '15', '0', '12', 'Elevit 女士爱乐维 孕期维生素 100粒', 'Elevit Pregnancy Multivitamin Tablets 100 Pack （Export Only）', '爱乐维', '健康备孕 降低胎儿畸形', '', '', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', null, '', '2020/10', '50', '0', '30.00', '50.00', '60.00', '50.00', '0.00', '0.50', '0.30', '100', '999', '1', '1', '0', '0', '0', '0', '50', '1564402296', '1566739614');
-INSERT INTO `pm_goods` VALUES ('23', '7', '测试店铺', '1', '1', '0.00', '0', '24', '0-4-24-', '0', '', '4', '0', '8', 'Swisse 高倍蜂胶2000mg 300粒', 'Swisse Ultiboost High Strength Propolis 2000mg 300 Capsules', 'SW蜂胶300粒', '液体黄金 澳洲蜂胶', '', '', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', null, '', '2020/02/05', '25', '0', '20.00', '25.00', '30.00', '0.00', '0.00', '0.50', '0.60', '100', '999', '1', '1', '1', '1', '0', '0', '50', '1564829689', '1566739589');
+INSERT INTO `pm_goods` VALUES ('22', '7', '测试店铺', '1', '1', '0.00', '0', '20', '0-10-20-', '0', '', '15', '0', '12', 'Elevit 女士爱乐维 孕期维生素 100粒', 'Elevit Pregnancy Multivitamin Tablets 100 Pack （Export Only）', '爱乐维', '健康备孕 降低胎儿畸形', '', '', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', null, '', '2020/10', '50', '0', '30.00', '50.00', '60.00', '50.00', '0.00', '0.50', '0.30', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564402296', '1567178132');
+INSERT INTO `pm_goods` VALUES ('23', '7', '测试店铺', '1', '1', '0.00', '0', '24', '0-4-24-', '0', '', '4', '0', '8', 'Swisse 高倍蜂胶2000mg 300粒', 'Swisse Ultiboost High Strength Propolis 2000mg 300 Capsules', 'SW蜂胶300粒', '液体黄金 澳洲蜂胶', '', '', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', null, '', '2020/02/05', '25', '0', '20.00', '25.00', '30.00', '0.00', '0.00', '0.50', '0.60', '100', '999', '1', '1', '1', '0', '0', '1', '50', '1564829689', '1567178124');
 INSERT INTO `pm_goods` VALUES ('24', '7', '测试店铺', '1', '2', '0.00', '0', '15', '0-1-15-', '0', '', '1', '1', '4', 'NK 7009 ugg 雪地靴 豆豆鞋 薰衣草紫', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '', '10', '0', '11.40', '15.00', '5.00', '12.00', '0.00', '0.50', '0.70', '0', '980', '1', '0', '1', '0', '0', '1', '50', '1565322339', '1566799065');
 INSERT INTO `pm_goods` VALUES ('25', '7', '测试店铺', '1', '2', '0.00', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '三件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '', '10', '0', '11.40', '100.00', '5.00', '12.00', '0.00', '0.50', '0.70', '0', '980', '3', '0', '1', '0', '0', '1', '50', '1565322339', '1566799065');
 INSERT INTO `pm_goods` VALUES ('26', '7', '测试店铺', '1', '2', '0.00', '24', '15', '0-1-15-', '0', '', '1', '1', '4', '六件包邮优惠套餐', 'test', '鞋子', 'UUG', '', '', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', null, '<p>222发斯蒂芬</p>\n<p>阿斯顿发斯蒂芬</p>\n<p><img src=\"/uploads/images/20190816/5415a5eeb090fdaa9ec32b458a705832.jpg\" alt=\"\" /></p>', '', '10', '0', '11.40', '180.00', '5.00', '12.00', '0.00', '0.50', '0.70', '0', '980', '6', '0', '1', '0', '0', '1', '50', '1565322339', '1566799065');
@@ -910,7 +910,7 @@ CREATE TABLE `pm_member` (
 -- Records of pm_member
 -- ----------------------------
 INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '0', '', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1568902862', '1563767631', '127.0.0.1');
-INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '', '', '月明', '0', '', '', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1568998804', '1566188328', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '', '', '月明', '0', '', '', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1569945610', '1566188328', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for `pm_member_code`
@@ -1489,6 +1489,26 @@ CREATE TABLE `pm_shop` (
 -- Records of pm_shop
 -- ----------------------------
 INSERT INTO `pm_shop` VALUES ('7', '1', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190822/f52faee6f9a9c30f23b75876b53915b7.jpg', 'jack', '阿德莱德长安大街11号', '13500000000', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '0', '1', '1566488164', '1566488454');
+
+-- ----------------------------
+-- Table structure for `pm_shop_fav`
+-- ----------------------------
+DROP TABLE IF EXISTS `pm_shop_fav`;
+CREATE TABLE `pm_shop_fav` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shopID` int(11) NOT NULL,
+  `memberID` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pm_shop_fav
+-- ----------------------------
+INSERT INTO `pm_shop_fav` VALUES ('4', '20', '2');
+INSERT INTO `pm_shop_fav` VALUES ('5', '24', '2');
+INSERT INTO `pm_shop_fav` VALUES ('6', '18', '2');
+INSERT INTO `pm_shop_fav` VALUES ('7', '15', '2');
+INSERT INTO `pm_shop_fav` VALUES ('15', '19', '10001');
 
 -- ----------------------------
 -- Table structure for `pm_sign`

@@ -3,12 +3,14 @@ namespace app\adminx\controller;
 
 class GoodsCate extends Admin {
     public function index(){
-		$list = db("GoodsCate")->order('path,id asc')->select();
+		$list = db("GoodsCate")->where('fid',0)->order('sort asc,id asc')->select();
 		foreach ($list as $key => $value) {
-            $count = count(explode('-', $value['path'])) - 2;
-            if ($value['fid'] > 0) {
-                $list[$key]['style'] = 'style="padding-left:' . (($count * 10) + 10) . 'px;"';
-            }
+			$child = db("GoodsCate")->where('fid',$value['id'])->order('sort asc,id asc')->select();
+			foreach ($child as $k => $val) {
+				$count = count(explode('-', $val['path'])) - 2;
+				$child[$k]['style'] = 'style="padding-left:' . (($count * 10) + 10) . 'px;"';
+			}
+			$list[$key]['child'] = $child;
         }
 		$this->assign('list', $list);
     	return view();

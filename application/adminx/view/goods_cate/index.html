@@ -29,7 +29,7 @@
                 {volist name='list' id="vo"}
                 <tr>
                     <td>{$vo.id}</td>
-                    <td> {eq name="vo.fid" value="0"}<strong style="color:#000">{$vo.name}</strong>{else/}<span {$vo.style}>{$vo.name}</span>{/eq}</td>
+                    <td><strong style="color:#000">{$vo.name}</strong></td>
                     <td>{$vo.url}</td>
                     <td>{$vo.sort}</td>
                     <td>{eq name="vo.comm" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
@@ -41,6 +41,22 @@
                         <option value="del">删除</option>
                     </select></td>
                 </tr>
+                {volist name="vo.child" id="f"}
+                <tr>
+                    <td>{$f.id}</td>
+                    <td><span {$f.style}>{$f.name}</span></td>
+                    <td>{$f.url}</td>
+                    <td>{$f.sort}</td>
+                    <td>{eq name="f.comm" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
+                    <td>{eq name="f.comm1" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
+                    <td class="layui-form"><select lay-filter="cate-action" data-id="{$f.id}" data-fid="{$f.fid}">
+                        <option value="">操作</option>
+                        <option value="add">添加子栏目</option>
+                        <option value="edit">编辑</option>
+                        <option value="del">删除</option>
+                    </select></td>
+                </tr>
+                {/volist}
                 {/volist}
             </tbody>
         </table>

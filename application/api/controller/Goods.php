@@ -38,7 +38,7 @@ class Goods extends Common {
             foreach ($cate as $key => $value) {
                 $map['cid|cid1'] = $value['id'];
                 $map['show'] = 1;
-                $goods = db("Goods")->where($map)->field('id,name,picname,say,price,marketPrice,comm')->order('sort asc,id desc')->select();
+                $goods = db("Goods")->where($map)->field('id,name,picname,say,price,comm')->order('sort asc,id desc')->select();
                 foreach ($goods as $k => $val) {
                     $val['picname'] = getThumb($val["picname"],400,400);
                     $goods[$k]['picname'] = getRealUrl($val['picname']);
@@ -179,7 +179,7 @@ class Goods extends Common {
                 $next = 0;
             }
 
-            $list = $obj->field('id,name,picname,price,say,marketPrice,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
                 $list[$key]['rmb'] = round($value['price']*$this->rate,2);
@@ -229,7 +229,7 @@ class Goods extends Common {
             }
             
             foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
+                $goods = db("Goods")->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
 
                 unset($list[$key]['goodsID']);
                 $goods['picname'] = getRealUrl($goods['picname']);
@@ -289,12 +289,12 @@ class Goods extends Common {
             }
             
             foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();             
+                $goods = db("Goods")->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();             
                 $sellNumber = $this->getFlashNumber($value['goodsID']);
 
                 $list[$key]['per'] = floor(($sellNumber/$value['number'])*100);
                 $list[$key]['picname'] = getRealUrl($goods['picname']);
-                $list[$key]['marketPrice'] = $goods['marketPrice'];
+                $list[$key]['marketPrice'] = $goods['price'];
                 $list[$key]['say'] = $goods['say'];
                 $list[$key]['comm'] = $goods['comm'];
                 $list[$key]['tehui'] = $goods['tehui'];
@@ -361,7 +361,7 @@ class Goods extends Common {
             }
             $map['id'] = $goodsID;
             $map['show'] = 1;
-            $list = db('Goods')->field('id,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
+            $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }
@@ -388,7 +388,8 @@ class Goods extends Common {
             }            
             
             $result = $this->getGoodsDetail($list,$this->flash);
-
+            $config = tpCache("member");
+            $flashTime = checkFlashTime($config['flashTime']);
             $list = $result['goods'];
             if($list['fid']>0){
                 $spec = [];
@@ -450,7 +451,48 @@ class Goods extends Common {
                 $pack[$key]['checked'] = false;
             }
 
-            returnJson(1,'success',['goods'=>$list,'cartNumber'=>$cartNumber,'fav'=>$fav,'coupon'=>$coupon,'pack'=>$pack,'spec'=>$spec,'filter_spec'=>$filter_spec]);
+            //是否明日抢购
+            $time = explode("-",$config['flashTime']);
+
+            $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
+            $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+
+            $start = strtotime(date($time[0]));
+            if (time()>$start) {
+                $beginToday = $beginToday+86400;
+                $endToday = $endToday+86400;
+            }
+            
+            unset($map);
+            $map['startDate'] = array('elt',$beginToday);
+            $map['endDate'] = array('egt',$endToday);
+            $map['goodsID'] = $fid;
+            $tomorrowPrice = db("Flash")->where($map)->value('price');
+            if($tomorrowPrice){
+                $tomorrow['price'] = $tomorrowPrice;
+                $tomorrow['date'] = date("m月d日",$endToday);                
+                $tomorrow['time'] = $time[0];
+            }else{
+                $tomorrow = [];
+            }
+
+            //店铺信息
+            $shop = db("Shop")->field('id,name,picname')->where('id',$list['shopID'])->find();
+            $shop['picname'] = getThumb($shop['picname'],200,200);
+            $shop['picname'] = getRealUrl($shop['picname']);
+            unset($map);
+            $map['shopID'] = $shop['id'];
+            $map['id'] = array('neq',$goodsID);
+            $about = db("Goods")->field('id,name,picname,price,say')->where('shopID',$shop['id'])->limit(3)->order('comm desc,id desc')->select();
+            foreach ($about as $key => $value) {
+                $value["picname"] = getThumb($value["picname"],400,400);
+                $about[$key]['picname'] = getRealUrl($value['picname']);
+                $about[$key]['rmb'] = round($value['price']*$this->rate,1);
+            }
+            $shop['goods'] = $about;
+            $shop['fav'] = db("ShopFav")->where('shopID',$shop['id'])->count();
+
+            returnJson(1,'success',['goods'=>$list,'flashTime'=>$flashTime,'tomorrow'=>$tomorrow,'shop'=>$shop,'cartNumber'=>$cartNumber,'fav'=>$fav,'coupon'=>$coupon,'pack'=>$pack,'spec'=>$spec,'filter_spec'=>$filter_spec]);
         }
     }
 
