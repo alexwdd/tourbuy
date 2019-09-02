@@ -1,5 +1,6 @@
 <?php
 namespace app\api\controller;
+use think\Db;
 
 class Shop extends Auth {
 
@@ -14,7 +15,7 @@ class Shop extends Auth {
             $shop = db('Shop')->field('id,name,picname,cate')->where($map)->find();
             if(!$shop){
                 returnJson(0,'店铺不存在');
-            }  
+            }
 
             if($shop['cate']!=''){
                 $cateIds = explode(",",$shop['cate']);
@@ -39,9 +40,26 @@ class Shop extends Auth {
                 $shop['faved'] = 0;
             }
 
+            //推荐
+            unset($map);
+            $map['comm'] = 1;
+            $map['shopID'] = $shopID;
+            $map['show'] = 1;
+            $commend = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
+            foreach ($commend as $key => $value) {
+                $value['picname'] = getThumb($value["picname"],400,400);
+                $commend[$key]['picname'] = getRealUrl($value['picname']);
+                $commend[$key]['rmb'] = round($value['price']*$this->rate,2);
+            }
+
+            //优惠券
+            $coupon = Db::query("select * from pm_coupon where status=1 and (shopID=0 or shopID=".$shopID.") order by id desc");
+
             returnJson(1,'success',[
                 'shop'=>$shop,
                 'cate'=>$cate,
+                'commend'=>$commend,
+                'coupon'=>$coupon
             ]);
         }
     }

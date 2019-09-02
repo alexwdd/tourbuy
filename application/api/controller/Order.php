@@ -20,23 +20,17 @@ class Order extends Auth {
             switch ($type) {
                 case 1:
                     $map['status'] = 0;
-                    $map['endTime'] = array('gt',0);
                     break;
                 case 2:
-                    $map['status'] = 0;
-                    $map['isCut'] = 1;
-                    $map['endTime'] = 0;
-                    break;
-                case 3:
                     $map['status'] = 1;   
                     break;
-                case 4:
+                case 3:
                     $map['status'] = 2;   
                     break;
-                case 5:
+                case 4:
                     $map['status'] = 3;   
                     break;
-                case 6:
+                case 5:
                     $map['status'] = 99;   
                     break;
             }
@@ -51,21 +45,8 @@ class Order extends Auth {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,order_no,isCut,total,front,back,sn,status,createTime,endTime')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,order_no,total,front,back,sn,status,createTime')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
             foreach ($list as $key => $value) {
-                if($value['isCut']==1){
-                    if($value['endTime']==0){
-                        $cutEndTime = $value['createTime']+($config['hour']*3600)-time();
-                        if($cutEndTime<0){
-                            $cutEndTime=0;
-                        }
-                        $list[$key]['cutEndTime'] = $cutEndTime;
-                    }else{
-                        $list[$key]['cutEndTime'] = 0;
-                    }
-                    $list[$key]['cutMoney'] = db("OrderCut")->where('orderID',$value['id'])->sum('money');
-                }
-
                 $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
                 if($value['sn']=='' || $value['front']=='' || $value['back']==''){
                     $list[$key]['upload'] = 0;
@@ -96,7 +77,7 @@ class Order extends Auth {
             $map['id'] = $id;
             $map['hide'] = 0;
             $map['memberID'] = $this->user['id'];
-            $list = db('Order')->field('id,isCut,total,goodsMoney,discount,wallet,money,payment,point,fund,order_no,name,tel,province,city,county,addressDetail,sn,front,back,sender,senderTel,intr,status,createTime,endTime')->where( $map )->find();
+            $list = db('Order')->field('id,total,goodsMoney,discount,wallet,money,payment,point,fund,order_no,name,tel,province,city,county,addressDetail,sn,front,back,sender,senderTel,intr,status,createTime')->where( $map )->find();
             if ($list) {                
                 if($list['sn']=='' || $list['front']=='' || $list['back']==''){
                     $list['upload'] = 0;
@@ -104,19 +85,6 @@ class Order extends Auth {
                     $list['upload'] = 1;
                 }
                 $list['statusStr'] = getOrderStatus($list);
-
-                if($list['isCut']==1){
-                    if($list['endTime']==0){
-                        $cutEndTime = $list['createTime']+($config['hour']*3600)-time();
-                        if($cutEndTime<0){
-                            $cutEndTime=0;
-                        }
-                        $list['cutEndTime'] = $cutEndTime;
-                    }else{
-                        $list['cutEndTime'] = 0;
-                    }
-                    $list['cutMoney'] = db("OrderCut")->where('orderID',$list['id'])->sum('money');
-                }
 
                 $goods = db("OrderCart")->field('goodsID,name,picname,price,number,spec')->where('orderID',$list['id'])->select();
                 foreach ($goods as $k => $val) {
@@ -408,9 +376,7 @@ class Order extends Auth {
                 db('OrderBaoguo')->where('orderID',$id)->delete();
                 db('OrderCart')->where('orderID',$id)->delete();
                 db('OrderDetail')->where('orderID',$id)->delete();
-                db('OrderCut')->where('orderID',$id)->delete();
             }
-
             returnJson(1,'success');
         }       
     }

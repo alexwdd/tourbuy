@@ -8,8 +8,8 @@ class Member extends Admin {
 		if (request()->isPost()) {
 			$result = model('Member')->getList();
 			foreach ($result['data'] as $key => $value) {
-                $fian = $this->getUserMoney($value['id']);
-                $list['data'][$key]['point'] = $fina['point'];
+                $fina = $this->getUserMoney($value['id']);
+                $result['data'][$key]['point'] = $fina['point'];
             }
 			echo json_encode($result);
     	}else{
@@ -24,9 +24,12 @@ class Member extends Admin {
 	        if(!$data['disable']) {
 	        	$data['disable'] = 0;
 	        }
+	        if(!$data['team']) {
+	        	$data['team'] = 0;
+	        }
 	        if ($data['id']!='') {
 	    		$user = db("Member")->where(array('id'=>$data['id']))->find();
-	    		if ($user['mobile']!=$data['mobile']) {
+	    		if ($user['mobile']!=$data['mobile'] && $data['mobile']!='') {
 	    			$num = db('Member')->where(array('mobile'=>$data['mobile']))->count();
 	    			if ($num>0) {
 	    				return array('code'=>0,'msg'=>'手机号码重复');die;
@@ -40,11 +43,6 @@ class Member extends Admin {
 	        }
 	        return model('Member')->saveData( $data );
 		}else{
-			$depart = db("Depart")->order('sort asc,id asc')->select();
-    		$junxian = db("Junxian")->order('sort asc,id asc')->select();
-    		$this->assign('depart',$depart);
-    		$this->assign('junxian',$junxian);
-
 			$id = input('get.id');
 			if ($id!='' || is_numeric($id)) {
 				$list = model('Member')->find($id);

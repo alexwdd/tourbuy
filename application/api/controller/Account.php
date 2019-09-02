@@ -15,83 +15,30 @@ class Account extends Auth {
             $user['sn'] = $this->user['sn'];
             $user['id'] = $this->user['id'];
 
+            unset($map);
+            $map['hide'] = 0;
             $map['memberID'] = $this->user['id'];
             $map['status'] = 0;
-            $map['endTime'] = array('gt',0);
-            $map['hide'] = 0;
             $order1 = db("Order")->where($map)->count();
-
-            unset($map);
-            $map['memberID'] = $this->user['id'];
-            $map['status'] = 0;
-            $map['isCut'] = 1;
-            $map['hide'] = 0;
-            $map['endTime'] = 0;
-            $order2 = db("Order")->where($map)->count();
-
-            unset($map);
-            $map['hide'] = 0;
-            $map['memberID'] = $this->user['id'];
             $map['status'] = 1;
-            $order3 = db("Order")->where($map)->count();
+            $order2 = db("Order")->where($map)->count();
             $map['status'] = 2;
-            $order4 = db("Order")->where($map)->count();
+            $order3 = db("Order")->where($map)->count();
             $map['status'] = 3;
-            $order5 = db("Order")->where($map)->count();
+            $order4 = db("Order")->where($map)->count();
             $map['status'] = 99;
-            $order6 = db("Order")->where($map)->count();
+            $order5 = db("Order")->where($map)->count();
 
             $fina = $this->getUserMoney($this->user['id']);
 
-            $result = getFundBack($fina['point']);
-            $config = tpCache('member');
-
-            $last_mont_first_date = date('Y-m-1',strtotime('last month'));
-            $last_mont_end_date = date('Y-m-d',strtotime(date('Y-m-1').'-1 day'));
-            unset($map);
-            $map['createTime'] = array('between',array(strtotime($last_mont_first_date),strtotime($last_mont_end_date)+86399));
-            $map['memberID'] = $this->user['id'];
-            $lastMonth = db("Finance")->where($map)->sum("money");
-
-            $result['fanli'] = round($fina['fund']*$result['bar'],2);
-            $result['baifenbi'] = ($find['point']/12000)*100;
-
-            //为您推荐 
-            $obj = db('GoodsPush');
-            $list = $obj->field('goodsID')->where('cateID',3)->limit(10)->order('id desc')->select();
-            foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
-
-                unset($list[$key]['goodsID']);
-                $goods['picname'] = getThumb($goods["picname"],200,200);
-                $goods['picname'] = getRealUrl($goods['picname']);
-                $goods['rmb'] = round($goods['price']*$this->rate,2);
-                $list[$key] = $goods;
-            }
-
-
             returnJson(1,'success',[
-                'goods'=>$list,
                 'fina'=>$fina,
-                'jifen'=>$result,
-                'lastMonth'=>[
-                    'money'=>$lastMonth,
-                    'rmb'=>round($lastMonth*$this->rate,2)
-                ],
-                'config'=>[
-                    ['jifen'=>$config['jifen1'],'bar'=>$config['back1']],
-                    ['jifen'=>$config['jifen2'],'bar'=>$config['back2']],
-                    ['jifen'=>$config['jifen3'],'bar'=>$config['back3']],
-                    ['jifen'=>$config['jifen4'],'bar'=>$config['back4']],
-                    ['jifen'=>$config['jifen5'],'bar'=>$config['back5']],
-                ],
                 'order'=>[
                     'nopay'=>$order1,
-                    'share'=>$order2,
-                    'peihuo'=>$order3,
-                    'peing'=>$order4,
-                    'fahuo'=>$order5,
-                    'close'=>$order6,
+                    'peihuo'=>$order2,
+                    'fahuo'=>$order3,
+                    'pingjia'=>$order4,
+                    'close'=>$order5
                 ],
                 'user'=>$user,
             ]);
@@ -188,6 +135,64 @@ class Account extends Auth {
             db("Fav")->where($map)->delete();
             returnJson(1,'success');
         }       
+    }
+
+    //我的收藏
+    public function finance(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $page = input('post.page/d',1);
+            $type = input('post.type/d',0);
+            $pagesize = input('post.pagesize',10);
+
+            $firstRow = $pagesize*($page-1); 
+            
+            if($type>0){
+                $map['type'] = $type;
+            }
+            $map['memberID'] = $this->user['id'];
+            $obj = db('Finance');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
+                $list[$key]['typeName'] = getMoneyType($value['type']);
+            }
+            returnJson(1,'success',['next'=>$next,'data'=>$list,'type'=>config('moneyType')]);
+        }
+    }
+
+    //我的团队
+    public function team(){       
+        if (request()->isPost()) {
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $page = input('post.page/d',1); 
+            $pagesize =10;
+            $firstRow = $pagesize*($page-1); 
+
+            $obj = db('Member');
+            $map['tjID'] = $this->user['id'];
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }           
+            $list = $obj->field('id,headimg,nickname,createTime')->where($map)->limit($firstRow.','.$pagesize)->select();
+            foreach ($list as $key => $value) {
+                $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
+                $list[$key]['headimg'] = getUserFace($value['headimg']);
+            }
+            returnJson(1,'success',['next'=>$next,'total'=>$count,'data'=>$list,'user'=>['team'=>$this->user['team']]]);
+        }
     }
 
     //每日签到
@@ -333,6 +338,29 @@ class Account extends Auth {
             $fileUrl = $this->base64ToImg($path,$fileName,$image);
             $fileUrl = getUserFace($fileUrl);
             returnJson(1,'success',['face'=>$fileUrl]);
+        }
+    }
+
+    //未领取的优惠券
+    public function couponList(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $data= [];
+            $map['status'] = 1;
+            $map['register'] = 0;
+            $list = db("Coupon")->where($map)->select();
+            foreach ($list as $key => $value) {
+                unset($map);
+                $map['couponID'] = $value['id'];
+                $map['memberID'] = $this->user['id'];
+                $count = db("CouponLog")->where($map)->count();
+                if($count>=$value['number']){
+                    unset($value);
+                }else{
+                    array_push($data,$value);
+                }
+            }
+            returnJson(1,'success',['data'=>$data]);
         }
     }
 

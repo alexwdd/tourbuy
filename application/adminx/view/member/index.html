@@ -20,6 +20,18 @@
             </div>
 
             <div class="layui-inline">
+                <label class="layui-form-mid">团队</label>
+                <div class="layui-input-inline">
+                    <select name="team">
+                        <option value="">--请选择--</option>
+                        <option value="1">开启</option>
+                        <option value="0">关闭</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
                 <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                 </button>
@@ -50,9 +62,10 @@
             <p field="tjName" title="推荐人" width="150"/>   
             <p field="name" title="姓名" width="120"/>
             <p field="wechat" title="微信" width="150"/>
-            <p field="qq" title="QQ" width="150"/>
+            <p title="团队" width="80" templet="#teamTpl"/>
             <p field="disable" title="状态" width="80" templet="#statusTpl"/>
             <p field="createTime" title="注册日期" width="180" sort="true"/>
+            <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="100"/>
         </div>
 
         <script type="text/html" id="face">
@@ -62,12 +75,22 @@
             <img src="{{d.headimg}}" style="height:40px"/>
             {{# } }}                
         </script>
+        <script type="text/html" id="teamTpl">
+            {{# if(d.team == 1){ }}
+            <span style="color:blue">开启</span>      
+            {{# }else{ }}
+            关闭    
+            {{# } }}           
+        </script>
         <script type="text/html" id="statusTpl">
             {{# if(d.disable == 1){ }}
             <span style="color:red">禁用</span>      
             {{# }else{ }}
             正常       
             {{# } }}           
+        </script>
+        <script type="text/html" id="barDemo">  
+            <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('member/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
         </script>
     </div>
 </div>

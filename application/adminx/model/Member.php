@@ -17,6 +17,7 @@ class Member extends Admin
         $order = input('post.order','desc');
         $keyword = input('post.keyword');
         $disable  = input('post.disable');
+        $team  = input('post.team');
 
         $map['id'] = array('gt',0);
         if($keyword!=''){
@@ -24,6 +25,9 @@ class Member extends Admin
         }
         if($disable!=''){
             $map['disable'] = $disable;
+        }
+        if($team!=''){
+            $map['team'] = $team;
         }
 
         $total = $this->where($map)->count();
@@ -88,14 +92,14 @@ class Member extends Admin
     public function edit(array $data = [])
     {  
         $validate = validate('Member');
-        if(!$validate->scene('edit')->check($data)) {
+        /*if(!$validate->scene('edit')->check($data)) {
             return array('code'=>0,'msg'=>$validate->getError());
         }
         if ($data['password']!='') {
             $data['password'] = md5($data['password']);
         }else{
             unset($data['password']);
-        }
+        }*/
         $this->allowField(true)->save($data,['id'=>$data['id']]);
         if($this->id > 0){
             return array('code'=>1,'msg'=>'操作成功');
