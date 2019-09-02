@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-09-02 00:00:43
+Date: 2019-09-02 17:23:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -320,7 +320,7 @@ INSERT INTO `pm_config` VALUES ('1', 'name', '途买商城', 'basic', '');
 INSERT INTO `pm_config` VALUES ('2', 'logo', '', 'basic', '');
 INSERT INTO `pm_config` VALUES ('3', 'isClose', '0', 'basic', '');
 INSERT INTO `pm_config` VALUES ('4', 'closeInfo', '系统维护中', 'basic', '');
-INSERT INTO `pm_config` VALUES ('5', 'domain', 'http://127.0.0.10', 'basic', '');
+INSERT INTO `pm_config` VALUES ('5', 'domain', 'http://127.0.0.9', 'basic', '');
 INSERT INTO `pm_config` VALUES ('6', 'copyright', '途买商城', 'basic', '');
 INSERT INTO `pm_config` VALUES ('7', 'email', '#', 'basic', '');
 INSERT INTO `pm_config` VALUES ('8', 'weixin', '#', 'basic', '');
@@ -909,7 +909,7 @@ CREATE TABLE `pm_member` (
 -- ----------------------------
 -- Records of pm_member
 -- ----------------------------
-INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '0', '', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1568902862', '1563767631', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '0', '', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1570008056', '1563767631', '127.0.0.1');
 INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '', '', '月明', '0', '', '', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1569945610', '1566188328', '127.0.0.1');
 
 -- ----------------------------
@@ -1466,6 +1466,7 @@ DROP TABLE IF EXISTS `pm_shop`;
 CREATE TABLE `pm_shop` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cityID` int(4) NOT NULL,
+  `cate` varchar(20) NOT NULL,
   `name` varchar(50) NOT NULL,
   `account` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
@@ -1473,7 +1474,8 @@ CREATE TABLE `pm_shop` (
   `linkman` varchar(20) NOT NULL,
   `address` varchar(200) NOT NULL,
   `tel` varchar(50) NOT NULL,
-  `logo` varchar(200) NOT NULL,
+  `intr` varchar(200) NOT NULL,
+  `mp4` varchar(300) DEFAULT NULL,
   `image` text NOT NULL,
   `content` text NOT NULL,
   `py` varchar(10) NOT NULL,
@@ -1488,7 +1490,7 @@ CREATE TABLE `pm_shop` (
 -- ----------------------------
 -- Records of pm_shop
 -- ----------------------------
-INSERT INTO `pm_shop` VALUES ('7', '1', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190822/f52faee6f9a9c30f23b75876b53915b7.jpg', 'jack', '阿德莱德长安大街11号', '13500000000', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '0', '1', '1566488164', '1566488454');
+INSERT INTO `pm_shop` VALUES ('7', '1', '1,4,5,7', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190902/2ff59491884d1bb456e56e542b574c8d.png', 'jack', '阿德莱德长安大街11号', '13500000000', '一家很不错的商店', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '0', '1', '1566488164', '1567415989');
 
 -- ----------------------------
 -- Table structure for `pm_shop_fav`
@@ -1499,7 +1501,7 @@ CREATE TABLE `pm_shop_fav` (
   `shopID` int(11) NOT NULL,
   `memberID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_shop_fav
@@ -1509,6 +1511,7 @@ INSERT INTO `pm_shop_fav` VALUES ('5', '24', '2');
 INSERT INTO `pm_shop_fav` VALUES ('6', '18', '2');
 INSERT INTO `pm_shop_fav` VALUES ('7', '15', '2');
 INSERT INTO `pm_shop_fav` VALUES ('15', '19', '10001');
+INSERT INTO `pm_shop_fav` VALUES ('17', '7', '10001');
 
 -- ----------------------------
 -- Table structure for `pm_sign`

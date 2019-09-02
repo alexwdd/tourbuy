@@ -31,6 +31,13 @@ class Shop extends Admin {
                     $image = [];
                 }
                 $this->assign('image', $image);
+
+                if ($list['cate']) {
+                    $cateIds = explode(",", $list['cate']);
+                } else {
+                    $cateIds = [];
+                }
+                $this->assign('cateIds', $cateIds);
 			}else{
 				$list['status'] = 1;
 			}
@@ -38,6 +45,9 @@ class Shop extends Admin {
 
 			$city = db("City")->select();
 			$this->assign('city', $city);
+
+			$cate = db("GoodsCate")->where('fid',0)->order('sort asc , id asc')->select();
+			$this->assign('cate',$cate);
 			return view();
 		}
 	}

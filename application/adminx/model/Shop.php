@@ -80,6 +80,13 @@ class Shop extends Admin
     //添加更新数据
     public function saveData( $data )
     {
+        $cate = input('post.cate/a');
+        if ($cate) {
+            $data['cate'] = implode(",", input('post.cate/a'));
+        }else{
+            $data['cate'] = '';
+        }
+
         $data['py'] = getfirstchar($data['name']);
         if( isset( $data['id']) && !empty($data['id'])) {
             $result = $this->edit( $data );
