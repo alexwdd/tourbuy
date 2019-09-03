@@ -33,13 +33,13 @@
                 <div class="layui-form-mid layui-word-aux">24小时制，如8:00-12:00</div>
             </div>
 
-            <div class="layui-form-item">
+            <!-- <div class="layui-form-item">
                 <label class="layui-form-label">每日签到</label>
                 <div class="layui-input-inline">
                     <input type="number" name="sign" value="{$config.sign}" lay-verify="required" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">每日签到送多少积分</div>
-            </div>
+            </div> -->
 
             <div class="layui-form-item">
                 <label class="layui-form-label">注册赠送</label>
@@ -57,13 +57,13 @@
                 <div class="layui-form-mid layui-word-aux">积分</div>
             </div>           
 
-            <div class="layui-form-item">
+            <!-- <div class="layui-form-item">
                 <label class="layui-form-label">砍价</label>
                 <div class="layui-input-block">             
                     <input type="radio" name="isCut" value="1" title="开启" <?php if($config['isCut']==='1')echo 'checked'; ?>>   
                     <input type="radio" name="isCut" value="0" title="关闭" <?php if($config['isCut']==='0')echo 'checked'; ?>>           
                 </div>
-            </div>
+            </div> -->
 
             <div class="layui-form-item">
                 <label class="layui-form-label">订单保留</label>
@@ -73,24 +73,24 @@
                 <div class="layui-form-mid layui-word-aux">未支付订单最多保留几个小时</div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">砍价范围</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="min" value="{$config.min}" lay-verify="required" class="layui-input">
-                </div>
-                <div class="layui-form-mid layui-word-aux">-</div>
-                <div class="layui-input-inline">
-                    <input type="text" name="max" value="{$config.max}" lay-verify="required" class="layui-input">
-                </div>                
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">砍价限时</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="hour" value="{$config.hour}" lay-verify="required" class="layui-input">
-                </div>
-                <div class="layui-form-mid layui-word-aux">小时，多少个小时后砍价结束</div>
-            </div>            
+            <!-- <div class="layui-form-item">
+                           <label class="layui-form-label">砍价范围</label>
+                           <div class="layui-input-inline">
+                               <input type="text" name="min" value="{$config.min}" lay-verify="required" class="layui-input">
+                           </div>
+                           <div class="layui-form-mid layui-word-aux">-</div>
+                           <div class="layui-input-inline">
+                               <input type="text" name="max" value="{$config.max}" lay-verify="required" class="layui-input">
+                           </div>                
+                       </div>
+                       
+                       <div class="layui-form-item">
+                           <label class="layui-form-label">砍价限时</label>
+                           <div class="layui-input-inline">
+                               <input type="text" name="hour" value="{$config.hour}" lay-verify="required" class="layui-input">
+                           </div>
+                           <div class="layui-form-mid layui-word-aux">小时，多少个小时后砍价结束</div>
+                       </div>  -->           
 
             <div class="layui-form-item">
                 <label class="layui-form-label"></label>

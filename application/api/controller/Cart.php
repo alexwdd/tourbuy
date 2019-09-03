@@ -243,7 +243,10 @@ class Cart extends Auth {
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
             $ids = input('post.ids');
-            $couponID = input('post.couponID');
+            $couponIds = input('post.couponID');
+            if($couponIds){
+                $couponIds = explode(",",$couponIds);
+            }
             if ($ids=='') {
                 returnJson(0,'缺少参数');
             }
@@ -256,72 +259,103 @@ class Cart extends Auth {
             $map['memberID'] = $this->user['id'];
             $ids = explode(",",$ids);
             $map['id'] = array('in',$ids);
-            $list = db('Cart')->where($map)->select();
-            if (!$list) {
+            $shopIds = db('Cart')->where($map)->group('shopID')->column('shopID');
+            if (!$shopIds) {
                 returnJson(0,'购物车中没有商品');
             }
 
-            $baoguo = $this->getYunfeiJson($list);    
+            $shop = db("Shop")->field('id,name')->whereIn('id',$shopIds)->select();
             $goodsMoney = 0;
             $point = 0;
-            foreach ($list as $key => $value) {
-                $goods = db("Goods")->where('id',$value['goodsID'])->find();
-                if($goods['fid']>0){
-                    $fid = $goods['fid'];
-                }else{
-                    $fid = $goods['id'];
-                }  
+            $total = 0;
+            $payment = 0;
+            foreach ($shop as $key => $value) {
+                unset($map);
+                $map['shopID'] = $value['id'];
+                $map['memberID'] = $this->user['id'];
+                $shopGoods = db("Cart")->where($map)->select();
+                if($couponIds){
+                    $couponID = $this->getCouponID($couponIds,$value['id']);
+                }     
+                $result = $this->getShopOrder($shopGoods,$value,$couponID);
+                $shop[$key]['cart'] = $result['cart'];
+                $shop[$key]['baoguo'] = $result['baoguo'];
+                $shop[$key]['goodsMoney'] = $result['baoguo'];
+                $shop[$key]['total'] = $result['total'];
+                $shop[$key]['point'] = $result['point'];
+                $shop[$key]['coupons'] = $result['coupons'];
 
-                $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
-                $list[$key]['name'] = $goods['name'];
-                $list[$key]['say'] = $goods['say'];
-                $list[$key]['picname'] = getRealUrl($goods['picname']);
-                $list[$key]['price'] = $result['price'];
-                $list[$key]['spec'] = $result['spec'];
-                $list[$key]['total'] = $result['price'] * $value['number'];  
-                $list[$key]['rmb'] = number_format($this->rate*$list[$key]['total'],1); 
-                $list[$key]['checked'] = false; 
-
-                $goodsMoney += $list[$key]['total'];
-                $point += $goods['point'] * $value['trueNumber'];
+                $total += $result['total'];
+                $point += $result['point'];
+                $goodsMoney += $result['goodsMoney'];
+                $payment += $result['baoguo']['totalPrice'];
             }
 
-  
-            //我的优惠券
-            unset($map);
-            $map['status'] = 0;
-            $map['memberID'] = $this->user['id'];
-            $coupon = db("CouponLog")->field('id,name,desc,full,dec,goodsID,endTime')->where($map)->select();
-            $coupons = []; 
-            foreach ($coupon as $key => $value) {
-                if($this->checkCoupon($value,$list,$goodsMoney)){
-                    if($value['id']==$couponID){
-                        $thisCoupon = $value;
-                    }
-                    $value['endTime'] = date("Y-m-d H:i:s",$value['endTime']);
-                    array_push($coupons,$value);
-                }
-            }
-            
-            $total = $goodsMoney + $baoguo['totalPrice'];
-            if($thisCoupon){
-                $total = $total - $thisCoupon['dec'];
-            }
-            if($total<=0){
-                $total = 1;
-            } 
-            $rmb = number_format($this->rate*$total,1); 
+            $rmb = number_format($this->rate*$total,1);
             returnJson(1,'success',[
                 'address'=>$address,
                 'sender'=>$sender,
                 'point'=>$point,
                 'goodsMoney'=>$goodsMoney,
                 'total'=>$total,
+                'payment'=>$payment,
                 'rmb'=>$rmb,
-                'cart'=>$list,
-                'bag'=>$baoguo,
-                'coupon'=>$coupons
+                'shop'=>$shop
             ]);
         }
+    }
+
+    public function getShopOrder($cart,$shop,$couponID=null){
+        $baoguo = $this->getYunfeiJson($cart);
+
+        $goodsMoney = 0;
+        $point = 0;
+        foreach ($cart as $key => $value) {
+            $goods = db("Goods")->where('id',$value['goodsID'])->find();
+            if($goods['fid']>0){
+                $fid = $goods['fid'];
+            }else{
+                $fid = $goods['id'];
+            }  
+
+            $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
+            $cart[$key]['name'] = $goods['name'];
+            $cart[$key]['say'] = $goods['say'];
+            $cart[$key]['picname'] = getRealUrl($goods['picname']);
+            $cart[$key]['price'] = $result['price'];
+            $cart[$key]['spec'] = $result['spec'];
+            $cart[$key]['total'] = $result['price'] * $value['number'];  
+            $cart[$key]['rmb'] = number_format($this->rate*$cart[$key]['total'],1); 
+
+            $goodsMoney += $cart[$key]['total'];
+            $point += $goods['point'] * $value['trueNumber'];
+        }
+
+        //我的优惠券
+        unset($map);
+        $map['status'] = 0;
+        $map['memberID'] = $this->user['id'];
+        $map['shopID'] = $shop['id'];
+        $coupon = db("CouponLog")->field('id,name,desc,full,dec,goodsID,endTime')->where($map)->select();
+        $coupons = []; 
+        foreach ($coupon as $key => $value) {
+            if($this->checkCoupon($value,$cart,$goodsMoney)){
+                if($value['id']==$couponID){
+                    $thisCoupon = $value;
+                }
+                $value['endTime'] = date("Y-m-d H:i:s",$value['endTime']);
+                $value['selected'] = false;
+                array_push($coupons,$value);
+            }
+        }
+
+        $total = $goodsMoney + $baoguo['totalPrice'];
+        if($thisCoupon){
+            $total = $total - $thisCoupon['dec'];
+        }
+        if($total<=0){
+            $total = 1;
+        }
+        return ['cart'=>$cart,'baoguo'=>$baoguo,'goodsMoney'=>$goodsMoney,'point'=>$point,'total'=>$total,'coupons'=>$coupons];
     }
 }

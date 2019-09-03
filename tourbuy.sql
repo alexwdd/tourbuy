@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-09-03 17:24:30
+Date: 2019-09-04 01:08:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -225,7 +225,7 @@ CREATE TABLE `pm_cart` (
   `trueNumber` int(11) NOT NULL COMMENT '真实商品数量比如2个3件的套餐就显示6',
   `typeID` int(11) NOT NULL COMMENT '包裹类型',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_cart
@@ -236,6 +236,7 @@ INSERT INTO `pm_cart` VALUES ('20', '2', '0', '20', '0', '3', '3', '4');
 INSERT INTO `pm_cart` VALUES ('58', '10001', '7', '22', '0', '1', '1', '15');
 INSERT INTO `pm_cart` VALUES ('54', '10001', '8', '10', '0', '1', '1', '1');
 INSERT INTO `pm_cart` VALUES ('56', '10001', '8', '7', '0', '1', '1', '1');
+INSERT INTO `pm_cart` VALUES ('65', '10002', '7', '22', '0', '1', '1', '15');
 
 -- ----------------------------
 -- Table structure for `pm_category`
@@ -359,8 +360,8 @@ INSERT INTO `pm_config` VALUES ('93', 'jifen4', '9000', 'member', null);
 INSERT INTO `pm_config` VALUES ('94', 'back4', '20', 'member', null);
 INSERT INTO `pm_config` VALUES ('95', 'jifen5', '12000', 'member', null);
 INSERT INTO `pm_config` VALUES ('50', 'APP_TOKEN', '', 'weixin', null);
-INSERT INTO `pm_config` VALUES ('51', 'APP_ID', 'wxefc3ac8d271b37b7', 'weixin', null);
-INSERT INTO `pm_config` VALUES ('52', 'APP_SECRET', '63e1cd9ea6b5eb918a02e1a44bef6cbd', 'weixin', null);
+INSERT INTO `pm_config` VALUES ('51', 'APP_ID', '', 'weixin', null);
+INSERT INTO `pm_config` VALUES ('52', 'APP_SECRET', '', 'weixin', null);
 INSERT INTO `pm_config` VALUES ('53', 'MCH_KEY', '', 'weixin', null);
 INSERT INTO `pm_config` VALUES ('54', 'MCH_ID', '', 'weixin', null);
 INSERT INTO `pm_config` VALUES ('55', 'NOTIFY', '#', 'alipay', null);
@@ -482,9 +483,9 @@ CREATE TABLE `pm_coupon_log` (
 INSERT INTO `pm_coupon_log` VALUES ('18', null, '2', '张小黑', '3', '新手券', '立减50元', '0.00', '50.00', null, '', '1277665138', '0', '0', '1568423272', '1565831272');
 INSERT INTO `pm_coupon_log` VALUES ('14', null, '0', '', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '', '1264725452', '0', '0', '0', '1565798942');
 INSERT INTO `pm_coupon_log` VALUES ('15', null, '0', '', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '', '1189652748', '0', '0', '0', '1565798942');
-INSERT INTO `pm_coupon_log` VALUES ('16', null, '10002', '月明', '5', '测试一下', '满50元立减5元', '50.00', '5.00', '好吃不贵', '', '1355403368', '1', '1566291433', '1568823326', '1565798942');
+INSERT INTO `pm_coupon_log` VALUES ('16', '8', '10002', '月明', '5', '测试一下', '满50元立减5元', '50.00', '5.00', '好吃不贵', '', '1355403368', '0', '0', '1568823326', '1565798942');
 INSERT INTO `pm_coupon_log` VALUES ('17', null, '2', '张小黑', '5', '测试一下', '满50元立减5元', '0.00', '5.00', null, '240', '1039757623', '0', '0', '1568391156', '1565799156');
-INSERT INTO `pm_coupon_log` VALUES ('19', null, '10002', '月明', '3', '新手券', '立减3元', '0.00', '3.00', '好贵不吃', '', '1239757623', '1', '1566293300', '1568809414', '1566217414');
+INSERT INTO `pm_coupon_log` VALUES ('19', '7', '10002', '月明', '3', '新手券', '立减3元', '0.00', '3.00', '好贵不吃', '', '1239757623', '0', '0', '1568809414', '1566217414');
 
 -- ----------------------------
 -- Table structure for `pm_express`
@@ -916,7 +917,7 @@ CREATE TABLE `pm_member` (
 -- Records of pm_member
 -- ----------------------------
 INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '10002', '月明', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1570093845', '1563767631', '127.0.0.1');
-INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1570034894', '1566188328', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1570122490', '1566188328', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for `pm_member_code`
@@ -1229,13 +1230,15 @@ CREATE TABLE `pm_order` (
   `createTime` int(11) NOT NULL,
   `updateTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order
 -- ----------------------------
 INSERT INTO `pm_order` VALUES ('20', '10002', '16', '72863769', '75.00', '0', '75.00', '80.00', '5.00', '0.00', '0.00', '65.00', '0.00', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '', null, '0', '0', '0', '3', '1', '0', '1566291433', '1566291433');
 INSERT INTO `pm_order` VALUES ('22', '10002', '0', '19082120265963', '180.00', '10', '180.00', '180.00', '0', '0.00', '0.00', '60.00', '0.00', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '', null, '0', '1', '1', '1', '0', '0', '1566390419', '1566390419');
+INSERT INTO `pm_order` VALUES ('32', '10002', '0', '19090400532989', '159.80', '155', '159.80', '155.00', '0', '0.00', '0.00', '110.00', '4.80', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', null, null, '0', '0', '0', '0', '0', '0', '1567529609', '0');
+INSERT INTO `pm_order` VALUES ('33', '10002', '0', '19090400585719', '54.20', '50', '54.20', '50.00', '0', '0.00', '0.00', '30.00', '4.20', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', null, null, '0', '0', '0', '0', '0', '0', '1567529937', '0');
 
 -- ----------------------------
 -- Table structure for `pm_order_baoguo`
@@ -1270,7 +1273,7 @@ CREATE TABLE `pm_order_baoguo` (
   `createTime` int(11) NOT NULL,
   `updateTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order_baoguo
@@ -1279,6 +1282,10 @@ INSERT INTO `pm_order_baoguo` VALUES ('9', '20', '10002', '72863769', '1', '0.00
 INSERT INTO `pm_order_baoguo` VALUES ('10', '20', '10002', '72863769', '4', '0.00', '6.72', '1.20', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '0', '0', '0', '0', '0', '1566291433', '0');
 INSERT INTO `pm_order_baoguo` VALUES ('12', '22', '10002', '19082120265963', '1', '0.00', '7.35', '2.10', '澳邮', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '1', '0', '0', '0', '0', '1566390419', '0');
 INSERT INTO `pm_order_baoguo` VALUES ('13', '22', '10002', '19082120265963', '1', '0.00', '7.35', '2.10', '澳邮', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '1', '0', '0', '0', '0', '1566390419', '0');
+INSERT INTO `pm_order_baoguo` VALUES ('22', '32', '10002', '19090400532989', '15', '4.20', '1.68', '0.30', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '0', '0', '0', '0', '0', '1567529609', '0');
+INSERT INTO `pm_order_baoguo` VALUES ('23', '32', '10002', '19090400532989', '1', '0.00', '7.70', '2.20', '澳邮', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '0', '0', '0', '0', '0', '1567529609', '0');
+INSERT INTO `pm_order_baoguo` VALUES ('24', '32', '10002', '19090400532989', '4', '0.60', '5.04', '0.90', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '0', '0', '0', '0', '0', '1567529609', '0');
+INSERT INTO `pm_order_baoguo` VALUES ('25', '33', '10002', '19090400585719', '15', '4.20', '1.68', '0.30', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '张三', '13500000000', '0', '0', '0', '0', '0', '1567529937', '0');
 
 -- ----------------------------
 -- Table structure for `pm_order_cart`
@@ -1298,7 +1305,7 @@ CREATE TABLE `pm_order_cart` (
   `number` int(11) NOT NULL,
   `trueNumber` int(11) NOT NULL COMMENT '真实商品数量比如2个3件的套餐就显示6',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order_cart
@@ -1307,6 +1314,12 @@ INSERT INTO `pm_order_cart` VALUES ('14', '10002', '20', '10', '0', '0', 'A2铂�
 INSERT INTO `pm_order_cart` VALUES ('15', '10002', '20', '23', '0', '0', 'Swisse 高倍蜂胶2000mg 300粒', '/uploads/images/20190803/504cb220ecb2a76a9794fa1ccb763b86.jpg', '', '23.00', '1', '1');
 INSERT INTO `pm_order_cart` VALUES ('16', '10002', '20', '20', '0', '0', 'Blackmores澳佳宝 孕妇黄金素 180粒', '/uploads/images/20190729/63b7cacef160a2699898bda5c231b78f.jpg', '', '28.00', '1', '1');
 INSERT INTO `pm_order_cart` VALUES ('18', '10002', '22', '26', '24', '0', '六件包邮优惠套餐', '/uploads/images/20190811/83c4de372c836bbeb4d378db0789faa9.jpg', '', '180.00', '1', '6');
+INSERT INTO `pm_order_cart` VALUES ('28', '10002', '32', '22', '0', '0', 'Elevit 女士爱乐维 孕期维生素 100粒', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', '', '50.00', '1', '1');
+INSERT INTO `pm_order_cart` VALUES ('29', '10002', '32', '10', '0', '0', 'A2铂金 二段 A2 Follow On Formula', '/uploads/images/20190729/e47cfa2678fc5785d957bb71e4e19f6e.jpg', '', '29.00', '1', '1');
+INSERT INTO `pm_order_cart` VALUES ('30', '10002', '32', '7', '0', '0', 'A2铂金 三段 A2 Premium Toddler', '/uploads/images/20190729/9609c47af27df3c4875605abde9ff4dc.jpg', '', '31.00', '1', '1');
+INSERT INTO `pm_order_cart` VALUES ('31', '10002', '32', '20', '0', '0', 'Blackmores澳佳宝 孕妇黄金素 180粒', '/uploads/images/20190729/63b7cacef160a2699898bda5c231b78f.jpg', '', '30.00', '1', '1');
+INSERT INTO `pm_order_cart` VALUES ('32', '10002', '32', '21', '0', '0', 'Blackmores澳佳宝 叶酸片500mcg 90粒', '/uploads/images/20190729/2808f8c49bc8ef2211cdeb8942968a61.jpg', '', '15.00', '1', '1');
+INSERT INTO `pm_order_cart` VALUES ('33', '10002', '33', '22', '0', '0', 'Elevit 女士爱乐维 孕期维生素 100粒', '/uploads/images/20190729/8225facb8669bff2ca9082f3404de33b.jpg', '', '50.00', '1', '1');
 
 -- ----------------------------
 -- Table structure for `pm_order_detail`
@@ -1326,7 +1339,7 @@ CREATE TABLE `pm_order_detail` (
   `cancel` tinyint(4) NOT NULL COMMENT '取消订单',
   `createTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order_detail
@@ -1336,6 +1349,12 @@ INSERT INTO `pm_order_detail` VALUES ('9', '20', '10002', '10', '23', '0', 'Swis
 INSERT INTO `pm_order_detail` VALUES ('10', '20', '10002', '10', '20', '0', 'Blackmores澳佳宝 孕妇黄金素 180粒', 'BM黄金素', '1', '28.00', '0', '1566291433');
 INSERT INTO `pm_order_detail` VALUES ('12', '22', '10002', '12', '26', '0', '六件包邮优惠套餐', '鞋子', '3', '180.00', '0', '1566390419');
 INSERT INTO `pm_order_detail` VALUES ('13', '22', '10002', '13', '26', '0', '六件包邮优惠套餐', '鞋子', '3', '180.00', '0', '1566390419');
+INSERT INTO `pm_order_detail` VALUES ('22', '32', '10002', '22', '22', '0', 'Elevit 女士爱乐维 孕期维生素 100粒', '爱乐维', '1', '50.00', '0', '1567529609');
+INSERT INTO `pm_order_detail` VALUES ('23', '32', '10002', '23', '10', '0', 'A2铂金 二段 A2 Follow On Formula', 'A2-2', '1', '29.00', '0', '1567529609');
+INSERT INTO `pm_order_detail` VALUES ('24', '32', '10002', '23', '7', '0', 'A2铂金 三段 A2 Premium Toddler', 'A3', '1', '31.00', '0', '1567529609');
+INSERT INTO `pm_order_detail` VALUES ('25', '32', '10002', '24', '20', '0', 'Blackmores澳佳宝 孕妇黄金素 180粒', 'BM黄金素', '1', '30.00', '0', '1567529609');
+INSERT INTO `pm_order_detail` VALUES ('26', '32', '10002', '24', '21', '0', 'Blackmores澳佳宝 叶酸片500mcg 90粒', 'BM叶酸90粒', '1', '15.00', '0', '1567529609');
+INSERT INTO `pm_order_detail` VALUES ('27', '33', '10002', '25', '22', '0', 'Elevit 女士爱乐维 孕期维生素 100粒', '爱乐维', '1', '50.00', '0', '1567529937');
 
 -- ----------------------------
 -- Table structure for `pm_role`

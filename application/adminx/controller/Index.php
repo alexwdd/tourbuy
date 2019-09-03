@@ -10,6 +10,20 @@ class Index extends Admin {
     }
 
     public function console(){
+        $member = db("Member")->count();
+        $goods = db("Goods")->count();
+        $order = db("Order")->count();
+
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
+        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+        $map['createTime'] = array('between',array($beginToday,$endToday));
+        $map['payStatus'] = 1;
+        $today = db('Order')->where($map)->sum('total');
+
+        $this->assign('member',$member);
+        $this->assign('goods',$goods);
+        $this->assign('order',$order);
+        $this->assign('today',$today);
         return view();
     }
 
