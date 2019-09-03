@@ -8,26 +8,31 @@ class Cart extends Auth {
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
             $map['memberID'] = $this->user['id'];
-            $list = db('Cart')->where($map)->select();
-            $total = 0;
-            foreach ($list as $key => $value) {
-                $goods = db("Goods")->where('id',$value['goodsID'])->find();
-                $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
+            $shopIds = db('Cart')->where($map)->group('shopID')->column('shopID');
+            $shop = db("Shop")->field('id,name')->whereIn('id',$shopIds)->select();
+            foreach ($shop as $key => $value) {
+                unset($map);
+                $map['shopID'] = $value['id'];
+                $map['memberID'] = $this->user['id'];
+                $shopGoods = db("Cart")->where($map)->select();
 
-                $list[$key]['name'] = $goods['name'];
-                $list[$key]['say'] = $goods['say'];
-                $list[$key]['marketPrice'] = $goods['marketPrice']; 
-                $list[$key]['picname'] = getRealUrl($goods['picname']);
-                $list[$key]['price'] = $result['price'];
-                $list[$key]['spec'] = $result['spec'];
-                $list[$key]['total'] = $result['price'] * $value['number'];
-                $list[$key]['rmb'] = number_format($this->rate*$list[$key]['total'],1); 
-                $list[$key]['checked'] = false; 
+                foreach ($shopGoods as $k => $val) {
+                    $goods = db("Goods")->where('id',$val['goodsID'])->find();
+                    $result = $this->getGoodsPrice($goods,$val['specID'],$this->flash);
 
-                $total += $list[$key]['total'];
+                    $shopGoods[$k]['name'] = $goods['name'];
+                    $shopGoods[$k]['say'] = $goods['say'];
+                    $shopGoods[$k]['picname'] = getRealUrl($goods['picname']);
+                    $shopGoods[$k]['price'] = $result['price'];
+                    $shopGoods[$k]['spec'] = $result['spec'];
+                    $shopGoods[$k]['total'] = $result['price'] * $val['number'];
+                    $shopGoods[$k]['rmb'] = number_format($this->rate*$shopGoods[$k]['total'],1); 
+                    $shopGoods[$k]['checked'] = false; 
+                }
+
+                $shop[$key]['goods'] = $shopGoods;
             }
-            $rmb = number_format($this->rate*$total,1); 
-            returnJson(1,'success',['cart'=>$list,'total'=>$total,'rmb'=>$rmb]);
+            returnJson(1,'success',['cart'=>$shop]);
         }
     }
 
@@ -123,6 +128,7 @@ class Cart extends Auth {
                     $data = [
                         'memberID'=>$this->user['id'],
                         'goodsID'=>$goods['id'],
+                        'shopID'=>$goods['shopID'],
                         'specID'=>$specID,
                         'number'=>$number,
                         'trueNumber'=>$number*$goods['number'],
@@ -257,9 +263,7 @@ class Cart extends Auth {
 
             $baoguo = $this->getYunfeiJson($list);    
             $goodsMoney = 0;
-            $cutMoney = 0;
             $point = 0;
-            $isCut = 1;            
             foreach ($list as $key => $value) {
                 $goods = db("Goods")->where('id',$value['goodsID'])->find();
                 if($goods['fid']>0){
@@ -267,14 +271,10 @@ class Cart extends Auth {
                 }else{
                     $fid = $goods['id'];
                 }  
-                if($this->checkInFlash($fid,$this->flash)){
-                    $isCut = 0;
-                }
 
                 $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
                 $list[$key]['name'] = $goods['name'];
                 $list[$key]['say'] = $goods['say'];
-                $list[$key]['marketPrice'] = $goods['marketPrice']; 
                 $list[$key]['picname'] = getRealUrl($goods['picname']);
                 $list[$key]['price'] = $result['price'];
                 $list[$key]['spec'] = $result['spec'];
@@ -282,14 +282,10 @@ class Cart extends Auth {
                 $list[$key]['rmb'] = number_format($this->rate*$list[$key]['total'],1); 
                 $list[$key]['checked'] = false; 
 
-                $cutMoney += $result['cutPrice'];
                 $goodsMoney += $list[$key]['total'];
                 $point += $goods['point'] * $value['trueNumber'];
             }
 
-            if($cutMoney<=0){
-                $isCut = 0;
-            }
   
             //我的优惠券
             unset($map);
@@ -313,16 +309,9 @@ class Cart extends Auth {
             }
             if($total<=0){
                 $total = 1;
-            }            
-
-            if($isCut && $cutMoney>0){
-                $cutPrice = $total - $cutMoney;
-            }else{
-                $cutPrice = 0;
-            }
+            } 
             $rmb = number_format($this->rate*$total,1); 
             returnJson(1,'success',[
-                'cutPrice'=>$cutPrice,
                 'address'=>$address,
                 'sender'=>$sender,
                 'point'=>$point,

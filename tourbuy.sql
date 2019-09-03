@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-09-03 00:48:47
+Date: 2019-09-03 17:24:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -218,21 +218,24 @@ DROP TABLE IF EXISTS `pm_cart`;
 CREATE TABLE `pm_cart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `memberID` int(11) NOT NULL,
+  `shopID` int(11) NOT NULL,
   `goodsID` int(11) NOT NULL,
   `specID` int(11) NOT NULL COMMENT '商品规格',
   `number` int(11) NOT NULL,
   `trueNumber` int(11) NOT NULL COMMENT '真实商品数量比如2个3件的套餐就显示6',
   `typeID` int(11) NOT NULL COMMENT '包裹类型',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_cart
 -- ----------------------------
-INSERT INTO `pm_cart` VALUES ('19', '2', '10', '0', '1', '1', '1');
-INSERT INTO `pm_cart` VALUES ('18', '2', '19', '0', '1', '1', '1');
-INSERT INTO `pm_cart` VALUES ('20', '2', '20', '0', '3', '3', '4');
-INSERT INTO `pm_cart` VALUES ('31', '10001', '10', '0', '1', '1', '1');
+INSERT INTO `pm_cart` VALUES ('19', '2', '0', '10', '0', '1', '1', '1');
+INSERT INTO `pm_cart` VALUES ('18', '2', '0', '19', '0', '1', '1', '1');
+INSERT INTO `pm_cart` VALUES ('20', '2', '0', '20', '0', '3', '3', '4');
+INSERT INTO `pm_cart` VALUES ('58', '10001', '7', '22', '0', '1', '1', '15');
+INSERT INTO `pm_cart` VALUES ('54', '10001', '8', '10', '0', '1', '1', '1');
+INSERT INTO `pm_cart` VALUES ('56', '10001', '8', '7', '0', '1', '1', '1');
 
 -- ----------------------------
 -- Table structure for `pm_category`
@@ -425,13 +428,14 @@ CREATE TABLE `pm_coupon` (
   `updateTime` int(11) NOT NULL,
   `createTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of pm_coupon
 -- ----------------------------
-INSERT INTO `pm_coupon` VALUES ('3', '0', '', '新手券', '立减50元', '1', '0', '50', '1', '1', '30', '', '使用说明啊啊啊', '1565831354', '1551964995');
+INSERT INTO `pm_coupon` VALUES ('3', '8', '奶粉专卖店', '新手券', '立减50元', '1', '0', '50', '1', '1', '30', '', '使用说明啊啊啊', '1567501388', '1551964995');
 INSERT INTO `pm_coupon` VALUES ('5', '7', '测试店铺', '测试一下', '满50元立减5元', '0', '50', '5', '0', '1', '30', '', '', '1566741166', '1565698449');
+INSERT INTO `pm_coupon` VALUES ('6', '7', '测试店铺', '123123', '立减1元', '0', '0', '1', '0', '1', '1', '', '', '1567501406', '1567501406');
 
 -- ----------------------------
 -- Table structure for `pm_coupon_goods`
@@ -510,7 +514,7 @@ CREATE TABLE `pm_fav` (
   `goodsID` int(11) NOT NULL,
   `memberID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_fav
@@ -520,6 +524,8 @@ INSERT INTO `pm_fav` VALUES ('5', '24', '2');
 INSERT INTO `pm_fav` VALUES ('6', '18', '2');
 INSERT INTO `pm_fav` VALUES ('7', '15', '2');
 INSERT INTO `pm_fav` VALUES ('15', '19', '10001');
+INSERT INTO `pm_fav` VALUES ('16', '9', '10001');
+INSERT INTO `pm_fav` VALUES ('17', '11', '10001');
 
 -- ----------------------------
 -- Table structure for `pm_feedback`
@@ -669,10 +675,10 @@ CREATE TABLE `pm_goods` (
 -- ----------------------------
 -- Records of pm_goods
 -- ----------------------------
-INSERT INTO `pm_goods` VALUES ('7', '7', '测试店铺', '1', '2', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 三段 A2 Premium Toddler', 'A2 Premium Toddler Stage 3 900g', 'A3', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 三段：1岁', '/uploads/images/20190729/9609c47af27df3c4875605abde9ff4dc.jpg', null, '', '2020/10', '30', '0', '25.00', '31.00', '35.00', '31.00', '0.00', '1.10', '1.10', '200', '999', '1', '1', '0', '0', '0', '1', '50', '1563703331', '1564397947');
-INSERT INTO `pm_goods` VALUES ('10', '7', '测试店铺', '1', '2', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 二段 A2 Follow On Formula', 'A2 Follow On Formula Stage 2 900g', 'A2-2', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 二段：6-12月', '/uploads/images/20190729/e47cfa2678fc5785d957bb71e4e19f6e.jpg', null, '', '2020/10', '30', '0', '25.00', '29.00', '35.00', '3.00', '0.00', '1.10', '1.10', '100', '999', '1', '0', '0', '0', '0', '1', '50', '1564396584', '1564400836');
-INSERT INTO `pm_goods` VALUES ('9', '7', '测试店铺', '1', '1', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 一段 A2 Infant Formula ', 'A2 Infant Formula Stage 1 900g', 'A1', '澳洲最佳奶粉推荐', '', 'A2 Platinum白金系列高端牛奶粉一段是专门为新生儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 一段：0-6月', '/uploads/images/20190729/a0312cfa0da34943a7898ee675267dd3.jpg', null, '', '2020/10', '30', '0', '25.00', '30.00', '35.00', '30.00', '0.00', '1.10', '1.10', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564395464', '1564395640');
-INSERT INTO `pm_goods` VALUES ('11', '7', '测试店铺', '1', '0', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 四段 A2 Junior Formula', 'A2 Junior Stage 4 900g', 'A4', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 四段：3岁', '/uploads/images/20190729/aa51a8e0127330992820424d3613f9db.jpg', null, '', '2020/10', '34', '0', '25.00', '34.00', '36.00', '34.00', '0.00', '1.10', '1.10', '100', '999', '1', '0', '0', '0', '0', '1', '50', '1564398209', '1564400855');
+INSERT INTO `pm_goods` VALUES ('7', '8', '奶粉专卖店', '2', '1', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 三段 A2 Premium Toddler', 'A2 Premium Toddler Stage 3 900g', 'A3', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 三段：1岁', '/uploads/images/20190729/9609c47af27df3c4875605abde9ff4dc.jpg', null, '', '2020/10', '30', '0', '25.00', '31.00', '35.00', '31.00', '0.00', '1.10', '1.10', '200', '999', '1', '1', '0', '0', '0', '1', '50', '1563703331', '1567475291');
+INSERT INTO `pm_goods` VALUES ('10', '8', '奶粉专卖店', '2', '1', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 二段 A2 Follow On Formula', 'A2 Follow On Formula Stage 2 900g', 'A2-2', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 二段：6-12月', '/uploads/images/20190729/e47cfa2678fc5785d957bb71e4e19f6e.jpg', null, '', '2020/10', '30', '0', '25.00', '29.00', '35.00', '3.00', '0.00', '1.10', '1.10', '100', '999', '1', '0', '0', '0', '0', '1', '50', '1564396584', '1567475308');
+INSERT INTO `pm_goods` VALUES ('9', '8', '奶粉专卖店', '2', '2', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 一段 A2 Infant Formula ', 'A2 Infant Formula Stage 1 900g', 'A1', '澳洲最佳奶粉推荐', '', 'A2 Platinum白金系列高端牛奶粉一段是专门为新生儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 一段：0-6月', '/uploads/images/20190729/a0312cfa0da34943a7898ee675267dd3.jpg', null, '', '2020/10', '30', '0', '25.00', '30.00', '35.00', '30.00', '0.00', '1.10', '1.10', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564395464', '1567475300');
+INSERT INTO `pm_goods` VALUES ('11', '8', '奶粉专卖店', '2', '1', '0.00', '0', '15', '0-1-15-', '0', '', '1', '0', '4', 'A2铂金 四段 A2 Junior Formula', 'A2 Junior Stage 4 900g', 'A4', '澳洲最佳奶粉推荐，独特a2配方', '', 'A2 Platinum白金系列高端牛奶粉是专门为婴幼儿而设计的特殊配方奶粉，它的营养很全面，能为宝宝提供成长和发育所需要的重要营养成分。该独特的配方奶粉含有天然的A2牛奶，能促进宝宝消化系统的发育,丰富的营养成分，有助于宝宝大脑和眼睛的发育，促进宝宝免疫系统的发育。 四段：3岁', '/uploads/images/20190729/aa51a8e0127330992820424d3613f9db.jpg', null, '', '2020/10', '34', '0', '25.00', '34.00', '36.00', '34.00', '0.00', '1.10', '1.10', '100', '999', '1', '0', '0', '0', '0', '1', '50', '1564398209', '1567475318');
 INSERT INTO `pm_goods` VALUES ('12', '7', '测试店铺', '1', '2', '0.00', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 一段 Aptamil Gold+ 1 Infant Formula', 'Aptamil Gold+ 1 Infant Formula 0-6 Months 900g', 'K1', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/0b2e9e8b22809180d74ab02aa7bae6ec.jpg', null, '', '2020/10', '28', '0', '25.00', '28.00', '35.00', '28.00', '0.00', '1.10', '1.10', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564400481', '1564400496');
 INSERT INTO `pm_goods` VALUES ('13', '7', '测试店铺', '1', '3', '0.00', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 二段 Aptamil Gold+ 2 Follow-On Formula', 'Aptamil Gold+ 2 Follow-On Formula 6-12 Months 900g', 'K2', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/88b995c3c31e9bd27f99690c5b8df15b.jpg', null, '', '2020/10', '27', '0', '25.00', '27.00', '30.00', '27.00', '0.00', '1.10', '1.10', '100', '999', '1', '1', '0', '0', '0', '1', '50', '1564400592', '1564400592');
 INSERT INTO `pm_goods` VALUES ('14', '7', '测试店铺', '1', '1', '0.00', '0', '16', '0-1-16-', '0', '', '1', '0', '5', '爱他美金装 三段 Aptamil Gold+ 3 Toddler', 'Aptamil Gold+ 3 Toddler Nutritional Supplement From 1 year 900g', 'K3', '新西兰纯天然奶源', '', '', '/uploads/images/20190729/44e9f48967390b811d34b29ef63b1cc6.jpg', null, '', '2020/10', '30', '0', '22.00', '30.00', '36.00', '30.00', '0.00', '1.10', '1.10', '100', '999', '1', '0', '0', '0', '0', '1', '50', '1564400696', '1564400866');
@@ -802,7 +808,6 @@ CREATE TABLE `pm_goods_spec_price` (
   `key` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '规格键名',
   `key_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '规格键名中文',
   `price` decimal(10,2) DEFAULT NULL COMMENT '价格',
-  `cutPrice` decimal(10,2) DEFAULT NULL,
   `store_count` int(11) unsigned DEFAULT '10' COMMENT '库存数量',
   `bar_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '商品条形码',
   `weight` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '重量',
@@ -817,10 +822,10 @@ CREATE TABLE `pm_goods_spec_price` (
 -- ----------------------------
 -- Records of pm_goods_spec_price
 -- ----------------------------
-INSERT INTO `pm_goods_spec_price` VALUES ('13', '24', '2_5', '尺码:40码 颜色:红色', '15.00', '2.00', '0', '', '0.5', null, '', '0', '0');
-INSERT INTO `pm_goods_spec_price` VALUES ('14', '24', '2_6', '尺码:40码 颜色:蓝色', '15.00', '2.00', '0', '', '0.5', null, '', '0', '0');
-INSERT INTO `pm_goods_spec_price` VALUES ('15', '24', '3_5', '尺码:42码 颜色:红色', '15.00', '2.00', '0', '', '0.5', null, '', '0', '0');
-INSERT INTO `pm_goods_spec_price` VALUES ('16', '24', '3_6', '尺码:42码 颜色:蓝色', '15.00', '2.00', '0', '', '0.5', null, '', '0', '0');
+INSERT INTO `pm_goods_spec_price` VALUES ('13', '24', '2_5', '尺码:40码 颜色:红色', '15.00', '0', '', '0.5', null, '', '0', '0');
+INSERT INTO `pm_goods_spec_price` VALUES ('14', '24', '2_6', '尺码:40码 颜色:蓝色', '15.00', '0', '', '0.5', null, '', '0', '0');
+INSERT INTO `pm_goods_spec_price` VALUES ('15', '24', '3_5', '尺码:42码 颜色:红色', '15.00', '0', '', '0.5', null, '', '0', '0');
+INSERT INTO `pm_goods_spec_price` VALUES ('16', '24', '3_6', '尺码:42码 颜色:蓝色', '15.00', '0', '', '0.5', null, '', '0', '0');
 
 -- ----------------------------
 -- Table structure for `pm_link`
@@ -910,7 +915,7 @@ CREATE TABLE `pm_member` (
 -- ----------------------------
 -- Records of pm_member
 -- ----------------------------
-INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '10002', '月明', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1570008056', '1563767631', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '10002', '月明', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1570093845', '1563767631', '127.0.0.1');
 INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1570034894', '1566188328', '127.0.0.1');
 
 -- ----------------------------
@@ -1442,12 +1447,13 @@ CREATE TABLE `pm_shop` (
   `createTime` int(11) NOT NULL,
   `updateTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_shop
 -- ----------------------------
 INSERT INTO `pm_shop` VALUES ('7', '1', '1,4,5,7', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190902/bc2b91794194d610b4d15c495735928f.jpg', 'jack', '阿德莱德长安大街11号', '13500000000', '一家很不错的商店', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '0', '1', '1566488164', '1567425920');
+INSERT INTO `pm_shop` VALUES ('8', '2', '1,4,7', '奶粉专卖店', 'test1', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190903/4d231b670020a7f8a62c13dd86291cd3.jpg', '赵柳', '阿萨德饭大是大非ad', '18700001111', '我们只卖一种产品', '', '', '', 'N', '0', '0', '1', '1567475240', '1567475240');
 
 -- ----------------------------
 -- Table structure for `pm_shop_fav`

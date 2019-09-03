@@ -161,39 +161,33 @@ class Base extends Controller {
         $spec = [];
         if($goods['fid']==0){
             if($specID>0){//有规格选项
-                $spec = db("GoodsSpecPrice")->field('key_name,price,cutPrice')->where('item_id',$specID)->find(); 
+                $spec = db("GoodsSpecPrice")->field('key_name,price')->where('item_id',$specID)->find(); 
                 if($flash){ //今日抢购      
                     $flash['spec'] = unserialize($flash['spec']); 
                     foreach ($flash['spec'] as $k => $val) {
                         if($val['specID'] == $specID){
                             $price = $val['price'];
-                            $cutPrice = 0;
                             break;
                         }
                     }
                 }else{
                     $price = $spec['price'];
-                    $cutPrice = $spec['cutPrice'];
                 }                        
             }else{
                 if($flash){
                     $price = $flash['price'];
-                    $cutPrice = 0;
                 }else{
                     $price = $goods['price'];
-                    $cutPrice = $goods['cutPrice'];
                 }                        
             }
         }else{//是套餐
             if($flash){
                 $price = $flash['price'];
-                $cutPrice = 0;
             }else{
                 $price = $goods['price'];
-                $cutPrice = $goods['cutPrice'];
             }
         } 
-        return ['price'=>$price,'cutPrice'=>$cutPrice,'spec'=>$spec];
+        return ['price'=>$price,'spec'=>$spec];
     }
 
     //获取包裹

@@ -70,7 +70,7 @@ class Goods extends Admin
         $path = input('path');
         $keyword  = input('keyword');
         $type  = input('type');
-        $goods_id  = input('goods_id');
+        $shopID  = input('shopID');
 
         if($path!=''){
             $map['path'] = array('like', $path.'%');
@@ -81,8 +81,8 @@ class Goods extends Admin
         if($type!=''){
             $map['show'] = $type;
         }
-        if($goods_id!=''){
-            $map['id'] = array('neq',$goods_id);
+        if($shopID!=''){
+            $map['shopID'] = $shopID;
         }
         $map['fid'] = 0;
         

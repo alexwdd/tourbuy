@@ -26,6 +26,9 @@ class Goods extends Admin
                 $cate[$key]['count'] = $count;
             }
             $this->assign('cate', $cate);
+
+            $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
             return view();
         }
     }
@@ -251,7 +254,7 @@ class Goods extends Admin
                    
         $spec = db('ModelSpec')->column('id,name'); // 规格表
         $specItem = db('ModelSpecItem')->column('id,item,specID');//规格项
-        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,cutPrice,store_count,bar_code,weight,spec_img');//规格项                          
+        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,store_count,bar_code,weight,spec_img');//规格项                          
         $str = "<table class='layui-table' lay-size='sm' id='spec_input_tab'>";
         $str .="<thead><tr>";       
         // 显示第一行的数据
