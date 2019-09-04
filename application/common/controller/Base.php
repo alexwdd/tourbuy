@@ -50,8 +50,12 @@ class Base extends Controller {
         if($point<0){
             $point=0;
         }
-        return array(       
-            'point' => $point
+
+        $config = tpCache('member');
+        $money = floor($point/$config['buy']);
+        return array(
+            'point' => $point,
+            'money' => $money
         );
     }
 

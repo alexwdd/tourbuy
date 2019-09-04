@@ -10,12 +10,7 @@ class Order extends Model
         if(!$validate->check($data)) {
             return array('code'=>0,'msg'=>$validate->getError());
         }
-        $data['createTime'] = time();
-        if($data['isCut']==1){
-            $data['endTime'] = 0;
-        }else{
-            $data['endTime'] = time();
-        }        
+        $data['createTime'] = time();    
         $data['status'] = 0;
         $data['payType'] = 0;
         $data['payStatus'] = 0;

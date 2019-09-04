@@ -77,18 +77,21 @@ class Order extends Auth {
             $map['id'] = $id;
             $map['hide'] = 0;
             $map['memberID'] = $this->user['id'];
-            $list = db('Order')->field('id,total,goodsMoney,discount,wallet,money,payment,point,fund,order_no,name,tel,province,city,county,addressDetail,sn,front,back,sender,senderTel,intr,status,createTime')->where( $map )->find();
+            $list = db('Order')->field('id,total,goodsMoney,discount,wallet,money,payment,point,order_no,name,tel,province,city,county,addressDetail,sn,front,back,sender,senderTel,intr,status,createTime')->where( $map )->find();
             if ($list) {                
                 if($list['sn']=='' || $list['front']=='' || $list['back']==''){
                     $list['upload'] = 0;
                 }else{
                     $list['upload'] = 1;
                 }
+                $list['front']=getRealUrl($list['front']);
+                $list['back']=getRealUrl($list['back']);
                 $list['statusStr'] = getOrderStatus($list);
 
                 $goods = db("OrderCart")->field('goodsID,name,picname,price,number,spec')->where('orderID',$list['id'])->select();
-                foreach ($goods as $k => $val) {
-                    $val['picname'] = getThumb($val['picname'],200,200);
+
+                foreach ($goods as $k => $val) { 
+                    $val['picname'] = getThumb($val['picname'],200,200);                    
                     $goods[$k]['picname'] = getRealUrl($val['picname']);
                 }
 
@@ -121,55 +124,6 @@ class Order extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
             $config = tpCache("member");
 
-            $ids = input('post.ids');
-            if ($ids=='') {
-                returnJson(0,'缺少参数');
-            }
-            $map['memberID'] = $this->user['id'];
-            $ids = explode(",",$ids);
-            $map['id'] = array('in',$ids);
-
-            $list = db("Cart")->where($map)->select();
-            if (!$list) {
-                returnJson(0,'购物车中没有商品');
-            }
-
-            $cut = input('post.cut');
-
-            //缺少判断库存
-
-
-            $goodsMoney = 0;   //商品总金额
-            $cutMoney = 0;     //可打折金额
-            $inprice = 0;
-            $point = 0;
-            $isCut = 1;        //订单是否可以砍价
-            foreach ($list as $key => $value) {
-                $goods = db("Goods")->where('id',$value['goodsID'])->find();
-                if($goods['fid']>0){
-                    $fid = $goods['fid'];
-                }else{
-                    $fid = $goods['id'];
-                }  
-                if($this->checkInFlash($fid,$this->flash)){
-                    $isCut = 0;
-                }
-
-                $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
-                $list[$key]['price'] = $result['price'];
-                $list[$key]['name'] = $goods['name'];
-                $list[$key]['fid'] = $goods['fid'];
-                $list[$key]['picname'] = $goods['picname'];
-                if($result['spec']){
-                    $list[$key]['spec'] = $result['spec']['key_name'];
-                }else{
-                    $list[$key]['spec'] = '';
-                }
-                $goodsMoney += $result['price'];
-                $cutMoney += $result['cutPrice'];
-                $inprice += $goods['inprice'] * $value['trueNumber'];
-                $point += $goods['point'] * $value['trueNumber'];
-            } 
             $senderID = input('post.senderID');
             $sender = db("Sender")->where(['id'=>$senderID,'memberID'=>$this->user['id']])->find();
             if(!$sender){
@@ -182,166 +136,226 @@ class Order extends Auth {
                 returnJson(0,'收件人错误');
             }
 
-            $couponID = input('post.couponID');
-            $data['memberID'] = $this->user['id'];
-
-            //判断优惠券
-            if ($couponID>0 && is_numeric($couponID)) {
-                $map['id'] = $couponID;
-                $map['useTime'] = 0;
-                $map['memberID'] = $this->user['id'];
-                $map['endTime'] = array('gt',time());
-                $coupon = db("CouponLog")->where($map)->find();
-                if(!$coupon){
-                    returnJson(0,'无效的优惠券');
-                }
-
-                if(!$this->checkCoupon($coupon,$list,$goodsMoney)){
-                    returnJson(0,'该优惠券不满足使用条件');
-                }
-
-                $data['couponID'] = $couponID;
-                $data['isCut'] = 0;
-                $data['discount'] = $coupon['dec'];
-            }else{
-                $data['couponID'] = 0;
-                if($config['isCut']==0){
-                    $data['isCut'] = 0;
-                }else{
-                    if($cutMoney > 0 && $isCut==1){
-                        $data['isCut'] = 1;
-                    }else{
-                        $data['isCut'] = 0;
-                    }
-                }
-                $data['discount'] = 0;
+            $ids = input('post.ids');
+            $couponIds = input('post.couponID');
+            $intr = input('post.intr');
+            if($couponIds){
+                $intr = explode("##",$intr);
+            }
+            if($couponIds){
+                $couponIds = explode(",",$couponIds);
+            }
+            if ($ids=='') {
+                returnJson(0,'缺少参数');
             }
 
-            if(!$cut){ //提交订单时不允许砍价
-                $data['isCut'] = 0;
+            $map['memberID'] = $this->user['id'];
+            $ids = explode(",",$ids);
+            $map['id'] = array('in',$ids);
+            $shopIds = db('Cart')->where($map)->group('shopID')->column('shopID');
+            if (!$shopIds) {
+                returnJson(0,'购物车中没有商品');
             }
-            //获取包裹信息
-            $baoguo = $this->getYunfeiJson($list,$address['province']);   
-    
-            $total = $goodsMoney + $baoguo['totalPrice'] - $data['discount'];
-            if($total<=0){
-                $total = 0;
-            }
-            $order_no = $this->getOrderNo();
-
-            if($data['isCut'] == 1){
-                $data['fund'] = 0;
-            }else{
-                $data['fund'] = $total;
-            }
-            $data['total'] = $total;
-            $data['point'] = $point;
-            $data['payment'] = $baoguo['totalPrice'];
-            $data['goodsMoney'] = $goodsMoney;
-            $data['minGoodsMoney'] = $goodsMoney - $cutMoney;
-            $data['inprice'] = $inprice;
-            $data['order_no'] = $order_no;
-            $data['addressID'] = $addressID;
-            $data['name'] = $address['name'];
-            $data['tel'] = $address['tel'];
-            $data['sn'] = $address['sn'];
-            $data['front'] = $address['front'];
-            $data['back'] = $address['back'];
-            $data['province'] = $address['province'];
-            $data['city'] = $address['city'];
-            $data['county'] = $address['county'];
-            $data['addressDetail'] = $address['addressDetail'];
-            $data['sender'] = $sender['name'];
-            $data['senderTel'] = $sender['tel'];
-            $data['intr'] = input('post.intr'); 
-
-            $res = model('Order')->add( $data );
-            if ($res['code']==1) {
-                $orderID = $res['msg'];
-                foreach ($baoguo['baoguo'] as $key => $value) {
-                    //保存详单
-                    $detail['orderID'] = $orderID;        
-                    $detail['order_no'] = $data['order_no'];
-                    $detail['memberID'] = $this->user['id'];  
-                    $detail['payment'] = $value['yunfei'];
-                    $detail['wuliuInprice'] = $value['inprice'];//物流成本
-                    $detail['type'] = $value['type'];
-                    $detail['weight'] = $value['totalWuliuWeight'];
-                    $detail['kuaidi'] = $value['kuaidi'];
-                    $detail['kdNo'] = '';
-                    $detail['name'] = $data['name'];
-                    $detail['tel'] = $data['tel'];
-                    $detail['province'] = $data['province'];            
-                    $detail['city'] = $data['city'];
-                    $detail['county'] = $data['county'];
-                    $detail['addressDetail'] = $data['addressDetail'];
-                    $detail['sender'] = $data['sender'];
-                    $detail['senderTel'] = $data['senderTel'];
-                    $detail['createTime'] = time();          
-                    $detail['status'] = 0;              
-                    $detail['snStatus'] = 0;
-                    $baoguoID = db('OrderBaoguo')->insertGetId($detail);
-                    if ($baoguoID) {
-                        foreach ($value['goods'] as $k => $val) {   
-                            $gData = [
-                                'orderID'=>$orderID,
-                                'memberID'=>$this->user['id'],
-                                'baoguoID'=>$baoguoID,
-                                'goodsID'=>$val['goodsID'],
-                                'specID'=>$val['specID'],
-                                'name'=>$val['name'],
-                                'short'=>$val['short'],
-                                'number'=>$val['trueNumber'],    
-                                'price'=>$val['price'],    
-                                'createTime'=>time()
-                            ];
-                            db('OrderDetail')->insert($gData);      
-                        }
-                    }
-                    unset($detail);
-                }
-
-                //作废优惠券
-                if($coupon){
-                    db("CouponLog")->where('id',$coupon['id'])->update([
-                        'useTime'=>time(),
-                        'status'=>1
-                    ]);
-                }
-
-                //删除购物车，保存订单记录                
-                $history = [];
-                foreach ($list as $key => $value) {
-                    array_push($history,[
-                        'orderID'=>$orderID,
-                        'memberID'=>$this->user['id'],
-                        'goodsID'=>$value['goodsID'],
-                        'fid'=>$value['fid'],
-                        'specID'=>$value['specID'],
-                        'name'=>$value['name'],
-                        'picname'=>$value['picname'],
-                        'price'=>$value['price'],
-                        'spec'=>$value['spec'],
-                        'number'=>$value['number'],
-                        'trueNumber'=>$value['trueNumber']
-                    ]);
-                }
-                db("OrderCart")->insertAll($history);
-
+            $shop = db("Shop")->field('id,name')->whereIn('id',$shopIds)->select();
+            $orders = [];
+            foreach ($shop as $key => $value) {
                 unset($map);
+                $map['shopID'] = $value['id'];
                 $map['memberID'] = $this->user['id'];
-                $map['id'] = array('in',$ids);
-                db("Cart")->where($map)->delete();
-                returnJson(1,'订单创建成功',[
-                    'order_no'=>$order_no,
-                    'isCut'=>$data['isCut'],
-                    'total'=>$data['total'],
-                    'minGoodsMoney'=>$data['minGoodsMoney']
-                ]); 
-            }else{
-                returnJson(0,$res['msg']);
-            }            
+                $shopGoods = db("Cart")->where($map)->select();
+                if($couponIds){
+                    $couponID = $this->getCouponID($couponIds,$value['id']);
+                }     
+                $result = $this->getShopOrder($shopGoods,$value,$address,$couponID);
+                $result['intr'] = $intr[$key];
+                //保存订单
+                $order_no = $this->saveShopOrder($address,$sender,$result);
+                array_push($orders,$order_no);
+            }
+            returnJson(1,'订单创建成功',['order_no'=>implode(",",$orders)]);
         }
+    }
+
+    public function saveShopOrder($address,$sender,$orderData){
+        unset($data);
+        $order_no = $this->getOrderNo();
+        $data['memberID'] = $this->user['id'];
+        $data['couponID'] = $orderData['coupon']['id'];
+        $data['discount'] = $orderData['coupon']['discount'];
+        $data['total'] = $orderData['total'];
+        $data['point'] = $orderData['point'];
+        $data['bonus'] = $orderData['bonus'];
+        $data['payment'] = $orderData['baoguo']['totalPrice'];
+        $data['goodsMoney'] = $orderData['goodsMoney'];
+        $data['inprice'] = $orderData['inprice'];
+        $data['order_no'] = $order_no;
+        $data['addressID'] = $address['id'];
+        $data['name'] = $address['name'];
+        $data['tel'] = $address['tel'];
+        $data['sn'] = $address['sn'];
+        $data['front'] = $address['front'];
+        $data['back'] = $address['back'];
+        $data['province'] = $address['province'];
+        $data['city'] = $address['city'];
+        $data['county'] = $address['county'];
+        $data['addressDetail'] = $address['addressDetail'];
+        $data['sender'] = $sender['name'];
+        $data['senderTel'] = $sender['tel'];
+        $data['intr'] = $orderData['intr'];   
+        $data['createTime'] = time();    
+        $data['status'] = 0;
+        $data['payType'] = 0;
+        $data['payStatus'] = 0;
+        $orderID = db('Order')->insertGetId( $data );
+        if ($orderID) {
+            foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
+                //保存详单
+                $detail['orderID'] = $orderID;        
+                $detail['order_no'] = $data['order_no'];
+                $detail['memberID'] = $this->user['id'];  
+                $detail['payment'] = $value['yunfei'];
+                $detail['wuliuInprice'] = $value['inprice'];//物流成本
+                $detail['type'] = $value['type'];
+                $detail['weight'] = $value['totalWuliuWeight'];
+                $detail['kuaidi'] = $value['kuaidi'];
+                $detail['kdNo'] = '';
+                $detail['name'] = $data['name'];
+                $detail['tel'] = $data['tel'];
+                $detail['province'] = $data['province'];            
+                $detail['city'] = $data['city'];
+                $detail['county'] = $data['county'];
+                $detail['addressDetail'] = $data['addressDetail'];
+                $detail['sender'] = $data['sender'];
+                $detail['senderTel'] = $data['senderTel'];
+                $detail['createTime'] = time();          
+                $detail['status'] = 0;              
+                $detail['snStatus'] = 0;
+                $baoguoID = db('OrderBaoguo')->insertGetId($detail);
+                if ($baoguoID) {
+                    foreach ($value['goods'] as $k => $val) {   
+                        $gData = [
+                            'orderID'=>$orderID,
+                            'memberID'=>$this->user['id'],
+                            'baoguoID'=>$baoguoID,
+                            'goodsID'=>$val['goodsID'],
+                            'specID'=>$val['specID'],
+                            'name'=>$val['name'],
+                            'short'=>$val['short'],
+                            'number'=>$val['trueNumber'],    
+                            'price'=>$val['price'],    
+                            'createTime'=>time()
+                        ];
+                        db('OrderDetail')->insert($gData);      
+                    }
+                }
+                unset($detail);
+            }
+
+            //作废优惠券
+            if($orderData['coupon']['id']>0){
+                db("CouponLog")->where('id',$orderData['coupon']['id'])->update([
+                    'useTime'=>time(),
+                    'status'=>1
+                ]);
+            }
+
+            //删除购物车，保存订单记录                
+            $history = [];
+            $ids = [];
+            foreach ($orderData['cart'] as $key => $value) {
+                array_push($history,[
+                    'orderID'=>$orderID,
+                    'memberID'=>$this->user['id'],
+                    'goodsID'=>$value['goodsID'],
+                    'fid'=>$value['fid'],
+                    'specID'=>$value['specID'],
+                    'name'=>$value['name'],
+                    'picname'=>$value['picname'],
+                    'price'=>$value['price'],
+                    'spec'=>$value['spec'],
+                    'number'=>$value['number'],
+                    'trueNumber'=>$value['trueNumber']
+                ]);
+                array_push($ids,$value['id']);
+            }
+            db("OrderCart")->insertAll($history);
+
+            unset($map);
+            $map['memberID'] = $this->user['id'];
+            $map['id'] = array('in',$ids);
+            db("Cart")->where($map)->delete();
+            return $order_no;
+        }else{
+            returnJson(0,'订单提交失败');
+        }
+    }
+
+    public function getShopOrder($cart,$shop,$address,$couponID=null){
+        $goodsMoney = 0;
+        $inprice = 0;
+        $point = 0;
+        $bonus = 0;
+        foreach ($cart as $key => $value) {
+            $goods = db("Goods")->where('id',$value['goodsID'])->find();
+
+            if (!$goods) {
+                returnJson(0,'商品【'.$goods['name'].'】已经下架');
+            }
+
+            if ($goods['stock'] < $value['trueNumber']) {
+                returnJson(0,'商品【'.$goods['name'].'】库存不足，当前库存为'.$goods['stock']);
+            }
+
+            $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
+            $cart[$key]['name'] = $goods['name'];
+            $cart[$key]['say'] = $goods['say'];
+            $cart[$key]['fid'] = $goods['fid'];
+            $cart[$key]['picname'] = getRealUrl($goods['picname']);
+            $cart[$key]['price'] = $result['price'];
+            if($result['spec']){
+                $cart[$key]['spec'] = $result['spec']['key_name'];
+            }else{
+                $cart[$key]['spec'] = '';
+            }
+            $cart[$key]['total'] = $result['price'] * $value['number'];  
+
+            $goodsMoney += $cart[$key]['total'];
+            $inprice += $goods['inprice'] * $value['trueNumber'];
+            $point += $goods['point'] * $value['trueNumber'];
+            $bonus += $goods['tjPoint'] * $value['trueNumber'];
+        }
+
+        $baoguo = $this->getYunfeiJson($cart,$address['province']);
+
+        //判断优惠券
+        if ($couponID>0 && is_numeric($couponID)) {
+            $map['id'] = $couponID;
+            $map['useTime'] = 0;
+            $map['memberID'] = $this->user['id'];
+            $map['endTime'] = array('gt',time());
+            $coupon = db("CouponLog")->where($map)->find();
+            if(!$coupon){
+                returnJson(0,'无效的优惠券');
+            }
+
+            if(!$this->checkCoupon($coupon,$cart,$goodsMoney)){
+                returnJson(0,'该优惠券不满足使用条件');
+            }
+
+            $discount = $coupon['dec'];
+        }else{
+            $couponID = 0;
+            $discount = 0;
+        }
+
+        $total = $goodsMoney + $baoguo['totalPrice'];
+        if($discount>0){
+            $total = $total - $discount;
+        }
+        if($total<=0){
+            $total = 1;
+        }
+        return ['cart'=>$cart,'baoguo'=>$baoguo,'goodsMoney'=>$goodsMoney,'inprice'=>$inprice,'point'=>$point,'bonus'=>$bonus,'total'=>$total,'coupon'=>['id'=>$couponID,'discount'=>$discount]];
     }
 
     //删除
@@ -400,125 +414,7 @@ class Order extends Auth {
         }       
     }
 
-    public function cutDetail(){
-        if (request()->isPost()) { 
-            if(!checkFormDate()){returnJson(0,'ERROR');}
-
-            $order_no = input('post.order_no');
-            if ($order_no=='') {
-                returnJson(0,'缺少参数');
-            }
-            $map['order_no'] = $order_no;
-            $map['isCut'] = 1;
-            $list = db('Order')->field('id,order_no,createTime,total,minGoodsMoney,endTime')->where($map)->find();
-            if(!$list){
-                returnJson(0,'订单不存在');
-            }
-
-            $list['rmb'] = round($list['total']*$this->rate,2);
-            $list['minRmb'] = round($list['minGoodsMoney']*$this->rate,2);
-            $list['headimg'] = $this->user['headimg'];
-            if($list['endTime']>0){
-                $list['endTime'] = date("Y-m-d H:i:s",$list['endTime']);
-                $list['end'] = 1;
-            }else{
-                $list['end'] = 0;
-            }
-
-            $goods = db("OrderCart")->field('name,picname,price,number,spec')->where('orderID',$list['id'])->select();
-            foreach ($goods as $k => $val) {
-                $val['picname'] = getThumb($val['picname'],200,200);
-                $goods[$k]['picname'] = getRealUrl($val['picname']);
-            }
-            $list['goods'] = $goods;
-
-            $friend = db("OrderCut")->field('money,headimg')->where('orderID',$list['id'])->select();
-
-            //为您推荐 
-            $obj = db('GoodsPush');
-            $commend = $obj->field('goodsID')->where('cateID',3)->limit(10)->order('id desc')->select();
-            foreach ($commend as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
-
-                unset($commend[$key]['goodsID']);
-                $goods['picname'] = getThumb($goods["picname"],200,200);
-                $goods['picname'] = getRealUrl($goods['picname']);
-                $goods['rmb'] = round($goods['price']*$this->rate,2);
-                $commend[$key] = $goods;
-            }
-
-            $config = tpCache('member');
-            $endTime = $list['createTime']+($config['hour']*3600)-time();
-            returnJson(1,'success',[
-                'data'=>$list,
-                'friend'=>$friend,
-                'goods'=>$commend,
-                'endTime'=>$endTime
-            ]);
-        }
-    }
-
-    //砍价
-    public function cut(){
-        if (request()->isPost()) { 
-            if(!checkFormDate()){returnJson(0,'ERROR');}
-
-            $order_no = input('post.order_no');
-            if ($order_no=='') {
-                returnJson(0,'缺少参数');
-            }
-            $map['order_no'] = $order_no;
-            $map['isCut'] = 1;
-            $map['endTime'] = array('gt',0);
-            $list = db('Order')->where($map)->find();
-            if(!$list){
-                returnJson(0,'订单不存在');
-            }
-
-            if($list['memberID'] == $this->user['id']){
-                returnJson(0,'不能为自己的订单砍价');
-            }
-            
-            unset($map);
-            $map['openid'] = $this->user['openid'];
-            $map['orderID'] = $list['id'];
-            $res = db("OrderCut")->where($map)->find();
-            if($res){
-                returnJson(0,'不能重复砍价');
-            }
-
-            $diffMoney = $list['total'] - $list['minGoodsMoney'];
-            if($diffMoney<0){
-                $diffMoney = 0;
-            }
-
-            $config = tpCache('member');
-            $money = rand($config['min']*100,$config['max']*100);
-            $money = $money/100;
-            
-            if($money > $diffMoney){
-                $money = $diffMoney;
-                $flag = 1;
-            }
-
-            $data = [
-                'openid'=>$this->user['openid'],
-                'orderID'=>$list['id'],
-                'nickname'=>$this->user['nickname'],
-                'headimg'=>$this->user['headimg'],
-                'money'=>$money,
-                'createTime'=>time()
-            ];
-            db("OrderCut")->insert($data);
-            $update['total'] = $list['total'] - $money;
-            if($flag){
-                $update['endTime'] = time();                
-            }
-            db("Order")->where('id',$list['id'])->update($update);
-            returnJson(1,'success',['money'=>$money]);
-        }
-    }
-
+    
     public function pay(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
@@ -526,31 +422,39 @@ class Order extends Auth {
             if($order_no==''){
                 returnJson(0,'参数错误');
             }
+            $order_no = explode(',',$order_no);
 
-            $map['order_no'] = $order_no;
+            $map['order_no'] = array('in',$order_no);
             $map['memberID'] = $this->user['id'];
             $map['status'] = 0;
-            $list = db("Order")->field('id,order_no,total,money')->where($map)->find();
+            $list = db("Order")->field('id,order_no,total,money')->where($map)->select();
             if(!$list){
                 returnJson(0,'订单不存在');
-            }   
-            if($list['money']>0){
-                $url = $this->getOmiUrl($list);
-                returnJson(1,'success',['url'=>$url]);
             }
 
-            $list['rate'] = $this->getRate();
-            $list['rmb'] = round($list['total']*$this->rate,2);
+            $total = 0;
+            foreach ($list as $key => $value) {
+                $total += $value['total'];
+            }
+
+            $rate = $this->getRate();
+            $rmb = round($total*$this->rate,2);
             $fina = $this->getUserMoney($this->user['id']);
-            if($fina['money']>=$list['total']){
+
+            if($fina['money']>=$total){
                 $type = 2;
             }else{
                 $type = 1;
             }
             returnJson(1,'success',[
                 'data'=>$list,
-                'wallet'=>$fina['money'],
-                'type'=>$type
+                'wallet'=>$fina,
+                'info'=>[
+                    'type'=>$type,
+                    'rate'=>$rate,
+                    'rmb'=>$rmb,
+                    'total'=>$total,
+                ]                
             ]);
         }
     }

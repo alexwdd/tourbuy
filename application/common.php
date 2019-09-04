@@ -259,6 +259,11 @@ function getStoreOrderNo($fix='') {
 
 //图片生成缩略图
 function getThumb($path, $width, $height) {
+    $first = substr($path,0,4);
+    if ($first == 'http') {
+        return $path;
+    }
+
     if(file_exists(".".$path) && !empty($path)){
         $fileArr = pathinfo($path); 
         $dirname = $fileArr['dirname']; 

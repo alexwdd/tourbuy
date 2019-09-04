@@ -312,11 +312,6 @@ class Cart extends Auth {
         $point = 0;
         foreach ($cart as $key => $value) {
             $goods = db("Goods")->where('id',$value['goodsID'])->find();
-            if($goods['fid']>0){
-                $fid = $goods['fid'];
-            }else{
-                $fid = $goods['id'];
-            }  
 
             $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
             $cart[$key]['name'] = $goods['name'];
