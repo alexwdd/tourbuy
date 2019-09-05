@@ -168,6 +168,7 @@ class Order extends Auth {
                 }     
                 $result = $this->getShopOrder($shopGoods,$value,$address,$couponID);
                 $result['intr'] = $intr[$key];
+                $result['shopID'] = $value['id'];
                 //保存订单
                 $order_no = $this->saveShopOrder($address,$sender,$result);
                 array_push($orders,$order_no);
@@ -179,6 +180,7 @@ class Order extends Auth {
     public function saveShopOrder($address,$sender,$orderData){
         unset($data);
         $order_no = $this->getOrderNo();
+        $data['shopID'] = $orderData['shopID'];
         $data['memberID'] = $this->user['id'];
         $data['couponID'] = $orderData['coupon']['id'];
         $data['discount'] = $orderData['coupon']['discount'];
@@ -210,7 +212,8 @@ class Order extends Auth {
         if ($orderID) {
             foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
                 //保存详单
-                $detail['orderID'] = $orderID;        
+                $detail['orderID'] = $orderID;
+                $detail['shopID'] = $data['shopID'];
                 $detail['order_no'] = $data['order_no'];
                 $detail['memberID'] = $this->user['id'];  
                 $detail['payment'] = $value['yunfei'];
@@ -601,6 +604,63 @@ class Order extends Auth {
             }
 
             returnJson(1,'success',['data'=>$order,'goods'=>$list]);
+        }
+    }
+
+    public function updatePersonCard(){
+        if (request()->isPost()) {
+            //if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $id = input('post.id');
+            $front = input('post.front');
+            $back = input('post.back');
+            if ($id=='') {
+                returnJson(0,'参数错误');
+            }
+            if ($front=='' && $back=='') {
+                returnJson(0,'请选择身份证照片');
+            }
+
+            $map['id'] = $id;
+            $map['memberID'] = $this->user['id'];
+            $list = db("Order")->where($map)->find();
+            if(!$list){
+                returnJson(0,'订单不存在');
+            }
+
+            if($front!='' && strstr($front, 'base64')){
+                $path = config('UPLOAD_PATH').'sn/'.$this->user['id'].'/';
+                $fileName = createNonceStr();
+                $frontUrl = $this->base64ToImg($path,$fileName,$front);
+            }else{
+                $frontUrl = $front;
+            }
+            
+            if($back!='' && strstr($back, 'base64')){
+                $path = config('UPLOAD_PATH').'sn/'.$this->user['id'].'/';
+                $fileName = createNonceStr();
+                $backUrl = $this->base64ToImg($path,$fileName,$back);
+            }else{
+                $backUrl = $back;
+            }
+            
+            if($frontUrl != ''){
+                $data['front'] = $frontUrl;
+            }
+
+            if($backUrl != ''){
+                $data['back'] = $backUrl;
+            }
+
+            $res = db("Order")->where('id',$id)->update($data);
+
+            if($res){
+                $frontUrl = getRealUrl($frontUrl);
+                $backUrl = getRealUrl($backUrl);
+                returnJson(1,'success',['front'=>$frontUrl,'back'=>$backUrl]);
+            }else{
+                returnJson(0,'照片保存失败');
+            }
         }
     }
 }

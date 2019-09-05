@@ -1,0 +1,322 @@
+<style type="text/css">
+.face{float: left; margin-right: 15px}
+.face img{height: 80px; display: block;}
+.face a{display: block; width: 100%; margin-top: 5px}
+</style>
+<div class="layui-row layui-col-space5">
+    <div class="layui-col-md5">
+        <fieldset class="layui-elem-field">
+            <legend>商品详情</legend>
+            <div class="layui-field-box">
+                <table class="layui-table">
+                    <colgroup>
+                        <col>
+                        <col width="100">
+                        <col width="150">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>数量</th>
+                      <th>金额</th>
+                    </tr> 
+                    </thead>
+                    <tbody>
+                        {volist name="goods" id="vo"}
+                        <tr>
+                            <td>
+                                {$vo.name}
+                                {notempty name="vo.spec"}
+                                <p style="font-size: 12px">{$vo.spec}</p>
+                                {/notempty}
+                            </td>
+                            <td>{$vo.number}</td>
+                            <td>{$vo.price}</td>
+                        </tr>
+                        {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field">
+            <legend>订单详情</legend>
+            <div class="layui-field-box">                   
+                <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单号</label>
+                        <div class="layui-form-mid">{$list.order_no}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品金额</label>
+                        <div class="layui-form-mid">{$list.goodsMoney}</div>
+                    </div>                    
+         
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">运费</label>
+                        <div class="layui-form-mid">{$list.payment}</div>
+                    </div>     
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">提交日期</label>
+                        <div class="layui-form-mid">{$list.createTime|date="Y-m-d H:i:s",###}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">支付方式</label>
+                        <div class="layui-form-mid">{$list.payType|getPayType}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">优惠</label>
+                        <div class="layui-form-mid">{$list.discount}</div>
+                    </div>                    
+
+                    {gt name="list.wallet" value="0"}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">余额支付</label>
+                        <div class="layui-form-mid">{$list.wallet}</div>
+                    </div>
+                    {/gt}
+                    
+                    {gt name="list.money" value="0"}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">在线支付</label>
+                        <div class="layui-form-mid">{$list.money}</div>
+                    </div>
+                    {/gt}
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">留言</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-form-mid">{$list.intr}</div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单状态</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-form-mid">{$list|getOrderStatus}</div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单总金额</label>
+                        {eq name="list.status" value="0"}
+                        <div class="layui-input-inline">
+                            <input type="number" step="0.01" name="total" value="{$list.total}" lay-verType="tips" lay-verify="required" autocomplete="off" class="layui-input"/>
+                        </div>
+                        {else/}
+                        <div class="layui-form-mid">{$list.total}</div>
+                        {/eq}
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">订单备注</label>
+                        <div class="layui-input-block">
+                            <textarea name="remark" class="layui-textarea">{$list.remark}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-hide">
+                        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('order/info')}">
+                    </div>
+                    <input type="hidden" name="id" value="{$list.id}">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="layui-col-md7">
+        <fieldset class="layui-elem-field">
+            <legend>收件人</legend>
+            <div class="layui-field-box">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-form-mid">{$list.name}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-form-mid">{$list.tel}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">地址</label>
+                        <div class="layui-form-mid">{$list.province}{$list.city}{$list.county}{$list.addressDetail}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-form-mid">{$list.sn|default='无'}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">身份证</label>
+                        <div class="layui-input-block">
+                            <div class="face">
+                                {empty name="list.front"}
+                                <img src="{:RES}/image/sn1.png">
+                                {else/}
+                                <img src="{$list.front}">
+                                <a href="{:url('order/image')}?img={$list.front}" class="layui-btn layui-btn-sm">下载</a>
+                                {/empty}
+                            </div>
+                            <div class="face">
+                                {empty name="list.back"}
+                                <img src="{:RES}/image/sn2.png">
+                                {else/}
+                                <img src="{$list.back}" />
+                                <a href="{:url('order/image')}?img={$list.back}" class="layui-btn layui-btn-sm">下载</a>
+                                {/empty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field">
+            <legend>发件人</legend>
+            <div class="layui-field-box">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-form-mid">{$list.sender}</div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-form-mid">{$list.senderTel}</div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field">
+            <legend>包裹</legend>
+            <div class="layui-field-box">
+                {volist name="baoguo" id="f"}
+                <div class="orderList">
+                    <div class="hd">包裹ID【{$f.id}】 身份证【{eq name="f.snStatus" value="0"}<span style="color: #f00">未上传</span>{else/}已上传{/eq}】 {$f.kuaidi} 运单号【{$f.kdNo|default="-"}】 【{eq name="f.flag" value="0"}<span style="color: #f00">未发货</span>{else/}已发货{/eq}】</div>
+                    <table class="layui-table" style="margin: 0">
+                        <colgroup>
+                            <col>
+                            <col>           
+                            <col>           
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>名称</th>                 
+                            <th>单价</th>
+                            <th>数量</th>     
+                        </tr> 
+                        </thead>
+                        <tbody>
+                            {volist name="f.goods" id="g"}
+                            <tr>                        
+                                <td>{$g.name}</td>                      
+                                <td>{$g.price}</td>
+                                <td>{$g.number}</td>
+                            </tr>       
+                            {/volist}
+                        </tbody>
+                    </table>                        
+                    <div class="fd">  
+                        <div class="wuliu">
+                            {volist name="f.eimg" id="img"}
+                            <a href="javascript:void(0)" class="photo" data-url="{$img}"><img src="{$img}"></a>
+                            {/volist}
+                            {volist name="f.image" id="img"}
+                            <a href="javascript:void(0)" class="photo" data-url="{$img}"><img src="{$img}"></a>
+                            {/volist}
+                        </div>
+                        {eq name="list.cancel" value="0"}
+                        <div style="float: right">          
+                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal snBtn">上传身份证</button>
+                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal createBtn">生成运单</button>
+                        <button type="button" data-url="{:url("Order/wuliu","id=".$f['id'])}" class="layui-btn wuliuBtn">运单信息</button>
+                        </div>
+                        {/eq}
+                    </div>                      
+                </div>
+                {/volist}
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload'], function() {    
+    var $ = layui.$,
+    myupload = layui.myupload;
+    $("html").css({"background":"#fff"});
+
+    $(".wuliuBtn").click(function(){
+        url = $(this).attr("data-url");
+        layer.open({
+            type: 2,
+            title: '运单信息',
+            shadeClose: true,
+            shade: 0.8,
+            area: ["80%", "80%"],
+            content: url //iframe的url
+        });
+    })
+
+    $(".photo").click(function(){
+        url = $(this).attr("data-url");
+        layer.open({
+            type: 1,
+            shadeClose: true,
+            shade: 0.8,
+            area: ["80%", "80%"],
+            content: '<img src="'+url+'"/>'
+        });
+    })
+
+    $(".createBtn").click(function(){
+        var id = $(this).attr("data-id");
+        layer.confirm("确定要生成运单吗？",function(){
+            layer.closeAll();
+            var load = layer.load(0,{shade: [0.7, '#000000']});
+            data = {id:id};
+            $.post("{:url('order/create')}",data,function(res){
+                layer.close(load);
+                if (res.code==1){
+                    layer.alert(res.msg,function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            },"json")
+        })
+    })
+
+    $(".snBtn").click(function(){
+        var id = $(this).attr("data-id");
+        layer.confirm("确定要上传身份证吗？",function(){
+            layer.closeAll();
+            var load = layer.load(0,{shade: [0.7, '#000000']});
+            data = {id:id};
+            $.post("{:url('order/uploadPhoto')}",data,function(res){
+                layer.close(load);
+                if (res.code==1){
+                    layer.alert(res.msg,function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            },"json")
+        })
+    })
+})
+</script>

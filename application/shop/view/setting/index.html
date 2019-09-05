@@ -1,0 +1,201 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    {eq name="list.edit" value="0"}
+    <div class="layui-form-item">
+        <label class="layui-form-label">商铺名称</label>
+        <div class="layui-form-mid">{$list.name}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">账户</label>
+        <div class="layui-form-mid">{$list.account}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">一句话描述</label>
+        <div class="layui-form-mid">{$list.intr}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">LOGO</label>
+        <div class="layui-input-block">
+            <a href="{$list.picname}" target="_blank">
+            <img src="{$list.picname}" style="width:100px"/>
+            </a>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">城市</label>
+        <div class="layui-form-mid">{$list.intr}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">推荐分类</label>
+        <div class="layui-form-mid">{$list.intr}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系人</label>
+        <div class="layui-form-mid">{$list.linkman}</div>
+
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-form-mid">{$list.tel}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址</label>
+        <div class="layui-form-mid">{$list.address}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">视频地址</label>
+        <div class="layui-form-mid">{$list.mp4|default='无'}</div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">照片</label>
+        <div class="layui-input-block">
+            <div class="insert-img">
+                {volist name="image" id="vo"}
+                <li><a href="{$vo}" target="_blank"><img src="{$vo}" /></a></li>
+                {/volist}
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">店铺介绍</label>
+        <div class="layui-form-mid">{$list.content}</div>
+    </div>    
+
+    {else/}
+    <div class="layui-form-item">
+        <label class="layui-form-label">商铺名称</label>
+        <div class="layui-form-mid">{$list.name}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">账户</label>
+        <div class="layui-form-mid">{$list.account}</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">一句话描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="intr" value="{$list.intr}" lay-verify="required" placeholder="店铺主营商品介绍" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">LOGO</label>
+        <div class="layui-input-inline" style="width:400px">
+            <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+            <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">推荐分类</label>
+        <div class="layui-input-block">
+            {volist name="cate" id="vo"}
+            <input type="checkbox" name="cate[]" value="{$vo.id}" lay-skin="primary" title="{$vo.name}" 
+            <?php
+            if(in_array($vo['id'],$cateIds)){
+            echo 'checked';
+            }
+            ?>
+            />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系人</label>
+        <div class="layui-input-inline">
+            <input type="text" name="linkman" value="{$list.linkman}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-inline">
+            <input type="text" name="tel" value="{$list.tel}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" value="{$list.address}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">视频地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="mp4" value="{$list.mp4}" placeholder="mp4格式" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div style="padding-left: 110px; clear: both; overflow: hidden; margin-bottom: 15px">
+        <div class="insert-img" id="insert-img">
+            {volist name="image" id="vo"}
+            <li><img src="{$vo}" /><input type="hidden" name="image[]" value="{$vo}" /><i class="layui-icon del-img-btn" data-url="{$vo}">&#x1006;</i></li>
+            {/volist}
+            <a href="javascript:;" class="insert-btn" id="upload-mult">+</a> 
+        </div>
+        <p style="font-size: 12px; color: #999; margin-top: 10px;">店铺照片</p>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺介绍</label>
+        <div class="layui-input-block">
+            <textarea name="content" class="layui-textarea" placeholder="选填">{$list.content}</textarea>
+        </div>
+    </div>
+    
+    <hr>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <input type="button" class="layui-btn" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="保存" iframe="1" url="{:url('setting/index')}">
+    </div>
+    {/eq}
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload'], function() {    
+    var $ = layui.$,
+        myupload = layui.myupload;
+
+    $("html").css({"background":"#fff"});
+
+    myupload.single({
+        elem : '#upload-single',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#picname'
+    }); 
+
+    myupload.mult({
+        elem : '#upload-mult',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120
+    });
+
+    //删除文件
+    $("body").on("click",".del-img-btn",function(){
+        let data = {path:$(this).attr("data-url")};
+        $.post("'{:url('admin/delfile')}",data);
+        $(this).parent().remove();
+    });
+})
+</script>

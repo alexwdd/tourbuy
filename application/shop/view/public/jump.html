@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<h1>
+<?php switch ($code) {?>
+    <?php case 1:?> 
+    <p class="success"><?php echo(strip_tags($msg));?></p>
+    <?php break;?>
+    <?php case 0:?>
+    <p class="error"><?php echo(strip_tags($msg));?></p>
+    <?php break;?>
+<?php } ?>
+</h1>
+</body>
+</html>
