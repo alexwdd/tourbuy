@@ -6,11 +6,14 @@ class Goods extends Common {
     public function category(){
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}
-            $map['fid'] = 0;
-            $list = db('GoodsCate')->field('id,path,name')->where($map)->order('sort asc,id desc')->select();
+            $fid = input('post.fid',0);
+
+            $map['fid'] = $fid;
+            $list = db('GoodsCate')->field('id,path,name')->where($map)->order('sort asc,id asc')->select();
             foreach ($list as $key => $value) {
-                $child = db('GoodsCate')->field('id,path,name,picname')->where('fid',$value['id'])->order('sort asc,id desc')->select();
+                $child = db('GoodsCate')->field('id,path,name,picname')->where('fid',$value['id'])->order('sort asc,id asc')->select();
                 foreach ($child as $k => $val) {
+                    $val['picname'] = getThumb($val["picname"],400,400);
                     $child[$k]['picname'] = getRealUrl($val['picname']);
                 }
                 $list[$key]['child'] = $child;
@@ -126,13 +129,24 @@ class Goods extends Common {
                 }
                 $list[$key]['child'] = $child;
             }
+            returnJson(1,'success',['brand'=>$list]);
+        }
+    }
 
-            $ad = db("Ad")->field('name,picname,url')->where('cid',2)->select();
-            foreach ($ad as $key => $value) {
-                $value['picname'] = getThumb($value["picname"],600,180);
-                $ad[$key]['picname'] = getRealUrl($value['picname']);
+    public function shopWall(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $map['cate'] = 5;
+            $list = db('OptionItem')->field('id as cid,name')->where($map)->order('sort asc,id asc')->select();
+            foreach ($list as $key => $value) {
+                $child = db('Shop')->field('id,name,picname')->where('cid',$value['cid'])->order('id desc,py asc')->limit(5)->select();
+                foreach ($child as $k => $val) {
+                    $val['picname'] = getThumb($val["picname"],200,150);
+                    $child[$k]['picname'] = getRealUrl($val['picname']);
+                }
+                $list[$key]['child'] = $child;
             }
-            returnJson(1,'success',['brand'=>$list,'ad'=>$ad]);
+            returnJson(1,'success',['shop'=>$list]);
         }
     }
 

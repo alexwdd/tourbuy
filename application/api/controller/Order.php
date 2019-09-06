@@ -107,6 +107,13 @@ class Order extends Auth {
                     }
                     $baoguo[$key]['goods'] = $goods;
                     $baoguo[$key]['number'] = $number;
+
+                    if($value['image']){
+                        $baoguo[$key]['image'] = explode(",", $value['image']);
+                    }
+                    if($value['eimg']){
+                        $baoguo[$key]['eimg'] = explode(",", $value['eimg']);
+                    }
                 }   
                 returnJson(1,'success',[
                     'order'=>$list,

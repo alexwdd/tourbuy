@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-09-06 17:28:50
+Date: 2019-09-07 00:25:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -58,7 +58,6 @@ CREATE TABLE `pm_ad` (
 INSERT INTO `pm_ad` VALUES ('1', '1', '0-1-', '测试广告', '/uploads/images/20190906/f1e66c82b163b7244b60b05bed837e6a.jpg', '111', '50', '1563768353', '1567739847');
 INSERT INTO `pm_ad` VALUES ('2', '1', '0-1-', '测试广告', '/uploads/images/20190906/a4f19a99293c639fef0e07454138f304.jpg', '111', '50', '1563768399', '1567739881');
 INSERT INTO `pm_ad` VALUES ('3', '1', '0-1-', 'swisse广告', '/uploads/images/20190906/0bf6e6ca6d8aee777d883bbcd6e49572.jpg', '1', '50', '1563788399', '1567739956');
-INSERT INTO `pm_ad` VALUES ('4', '2', '0-2-', '测试', '/uploads/images/20190816/0b929b1116175b887c7c57a85e7a58bd.jpg', '1', '50', '1565969493', '1565969493');
 
 -- ----------------------------
 -- Table structure for `pm_address`
@@ -260,7 +259,6 @@ CREATE TABLE `pm_category` (
 -- Records of pm_category
 -- ----------------------------
 INSERT INTO `pm_category` VALUES ('1', '6', '0', '首页广告', '', '50', '0-1-', '', '', '0', '', '', '1563116411', '1563116411');
-INSERT INTO `pm_category` VALUES ('2', '6', '0', '品牌墙广告', '', '50', '0-2-', '', '', '0', '', '', '1565969443', '1565969443');
 
 -- ----------------------------
 -- Table structure for `pm_city`
@@ -691,21 +689,21 @@ INSERT INTO `pm_goods_cate` VALUES ('11', '1', '性感内衣', '', '50', '0-1-11
 INSERT INTO `pm_goods_cate` VALUES ('12', '1', '文胸', '', '50', '0-1-12-', '', '', '0', '0', '0', '', '', '1567736993', '1567736993');
 INSERT INTO `pm_goods_cate` VALUES ('13', '1', '丝袜', '', '50', '0-1-13-', '', '', '0', '0', '0', '', '', '1567737014', '1567737014');
 INSERT INTO `pm_goods_cate` VALUES ('14', '1', '家居服', '', '50', '0-1-14-', '', '', '0', '0', '0', '', '', '1567737035', '1567737035');
-INSERT INTO `pm_goods_cate` VALUES ('15', '10', '羽绒服', '', '50', '0-1-10-15-', '', '', '0', '0', '0', '', '', '1567737065', '1567737065');
-INSERT INTO `pm_goods_cate` VALUES ('16', '10', '连衣裙', '', '50', '0-1-10-16-', '', '', '0', '0', '0', '', '', '1567738378', '1567738378');
-INSERT INTO `pm_goods_cate` VALUES ('17', '10', '毛呢大衣', '', '50', '0-1-10-17-', '', '', '0', '0', '0', '', '', '1567738491', '1567738491');
-INSERT INTO `pm_goods_cate` VALUES ('18', '10', '新品', '', '50', '0-1-10-18-', '', '', '0', '0', '0', '', '', '1567738516', '1567738516');
-INSERT INTO `pm_goods_cate` VALUES ('19', '11', '性感诱惑', '', '50', '0-1-11-19-', '', '', '0', '0', '0', '', '', '1567738552', '1567738552');
-INSERT INTO `pm_goods_cate` VALUES ('20', '11', '甜美新品', '', '50', '0-1-11-20-', '', '', '0', '0', '0', '', '', '1567738570', '1567738570');
-INSERT INTO `pm_goods_cate` VALUES ('21', '12', '蕾丝内衣', '', '50', '0-1-12-21-', '', '', '0', '0', '0', '', '', '1567738587', '1567738682');
-INSERT INTO `pm_goods_cate` VALUES ('22', '12', '运动文胸', '', '50', '0-1-12-22-', '', '', '0', '0', '0', '', '', '1567738605', '1567738657');
-INSERT INTO `pm_goods_cate` VALUES ('23', '12', '聚拢文胸', '', '50', '0-1-12-23-', '', '', '0', '0', '0', '', '', '1567738617', '1567738646');
-INSERT INTO `pm_goods_cate` VALUES ('24', '11', '简约优雅 ', '', '50', '0-1-11-24-', '', '', '0', '0', '0', '', '', '1567738706', '1567738706');
-INSERT INTO `pm_goods_cate` VALUES ('25', '11', '奢华高贵', '', '50', '0-1-11-25-', '', '', '0', '0', '0', '', '', '1567738722', '1567738722');
-INSERT INTO `pm_goods_cate` VALUES ('26', '12', '无钢圈', '', '50', '0-1-12-26-', '', '', '0', '0', '0', '', '', '1567738740', '1567738740');
-INSERT INTO `pm_goods_cate` VALUES ('27', '13', '船袜', '', '50', '0-1-13-27-', '', '', '0', '0', '0', '', '', '1567738771', '1567738771');
-INSERT INTO `pm_goods_cate` VALUES ('28', '13', '连裤袜', '', '50', '0-1-13-28-', '', '', '0', '0', '0', '', '', '1567738783', '1567738783');
-INSERT INTO `pm_goods_cate` VALUES ('29', '13', '隐形袜', '', '50', '0-1-13-29-', '', '', '0', '0', '0', '', '', '1567738811', '1567738811');
+INSERT INTO `pm_goods_cate` VALUES ('15', '10', '羽绒服', '', '50', '0-1-10-15-', '/uploads/images/20190906/9c758eecc283f107a2d31fcefa8f7f21.jpg', '', '0', '0', '0', '', '', '1567737065', '1567775181');
+INSERT INTO `pm_goods_cate` VALUES ('16', '10', '连衣裙', '', '50', '0-1-10-16-', '/uploads/images/20190906/0846a910fe0cc8c58bc09f9b57a3ebbf.jpg', '', '0', '0', '0', '', '', '1567738378', '1567775291');
+INSERT INTO `pm_goods_cate` VALUES ('17', '10', '毛呢大衣', '', '50', '0-1-10-17-', '/uploads/images/20190906/42e31c99c9240d3fd52aca3f3597cc89.jpg', '', '0', '0', '0', '', '', '1567738491', '1567775336');
+INSERT INTO `pm_goods_cate` VALUES ('18', '10', '新品', '', '50', '0-1-10-18-', '/uploads/images/20190906/ca2411c05cb6b39469bfe98a117c247e.jpg', '', '0', '0', '0', '', '', '1567738516', '1567775413');
+INSERT INTO `pm_goods_cate` VALUES ('19', '11', '性感诱惑', '', '50', '0-1-11-19-', '/uploads/images/20190906/4f804ebec222e3cd2691c36743971b08.jpg', '', '0', '0', '0', '', '', '1567738552', '1567775549');
+INSERT INTO `pm_goods_cate` VALUES ('20', '11', '甜美新品', '', '50', '0-1-11-20-', '/uploads/images/20190906/73a3183557763cc63aeed7ac3d726719.jpg', '', '0', '0', '0', '', '', '1567738570', '1567775619');
+INSERT INTO `pm_goods_cate` VALUES ('21', '12', '蕾丝内衣', '', '50', '0-1-12-21-', '/uploads/images/20190906/55de5ac48427318e86c628d3c38dc7c4.jpg', '', '0', '0', '0', '', '', '1567738587', '1567775871');
+INSERT INTO `pm_goods_cate` VALUES ('22', '12', '运动文胸', '', '50', '0-1-12-22-', '/uploads/images/20190906/debb07f515e1c4dd8706b2ae79d137af.jpg', '', '0', '0', '0', '', '', '1567738605', '1567775925');
+INSERT INTO `pm_goods_cate` VALUES ('23', '12', '聚拢文胸', '', '50', '0-1-12-23-', '/uploads/images/20190906/f0f6f1f06a579dab4e01fd8df65f2ff1.jpg', '', '0', '0', '0', '', '', '1567738617', '1567776050');
+INSERT INTO `pm_goods_cate` VALUES ('24', '11', '简约优雅 ', '', '50', '0-1-11-24-', '/uploads/images/20190906/67508efa4a5b868f0283759582c1732b.jpg', '', '0', '0', '0', '', '', '1567738706', '1567775697');
+INSERT INTO `pm_goods_cate` VALUES ('25', '11', '奢华高贵', '', '50', '0-1-11-25-', '/uploads/images/20190906/940da6f12615dcc78a02d2350e24a829.jpg', '', '0', '0', '0', '', '', '1567738722', '1567775812');
+INSERT INTO `pm_goods_cate` VALUES ('26', '12', '无钢圈', '', '50', '0-1-12-26-', '/uploads/images/20190906/7d0b9b07507a7de6b8ec6750a92cd2ed.jpg', '', '0', '0', '0', '', '', '1567738740', '1567776117');
+INSERT INTO `pm_goods_cate` VALUES ('27', '13', '船袜', '', '50', '0-1-13-27-', '/uploads/images/20190906/1a2f7e3a483217e16f1274fe0731ff9a.jpg', '', '0', '0', '0', '', '', '1567738771', '1567776254');
+INSERT INTO `pm_goods_cate` VALUES ('28', '13', '连裤袜', '', '50', '0-1-13-28-', '/uploads/images/20190906/50cc1f012b71525bc7c2e64815d1c82b.jpg', '', '0', '0', '0', '', '', '1567738783', '1567776385');
+INSERT INTO `pm_goods_cate` VALUES ('29', '13', '隐形袜', '', '50', '0-1-13-29-', '/uploads/images/20190906/7fc59808c3750f87b5a255433a6b8a4c.jpg', '', '0', '0', '0', '', '', '1567738811', '1567776452');
 INSERT INTO `pm_goods_cate` VALUES ('30', '0', '箱包', '', '50', '0-30-', '/uploads/images/20190906/a7f6b8ae6eb8cf07eec518d2ce891bbe.jpg', '', '0', '1', '0', '', '', '1567740140', '1567740611');
 
 -- ----------------------------
@@ -861,7 +859,7 @@ CREATE TABLE `pm_member` (
 -- Records of pm_member
 -- ----------------------------
 INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '10002', '月明', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1570152556', '1563767631', '127.0.0.1');
-INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1570350605', '1566188328', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1570377894', '1566188328', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for `pm_member_code`
@@ -1443,8 +1441,8 @@ CREATE TABLE `pm_shop` (
 -- ----------------------------
 -- Records of pm_shop
 -- ----------------------------
-INSERT INTO `pm_shop` VALUES ('7', '1', '20', '1,3', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190903/4d231b670020a7f8a62c13dd86291cd3_200_200', 'jack', '阿德莱德长安大街11号', '13500000000', '一家很不错的商店', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '1', '1', '1566488164', '1567758144');
-INSERT INTO `pm_shop` VALUES ('8', '2', '21', '1,4', '奶粉专卖店', 'test1', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190903/4d231b670020a7f8a62c13dd86291cd3.jpg', '赵柳', '阿萨德饭大是大非ad', '18700001111', '我们只卖一种产品', '', '', '', 'N', '0', '0', '1', '1567475240', '1567758096');
+INSERT INTO `pm_shop` VALUES ('7', '1', '20', '1,3', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190906/786a1f147fbcd15c7c0d0affd6439e31.jpg', 'jack', '阿德莱德长安大街11号', '13500000000', '一家很不错的商店', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '1', '1', '1566488164', '1567785034');
+INSERT INTO `pm_shop` VALUES ('8', '2', '21', '1,4', '奶粉专卖店', 'test1', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190906/8962d63087ef4eb6d11a5358b5f960d9.jpg', '赵柳', '阿萨德饭大是大非ad', '18700001111', '我们只卖一种产品', '', '', '', 'N', '0', '0', '1', '1567475240', '1567785124');
 
 -- ----------------------------
 -- Table structure for `pm_shop_fav`
