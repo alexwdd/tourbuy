@@ -24,31 +24,26 @@ class Index extends Common
             	$cate[$key]['picname'] = getRealUrl($value['picname']);
             }
 
-            $push = db('OptionItem')->field('value,name,ext')->where('cate',1)->select();
-            foreach ($push as $key => $value) {
-                $push[$key]['goods'] = [];
-                $ids = db('GoodsPush')->field('goodsID')->where('cateID',$value['value'])->order('updateTime desc')->limit(6)->select();
-                if($ids){                    
-                    foreach ($ids as $k => $val) {
-                        $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$val['goodsID'])->find();                
-                        $goods['picname'] = getThumb($goods["picname"],400,400);
-                        $goods['picname'] = getRealUrl($goods['picname']);
-                        $goods['rmb'] = round($goods['price']*$this->rate,2);
-                        array_push($push[$key]['goods'],$goods);
-                     
-                    }
-                }
-            }
-
-            //推荐
+            //精品
             unset($map);
             $map['show'] = 1;
-            $map['comm'] = 1;
-            $commend = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
-            foreach ($commend as $key => $value) {
+            $map['jingpin'] = 1;
+            $jingpin = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
+            foreach ($jingpin as $key => $value) {
                 $value['picname'] = getThumb($value["picname"],400,400);
-                $commend[$key]['picname'] = getRealUrl($value['picname']);
-                $commend[$key]['rmb'] = round($value['price']*$this->rate,2);
+                $jingpin[$key]['picname'] = getRealUrl($value['picname']);
+                $jingpin[$key]['rmb'] = round($value['price']*$this->rate,1);
+            }
+
+            //特惠
+            unset($map);
+            $map['show'] = 1;
+            $map['tehui'] = 1;
+            $tehui = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
+            foreach ($tehui as $key => $value) {
+                $value['picname'] = getThumb($value["picname"],400,400);
+                $tehui[$key]['picname'] = getRealUrl($value['picname']);
+                $tehui[$key]['rmb'] = round($value['price']*$this->rate,1);
             }
    
             //今日抢购
@@ -69,7 +64,7 @@ class Index extends Common
                 $flashGoods[$key]['name'] = $goods['name'];
                 $goods['picname'] = getThumb($goods["picname"],400,400);
                 $flashGoods[$key]['picname'] = getRealUrl($goods['picname']);
-                $flashGoods[$key]['rmb'] = round($value['price']*$this->rate,2);
+                $flashGoods[$key]['rmb'] = round($value['price']*$this->rate,1);
                 array_push($q,$flashGoods[$key]);
                 if ($i%3==0) {
                     array_push($flash,$q);
@@ -82,12 +77,31 @@ class Index extends Common
             }
 
             $flashTime = checkFlashTime($config['flashTime']);
+
+            unset($map);
+            $map['fid'] = 0;
+            $map['comm1'] = 1;
+            $cateGoods = db("GoodsCate")->field('id,name,path')->where($map)->order('sort asc')->select();
+            foreach ($cateGoods as $key => $value) {
+                unset($map);
+                $map['path'] = array('like',$value['path'].'%');
+                $map['show'] = 1;
+                $map['comm'] = 1;
+                $goods = db('Goods')->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(8)->select();
+                foreach ($goods as $k => $val) {
+                    $val['picname'] = getThumb($val["picname"],400,400);
+                    $goods[$k]['picname'] = getRealUrl($val['picname']);
+                    $goods[$k]['rmb'] = round($val['price']*$this->rate,1);
+                }
+                $cateGoods[$key]['goods'] = $goods;
+            }
             
             returnJson(1,'success',[
             	'ad'=>$ad,
             	'category'=>$cate,
-                'push'=>$push,
-                'commend'=>$commend,
+                'jingpin'=>$jingpin,
+                'tehui'=>$tehui,
+                'cateGoods'=>$cateGoods,
                 'flash'=>$flash,
                 'flashTime'=>$flashTime,
             	'rate'=>$this->rate,

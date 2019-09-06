@@ -6,9 +6,9 @@ class GoodsCate extends Admin {
 		$list = db("GoodsCate")->where('fid',0)->order('sort asc,id asc')->select();
 		foreach ($list as $key => $value) {
 			$child = db("GoodsCate")->where('fid',$value['id'])->order('sort asc,id asc')->select();
-			foreach ($child as $k => $val) {
-				$count = count(explode('-', $val['path'])) - 2;
-				$child[$k]['style'] = 'style="padding-left:' . (($count * 10) + 10) . 'px;"';
+			foreach ($child as $k => $val) {				
+				$sun = db("GoodsCate")->where('fid',$val['id'])->order('sort asc,id asc')->select();
+				$child[$k]['child'] = $sun;
 			}
 			$list[$key]['child'] = $child;
         }

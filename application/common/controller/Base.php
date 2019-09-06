@@ -247,9 +247,23 @@ class Base extends Controller {
         if (cache("rate")) {
             return cache("rate");
         }else{
-            $rate = 4.921;
-            cache("rate",$rate,3600);
-            return $rate;
+            $config = tpCache("supay");
+            $data['merchant_id'] = $config['SUPAY_ID'];
+            $data['authentication_code'] = $config['SUPAY_KEY'];
+            $data['currency'] = 'AUD';
+            $data['source'] = 'A';
+            $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&currency='.$data['currency'].'&source='.$data['source'];
+            $token = md5($str);
+            $data['token'] = $token;      
+            $url = 'https://api.superpayglobal.com/payment/bridge/get_current_rate';
+            $result = $this->https_post($url,$data);
+            $result = json_decode($result,true);
+            if($result['query_success']=='T'){
+                cache("rate",$result['rate'],3600);
+                return $rate;
+            }else{
+                return 0;
+            }
         }        
     }
 

@@ -4,7 +4,7 @@
 			<div class="layui-tab" style="margin-bottom: 10px">
 				<ul class="layui-tab-title">
 					{foreach name="group_list" item="vo" key="k"}
-		         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'omi'"}class="layui-this"{/if}>{$vo}</li></a>
+		         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'supay'"}class="layui-this"{/if}>{$vo}</li></a>
 		         	{/foreach}
 				</ul>
 			</div>
@@ -12,14 +12,14 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">商户号</label>
 				<div class="layui-input-block">
-					<input type="text" name="OMI_ID" value="{$config.OMI_ID}" class="layui-input">
+					<input type="text" name="SUPAY_ID" value="{$config.SUPAY_ID}" class="layui-input">
 				</div>
 			</div>
 
 			<div class="layui-form-item">
-				<label class="layui-form-label">密钥</label>
+				<label class="layui-form-label">验证码</label>
 				<div class="layui-input-block">
-					<input type="text" name="OMI_KEY" value="{$config.OMI_KEY}" class="layui-input">
+					<input type="text" name="SUPAY_KEY" value="{$config.SUPAY_KEY}" class="layui-input">
 				</div>
 			</div>
 

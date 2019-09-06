@@ -6,6 +6,7 @@
 
         <table class="layui-table">
             <colgroup>
+                <col width="100">
                 <col width="80">
                 <col>
                 <col width="300">
@@ -17,6 +18,7 @@
             <thead>
             <tr>
                 <th>ID</th>
+                <th>图片</th>
                 <th>名称</th>
                 <th>链接</th>
                 <th>排序</th>
@@ -29,6 +31,7 @@
                 {volist name='list' id="vo"}
                 <tr>
                     <td>{$vo.id}</td>
+                    <td><img src="{$vo.picname}" style="height: 30px;" /></td>
                     <td><strong style="color:#000">{$vo.name}</strong></td>
                     <td>{$vo.url}</td>
                     <td>{$vo.sort}</td>
@@ -44,7 +47,8 @@
                 {volist name="vo.child" id="f"}
                 <tr>
                     <td>{$f.id}</td>
-                    <td><span {$f.style}>{$f.name}</span></td>
+                    <td><img src="{$f.picname}" style="height: 30px;" /></td>
+                    <td><span style="padding-left: 20px;">{$f.name}</span></td>
                     <td>{$f.url}</td>
                     <td>{$f.sort}</td>
                     <td>{eq name="f.comm" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
@@ -56,6 +60,23 @@
                         <option value="del">删除</option>
                     </select></td>
                 </tr>
+                {volist name="f.child" id="s"}
+                <tr>
+                    <td>{$s.id}</td>
+                    <td><img src="{$s.picname}" style="height: 30px;" /></td>
+                    <td><span style="padding-left: 40px;">{$s.name}</span></td>
+                    <td>{$s.url}</td>
+                    <td>{$s.sort}</td>
+                    <td>{eq name="s.comm" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
+                    <td>{eq name="s.comm1" value="1"}<i class="layui-icon layui-icon-ok"></i>{/eq}</td>
+                    <td class="layui-form"><select lay-filter="cate-action" data-id="{$s.id}" data-fid="{$s.fid}">
+                        <option value="">操作</option>
+                        <option value="add">添加子栏目</option>
+                        <option value="edit">编辑</option>
+                        <option value="del">删除</option>
+                    </select></td>
+                </tr>
+                {/volist}
                 {/volist}
                 {/volist}
             </tbody>

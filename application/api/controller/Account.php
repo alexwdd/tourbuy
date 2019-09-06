@@ -110,7 +110,7 @@ class Account extends Auth {
                 $goods = db('Goods')->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where($map)->find();
                 if($goods){
                     $goods['picname'] = getRealUrl($goods['picname']);
-                    $goods['rmb'] = round($value['price']*$this->rate,2);
+                    $goods['rmb'] = round($value['price']*$this->rate,1);
                 }else{
                     $goods = [];
                 }                

@@ -42,7 +42,7 @@ class Goods extends Common {
                 foreach ($goods as $k => $val) {
                     $val['picname'] = getThumb($val["picname"],400,400);
                     $goods[$k]['picname'] = getRealUrl($val['picname']);
-                    $goods[$k]['rmb'] = round($val['price']*$this->rate,2);
+                    $goods[$k]['rmb'] = round($val['price']*$this->rate,1);
                 }
                 $cate[$key]['goods'] = $goods;
             }
@@ -182,7 +182,7 @@ class Goods extends Common {
             $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
-                $list[$key]['rmb'] = round($value['price']*$this->rate,2);
+                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
             }
             returnJson(1,'success',['cate'=>$cate,'brand'=>$brand,'child'=>$child,'next'=>$next,'data'=>$list]);
         }
@@ -233,7 +233,7 @@ class Goods extends Common {
 
                 unset($list[$key]['goodsID']);
                 $goods['picname'] = getRealUrl($goods['picname']);
-                $goods['rmb'] = round($goods['price']*$this->rate,2);
+                $goods['rmb'] = round($goods['price']*$this->rate,1);
                 $list[$key] = $goods;
             }
             returnJson(1,'success',['next'=>$next,'data'=>$list,'cate'=>$cate]);
@@ -300,7 +300,7 @@ class Goods extends Common {
                 $list[$key]['tehui'] = $goods['tehui'];
                 $list[$key]['flash'] = $goods['flash'];
                 $list[$key]['baoyou'] = $goods['baoyou'];
-                $list[$key]['rmb'] = round($value['price']*$this->rate,2);
+                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
 
                 unset($list[$key]['spec']);
                 unset($list[$key]['pack']);

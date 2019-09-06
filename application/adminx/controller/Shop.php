@@ -7,6 +7,13 @@ class Shop extends Admin {
 	public function index() {
 		if (request()->isPost()) {
 			$result = model('Shop')->getList();
+			$map['cate']=5;	
+            $cateArr = db('OptionItem')->where($map)->column('id,name');
+            foreach ($result['data'] as $key => $value) {
+                if (isset($cateArr[$value['cid']])) {
+                    $result['data'][$key]['shopCate'] = $cateArr[$value['cid']];
+                }                
+            }
 			echo json_encode($result);
     	}else{
 	    	return view();
@@ -48,6 +55,11 @@ class Shop extends Admin {
 
 			$cate = db("GoodsCate")->where('fid',0)->order('sort asc , id asc')->select();
 			$this->assign('cate',$cate);
+
+			unset($map);
+			$map['cate']=5;
+            $shopCate = db('OptionItem')->field("id,name")->where($map)->order('value asc')->select();
+            $this->assign('shopCate', $shopCate);
 			return view();
 		}
 	}

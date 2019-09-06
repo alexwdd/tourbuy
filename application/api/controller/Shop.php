@@ -49,7 +49,7 @@ class Shop extends Auth {
             foreach ($commend as $key => $value) {
                 $value['picname'] = getThumb($value["picname"],400,400);
                 $commend[$key]['picname'] = getRealUrl($value['picname']);
-                $commend[$key]['rmb'] = round($value['price']*$this->rate,2);
+                $commend[$key]['rmb'] = round($value['price']*$this->rate,1);
             }
 
             //优惠券
