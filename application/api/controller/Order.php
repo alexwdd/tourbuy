@@ -109,10 +109,18 @@ class Order extends Auth {
                     $baoguo[$key]['number'] = $number;
 
                     if($value['image']){
-                        $baoguo[$key]['image'] = explode(",", $value['image']);
+                        $image = explode(",", $value['image']);
+                        foreach ($image as $k => $val) {
+                            $image[$k] = getRealUrl($val);
+                        }
+                        $baoguo[$key]['image'] = $image;
                     }
                     if($value['eimg']){
-                        $baoguo[$key]['eimg'] = explode(",", $value['eimg']);
+                        $eimg = explode(",", $value['eimg']);
+                        foreach ($eimg as $k => $val) {
+                            $eimg[$k] = getRealUrl($val);
+                        }
+                        $baoguo[$key]['eimg'] = $eimg;
                     }
                 }   
                 returnJson(1,'success',[
