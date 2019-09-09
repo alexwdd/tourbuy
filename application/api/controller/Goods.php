@@ -361,7 +361,7 @@ class Goods extends Common {
             }            
             $pack = $result['pack'];
 
-            $list['rmb'] = number_format($this->rate*$list['price'],1);  
+            $list['rmb'] = round($this->rate*$list['price'],1);  
             returnJson(1,'success',['goods'=>$list,'pack'=>$pack,'spec'=>$spec,'filter_spec'=>$filter_spec]);
         }
     }
