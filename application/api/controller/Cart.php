@@ -253,7 +253,7 @@ class Cart extends Auth {
 
             $map['memberID'] = $this->user['id'];
             $address = db('Address')->where($map)->order('def desc , id desc')->find();
-            $sender = db('Sender')->where($map)->order('id desc')->find();
+            //$sender = db('Sender')->where($map)->order('id desc')->find();
 
             unset($map);
             $map['memberID'] = $this->user['id'];

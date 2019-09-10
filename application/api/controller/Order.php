@@ -139,11 +139,11 @@ class Order extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
             $config = tpCache("member");
 
-            $senderID = input('post.senderID');
+            /*$senderID = input('post.senderID');
             $sender = db("Sender")->where(['id'=>$senderID,'memberID'=>$this->user['id']])->find();
             if(!$sender){
                 returnJson(0,'发件人错误');
-            }
+            }*/
 
             $addressID = input('post.addressID');
             $address = db("Address")->where(['id'=>$addressID,'memberID'=>$this->user['id']])->find();
@@ -171,7 +171,7 @@ class Order extends Auth {
             if (!$shopIds) {
                 returnJson(0,'购物车中没有商品');
             }
-            $shop = db("Shop")->field('id,name')->whereIn('id',$shopIds)->select();
+            $shop = db("Shop")->field('id,name,tel')->whereIn('id',$shopIds)->select();
             $orders = [];
             foreach ($shop as $key => $value) {
                 unset($map);
@@ -184,15 +184,17 @@ class Order extends Auth {
                 $result = $this->getShopOrder($shopGoods,$value,$address,$couponID);
                 $result['intr'] = $intr[$key];
                 $result['shopID'] = $value['id'];
+                $result['shopName'] = $value['name'];
+                $result['shopTel'] = $value['tel'];
                 //保存订单
-                $order_no = $this->saveShopOrder($address,$sender,$result);
+                $order_no = $this->saveShopOrder($address,$result);
                 array_push($orders,$order_no);
             }
             returnJson(1,'订单创建成功',['order_no'=>implode(",",$orders)]);
         }
     }
 
-    public function saveShopOrder($address,$sender,$orderData){
+    public function saveShopOrder($address,$orderData){
         unset($data);
         $order_no = $this->getOrderNo();
         $data['shopID'] = $orderData['shopID'];
@@ -216,8 +218,8 @@ class Order extends Auth {
         $data['city'] = $address['city'];
         $data['county'] = $address['county'];
         $data['addressDetail'] = $address['addressDetail'];
-        $data['sender'] = $sender['name'];
-        $data['senderTel'] = $sender['tel'];
+        $data['sender'] = $orderData['shopName'];
+        $data['senderTel'] = $orderData['shopTel'];
         $data['intr'] = $orderData['intr'];   
         $data['createTime'] = time();    
         $data['status'] = 0;
@@ -484,11 +486,37 @@ class Order extends Auth {
             $order_no = input('post.order_no');
             $payType = input('post.type');
 
-            if (!in_array($payType,[1,2])) {
-                returnJson(0,'支付方式错误');
+            $order_no = explode(',',$order_no);
+
+            $map['order_no'] = array('in',$order_no);
+            $map['memberID'] = $this->user['id'];
+            $map['status'] = 0;
+            $list = db("Order")->field('id,order_no,total,money')->where($map)->select();
+            if(!$list){
+                returnJson(0,'订单不存在');
             }
 
-            $map['order_no'] = $order_no;            
+            $total = 0;
+            foreach ($list as $key => $value) {
+                $total += $value['total'];
+            }
+
+            $rate = $this->getRate();
+            $rmb = round($total*$this->rate,1);
+            $fina = $this->getUserMoney($this->user['id']);
+
+            if($fina['money']>=$total){
+                $this->walletPay($list);
+            }else{
+                if (!in_array($payType,[1,2])) {
+                    returnJson(0,'支付方式错误');
+                }
+            }
+
+            
+
+            //$map['order_no'] = $order_no;
+            $map['id'] = 72;
             $map['memberID'] = $this->user['id'];
             $map['payStatus'] = 0;
             $list = db('Order')->where($map)->find();
@@ -512,6 +540,9 @@ class Order extends Auth {
                 $data['endTime'] = time();
             }
 
+            $res = $this->getWeixinUrl($list);
+            dump($res);
+            die;
             if ($data['wallet']>0) {
                 $finance = model('Finance');
                 $finance->startTrans();
@@ -571,25 +602,57 @@ class Order extends Auth {
         }
     }
 
-    public function getOmiUrl($order){
-        $config = tpCache("omi");
-        require_once EXTEND_PATH.'omipay/OmiPayApi.php';
-        $input = new \MakeJSAPIOrderQueryData();
-        $domain = 'CN';
-        // 设置'CN'为访问国内的节点 ,设置为'AU'为访问香港的节点
-        $input -> setMerchantNo($config['OMI_ID']);
-        $input -> setSercretKey($config['OMI_KEY']);
-        $notify = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/ominotify.html';
-        $input -> setNotifyUrl($notify);
-        $input -> setCurrency("AUD");// 这里是设置币种
-        $input -> setOrderName("在线支付".$order['order_no']);// 这里是设置商品名称
-        //$input -> setAmount($order['money']*100);// 这里是设置支付金额
-        $input -> setAmount(1);// 这里是设置支付金额
-        $input -> setOutOrderNo($order['order_no']);// 这里是设置外部订单编号，请确保唯一性
-        $returnUrl = 'http://m.aumaria.com/pay/return/'.$order['order_no'];
-        $input -> setRedirectUrl($returnUrl);//设置支付完成之后的跳转地址 
-        $omipay = new \OmiPayApi();
-        $result = $omipay->jsApiOrder($input,$domain);
+    public function getAlipayUrl($order){ 
+        $config = tpCache("supay");
+        $data['merchant_id'] = $config['SUPAY_ID'];
+        $data['authentication_code'] = $config['SUPAY_KEY'];
+        $data['product_title'] = urlencode('途买在线支付');
+        $data['merchant_trade_no'] = $order['order_no'];
+        $data['currency'] = 'AUD';
+        $data['total_amount'] = 0.01;
+        $data['create_time'] = urlencode(date("Y-m-d H:i:s",time()));
+        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/ominotify.html';
+        $data['return_url'] = 'http://m.aumaria.com/pay/return/'.$order['order_no'];
+        $data['mobile_flag'] = 'T';
+        $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
+
+        $token = md5($str);
+        $data['token'] = $token;
+
+        $query = http_build_query($data);
+        $url = 'https://api.superpayglobal.com/payment/bridge/merchant_request?'.$query;
+        return $url;       
+    }
+
+    public function getWeixinUrl($order){ 
+        $config = tpCache("supay");
+        $data['merchant_id'] = $config['SUPAY_ID'];
+        $data['authentication_code'] = $config['SUPAY_KEY'];
+        $data['product_title'] = urlencode('途买在线支付');
+        $data['merchant_trade_no'] = $order['order_no'];
+        $data['currency'] = 'AUD';
+        $data['total_amount'] = 0.01;
+        $data['create_time'] = urlencode(date("Y-m-d H:i:s",time()));
+        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/ominotify.html';
+        $data['return_url'] = 'http://m.aumaria.com/pay/return/'.$order['order_no'];
+        $data['return_target'] = 'WX';
+        $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
+
+        $token = md5($str);
+        $data['token'] = $token;
+
+        $url = 'https://api.superpayglobal.com/payment/wxpayproxy/merchant_request';
+        $result = $this->https_post($url,$data);        
+        $result = json_decode($result,true);
+        dump($result);die;
+        
+        if($result['query_success']=='T'){
+            cache("rate",$result['rate'],3600);
+            return $rate;
+        }else{
+            return 0;
+        }
+
         return $result['pay_url'];       
     }
 

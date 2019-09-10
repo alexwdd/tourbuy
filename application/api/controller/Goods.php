@@ -153,6 +153,7 @@ class Goods extends Common {
     public function lists(){
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}
+            $cityID = input('post.cityID');
             $path = input('post.path');
             $cid = input('post.cid');
             $brandID = input('post.brandID');
@@ -162,6 +163,9 @@ class Goods extends Common {
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
 
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
             if($comm!=''){
                 $map['comm'] = $comm;
             }
@@ -198,7 +202,9 @@ class Goods extends Common {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
                 $list[$key]['rmb'] = round($value['price']*$this->rate,1);
             }
-            returnJson(1,'success',['cate'=>$cate,'brand'=>$brand,'child'=>$child,'next'=>$next,'data'=>$list]);
+
+            $city = db("City")->cache(true)->field('id,name')->select();
+            returnJson(1,'success',['city'=>$city,'cate'=>$cate,'brand'=>$brand,'child'=>$child,'next'=>$next,'data'=>$list]);
         }
     }
 

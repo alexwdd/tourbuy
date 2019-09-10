@@ -7,7 +7,7 @@ class Index extends Common
     	if (request()->isPost()) {
                         
             if(!checkFormDate()){returnJson(0,'ERROR');}
-
+            $cityID = input('post.cityID');
             $config = tpCache('member');
 
             $ad = db("Ad")->field('name,picname,url')->where('cid',1)->select();
@@ -28,6 +28,9 @@ class Index extends Common
             unset($map);
             $map['show'] = 1;
             $map['jingpin'] = 1;
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
             $jingpin = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
             foreach ($jingpin as $key => $value) {
                 $value['picname'] = getThumb($value["picname"],400,400);
@@ -39,6 +42,9 @@ class Index extends Common
             unset($map);
             $map['show'] = 1;
             $map['tehui'] = 1;
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
             $tehui = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
             foreach ($tehui as $key => $value) {
                 $value['picname'] = getThumb($value["picname"],400,400);
@@ -59,7 +65,12 @@ class Index extends Common
             foreach ($flashGoods as $key => $value) {
                 unset($flashGoods[$key]['spec']);
                 unset($flashGoods[$key]['pack']);
-                $goods = db("Goods")->field('id,name,picname,price,say')->where('id',$value['goodsID'])->find();
+                unset($map);
+                if($cityID>0){
+                    $map['cityID'] = $cityID;
+                }
+                $map['id'] = $value['goodsID'];
+                $goods = db("Goods")->field('id,name,picname,price,say')->where($map)->find();
                 $flashGoods[$key]['marketPrice'] = $goods['price'];
                 $flashGoods[$key]['name'] = $goods['name'];
                 $goods['picname'] = getThumb($goods["picname"],400,400);
@@ -87,6 +98,9 @@ class Index extends Common
                 $map['path'] = array('like',$value['path'].'%');
                 $map['show'] = 1;
                 $map['comm'] = 1;
+                if($cityID>0){
+                    $map['cityID'] = $cityID;
+                }
                 $goods = db('Goods')->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(8)->select();
                 foreach ($goods as $k => $val) {
                     $val['picname'] = getThumb($val["picname"],400,400);
@@ -96,8 +110,10 @@ class Index extends Common
                 $cateGoods[$key]['goods'] = $goods;
             }
             
+            $city = db("City")->cache(true)->field('id,name')->select();
             returnJson(1,'success',[
             	'ad'=>$ad,
+                'city'=>$city,
             	'category'=>$cate,
                 'jingpin'=>$jingpin,
                 'tehui'=>$tehui,
