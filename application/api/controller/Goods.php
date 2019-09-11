@@ -159,6 +159,8 @@ class Goods extends Common {
             $brandID = input('post.brandID');
             $keyword = input('param.keyword');
             $comm = input('param.comm');
+            $order = input('param.order');
+            $desc = input('param.desc');
             $page = input('post.page/d',1);
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
@@ -197,7 +199,7 @@ class Goods extends Common {
                 $next = 0;
             }
 
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
                 $list[$key]['rmb'] = round($value['price']*$this->rate,1);

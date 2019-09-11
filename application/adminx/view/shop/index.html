@@ -17,13 +17,19 @@
             <p field="linkman" title="联系人" width="120"/>
             <p field="tel" title="电话" width="120"/>
             <p field="address" title="地址" width="200"/>
+            <p title="推荐" width="100" templet="#commTpl"/>
             <p title="状态" width="100" templet="#statusTpl"/>
             <p title="发布商品" width="100" templet="#submitTpl"/>
             <p title="编辑资料" width="100" templet="#editTpl"/>
             <p field="createTime" title="发布日期" width="180"/>
             <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="80"/>
         </div>
-
+        
+        <script type="text/html" id="commTpl">
+            {{# if(d.comm == 1){ }}
+            <i class="layui-icon layui-icon-ok"></i>
+            {{# } }}                
+        </script>
         <script type="text/html" id="statusTpl">
             {{# if(d.status == 0){ }}
             <span style="color: #f00">禁用</span>

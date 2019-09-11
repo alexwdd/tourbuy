@@ -110,6 +110,7 @@ class Shop extends Admin
         $data['password'] = md5($data['password']);
         $this->allowField(true)->save($data);
         if($this->id > 0){
+            $this->saveCate($data['cate'],$this->id);
             return info('操作成功',1);
         }else{
             return info('操作失败',0);
@@ -130,10 +131,24 @@ class Shop extends Admin
         }
         $this->allowField(true)->save($data,['id'=>$data['id']]);
         if($this->id > 0){
+            $this->saveCate($data['cate'],$this->id);
             return info('操作成功',1);
         }else{
             return info('操作失败',0);
         }
+    }
+
+    public function saveCate($cate,$shopID){
+        $cate = explode(",", $cate);
+        db("ShopCate")->where('shopID',$shopID)->delete();
+        $arr = [];
+        foreach ($cate as $key => $value) {
+            array_push($arr,[
+                'cateID'=>$value,
+                'shopID'=>$shopID,
+            ]);
+        }
+        db("ShopCate")->insertAll($arr);
     }
 
     public function del($id){

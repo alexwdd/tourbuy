@@ -108,6 +108,20 @@ class Index extends Common
                     $goods[$k]['rmb'] = round($val['price']*$this->rate,1);
                 }
                 $cateGoods[$key]['goods'] = $goods;
+
+                //推荐商铺
+                unset($map);      
+                if($cityID>0){
+                    $map['cityID'] = $cityID;
+                }
+                $map['comm'] = $value['id'];
+                $map['banner'] = array('neq','');
+                $shop = db("Shop")->field('id,banner')->where($map)->limit(5)->select();
+                foreach ($shop as $k => $val) {
+                    $val['banner'] = getThumb($val["banner"],760,300);
+                    $shop[$k]['banner'] = getRealUrl($val['banner']);
+                }
+                $cateGoods[$key]['shop'] = $shop;
             }
             
             $city = db("City")->cache(true)->field('id,name')->select();
