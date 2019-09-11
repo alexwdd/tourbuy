@@ -18,6 +18,8 @@
 	getUserMoney	获取用户财产
 	autoCoupon		注册就送优惠券
 	base64ToImg		base64转图片
+	getAlipayUrl
+	getWeixinUrl
 
 # 工具栏的方法
 	action			不开启新窗口，直接post

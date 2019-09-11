@@ -368,6 +368,49 @@ class Base extends Controller {
         }
     }
 
+    public function getAlipayUrl($order){ 
+        $config = tpCache("supay");
+        $data['merchant_id'] = $config['SUPAY_ID'];
+        $data['authentication_code'] = $config['SUPAY_KEY'];
+        $data['product_title'] = urldecode('途买在线支付');
+        $data['merchant_trade_no'] = $order['out_trade_no'];
+        $data['currency'] = 'AUD';
+        $data['total_amount'] = $order['money'];
+        $data['create_time'] = urldecode(date("Y-m-d H:i:s",time()));
+        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/alinotify.html';
+        $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
+        $data['mobile_flag'] = 'T';
+        $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
+        $token = md5($str);
+        $data['token'] = $token;    
+        $query = http_build_query($data);
+        $url = 'https://api.superpayglobal.com/payment/bridge/merchant_request?'.$query;
+        return $url;
+    }
+
+    public function getWeixinUrl($order){ 
+        $config = tpCache("supay");
+        $data['merchant_id'] = $config['SUPAY_ID'];
+        $data['authentication_code'] = $config['SUPAY_KEY'];
+        $data['product_title'] = '途买在线支付';
+        $data['merchant_trade_no'] = $order['out_trade_no'];
+        $data['currency'] = 'AUD';
+        $data['total_amount'] = $order['money'];
+        $data['create_time'] = date("Y-m-d H:i:s",time());
+        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/wxnotify.html';
+        $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
+        $data['return_target'] = 'WX';
+        $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
+
+        $token = md5($str);
+        $data['token'] = $token;
+
+        $url = 'https://api.superpayglobal.com/payment/wxpayproxy/merchant_request';
+        $result = $this->https_post($url,$data);        
+        $result = json_decode($result,true);
+        return $result;     
+    }
+
     public function https_post($url,$data = null){
         $ch = curl_init();
         $header = "Accept-Charset: utf-8";

@@ -459,18 +459,18 @@ class Order extends Auth {
 
             $rate = $this->getRate();
             $rmb = round($total*$this->rate,1);
-            $fina = $this->getUserMoney($this->user['id']);
+            /*$fina = $this->getUserMoney($this->user['id']);
 
             if($fina['money']>=$total){
                 $type = 2;
             }else{
                 $type = 1;
-            }
+            }*/
             returnJson(1,'success',[
                 'data'=>$list,
-                'wallet'=>$fina,
+                //'wallet'=>$fina,
                 'info'=>[
-                    'type'=>$type,
+                    //'type'=>$type,
                     'rate'=>$rate,
                     'rmb'=>$rmb,
                     'total'=>$total,
@@ -497,164 +497,36 @@ class Order extends Auth {
             }
 
             $total = 0;
+            $out_trade_no = '';
             foreach ($list as $key => $value) {
                 $total += $value['total'];
+                if($out_trade_no==''){
+                    $out_trade_no = $value['id'];
+                }else{
+                    $out_trade_no .= '_'.$value['id'];
+                }
             }
 
             $rate = $this->getRate();
             $rmb = round($total*$this->rate,1);
-            $fina = $this->getUserMoney($this->user['id']);
 
-            if($fina['money']>=$total){
-                $this->walletPay($list);
-            }else{
-                if (!in_array($payType,[1,2])) {
-                    returnJson(0,'支付方式错误');
-                }
-            }
-
-            
-
-            //$map['order_no'] = $order_no;
-            $map['id'] = 72;
-            $map['memberID'] = $this->user['id'];
-            $map['payStatus'] = 0;
-            $list = db('Order')->where($map)->find();
-            if(!$list){
-                returnJson(0,'订单不存在');
-            }
-
-            $fina = $this->getUserMoney($this->user['id']);
-            if ($fina['money']>=$list['total']) {
-                $data['payType'] = 2;
-                $data['wallet'] = $list['total'];
-                $data['payStatus'] = 1;
-                $data['status'] = 1;
-            }else{
-                $data['payType'] = 1;
-                $data['money'] = $list['total'] - $fina['money'];
-                $data['wallet'] = $fina['money'];  
-            }
-
-            if($list['endTime']==0){
-                $data['endTime'] = time();
-            }
-
-            $res = $this->getWeixinUrl($list);
-            dump($res);
-            die;
-            if ($data['wallet']>0) {
-                $finance = model('Finance');
-                $finance->startTrans();
-                $fdata = array(
-                    'type' => 4,
-                    'money' => $data['wallet'],
-                    'memberID' => $this->user['id'],  
-                    'doID' => $this->user['id'],
-                    'oldMoney'=>$fina['money'],
-                    'newMoney'=>$fina['money']-$data['wallet'],
-                    'admin' => 2,
-                    'msg' => '购买商品，账户余额支付$'.$data['wallet'].'，订单号：'.$list['order_no'],
-                    'extend1' => $list['id'],
-                    'createTime' => time()
-                ); 
-
-                //db('Finance')->insert($fdata);
-                $res = $finance->insert( $fdata );
-                if ($res) {
-                    $orderModel = model('Order');      
-                    $orderModel->startTrans();  
-                    $result = $orderModel->where('id',$list['id'])->update($data);
-                    if ($result) {  
-                        $orderModel->commit();
-                        $finance->commit();  
-                        //file_put_contents("pay".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."订单" .$list['order_no']. "，总金额".$list['total']."，用户余额".$this->user['money']."，扣余额".$data['wallet']."，应付".$data['money']."\r\n", FILE_APPEND);
-                    }else{
-                        $orderModel->rollBack();    
-                        $finance->rollBack();  
-                        returnJson(0,'操作失败'); 
-                    } 
-                }else{
-                    $orderModel->rollBack();    
-                    $finance->rollBack();  
-                    returnJson(0,'操作失败'); 
-                }
-            }else{                
-                $result = db("Order")->where('id',$list['id'])->update($data);
-                if (!$result) {  
-                    returnJson(0,'操作失败'); 
-                }
-            }
-
-            if ($data['payStatus']==1) {
-                db('OrderBaoguo')->where('orderID',$list['id'])->setField('status',1);
-                //减库存
-                $detail = db("OrderDetail")->where('orderID',$list['id'])->select();
-                foreach ($detail as $key => $value) {
-                    //这里是有问题的
-                    db("Goods")->where('id',$value['goodsID'])->setDec("stock",$value['number']);
-                }
-                returnJson(1,'支付成功，等待商家配货');
-            }else{
-                $url = $this->getOmiUrl($list);
+            $order['money'] = $total;
+            $order['out_trade_no'] = $out_trade_no;
+            if($payType==1){                
+                $url = 'http://'.$_SERVER['HTTP_HOST'].url('www/alipay/index','out_trade_no='.$out_trade_no);
                 returnJson(1,'success',['url'=>$url]);
-            }         
+            }elseif($payType==2){
+                $result = $this->getWeixinUrl($order);
+                if($result['result']=='SUCCESS'){
+                    returnJson(1,'success',['url'=>$result['QRCodeURL']]);
+                }else{
+                    returnJson(0,'发起支付失败');
+                }
+            }else{
+                returnJson(0,'支付方式错误');
+            }                     
         }
-    }
-
-    public function getAlipayUrl($order){ 
-        $config = tpCache("supay");
-        $data['merchant_id'] = $config['SUPAY_ID'];
-        $data['authentication_code'] = $config['SUPAY_KEY'];
-        $data['product_title'] = urlencode('途买在线支付');
-        $data['merchant_trade_no'] = $order['order_no'];
-        $data['currency'] = 'AUD';
-        $data['total_amount'] = 0.01;
-        $data['create_time'] = urlencode(date("Y-m-d H:i:s",time()));
-        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/ominotify.html';
-        $data['return_url'] = 'http://m.aumaria.com/pay/return/'.$order['order_no'];
-        $data['mobile_flag'] = 'T';
-        $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
-
-        $token = md5($str);
-        $data['token'] = $token;
-
-        $query = http_build_query($data);
-        $url = 'https://api.superpayglobal.com/payment/bridge/merchant_request?'.$query;
-        return $url;       
-    }
-
-    public function getWeixinUrl($order){ 
-        $config = tpCache("supay");
-        $data['merchant_id'] = $config['SUPAY_ID'];
-        $data['authentication_code'] = $config['SUPAY_KEY'];
-        $data['product_title'] = urlencode('途买在线支付');
-        $data['merchant_trade_no'] = $order['order_no'];
-        $data['currency'] = 'AUD';
-        $data['total_amount'] = 0.01;
-        $data['create_time'] = urlencode(date("Y-m-d H:i:s",time()));
-        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/ominotify.html';
-        $data['return_url'] = 'http://m.aumaria.com/pay/return/'.$order['order_no'];
-        $data['return_target'] = 'WX';
-        $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
-
-        $token = md5($str);
-        $data['token'] = $token;
-
-        $url = 'https://api.superpayglobal.com/payment/wxpayproxy/merchant_request';
-        $result = $this->https_post($url,$data);        
-        $result = json_decode($result,true);
-        dump($result);die;
-        
-        if($result['query_success']=='T'){
-            cache("rate",$result['rate'],3600);
-            return $rate;
-        }else{
-            return 0;
-        }
-
-        return $result['pay_url'];       
-    }
+    }    
 
     public function success(){
         if (request()->isPost()) {
