@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-09-11 19:48:13
+Date: 2019-09-16 00:59:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -224,7 +224,7 @@ CREATE TABLE `pm_cart` (
   `trueNumber` int(11) NOT NULL COMMENT '真实商品数量比如2个3件的套餐就显示6',
   `typeID` int(11) NOT NULL COMMENT '包裹类型',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_cart
@@ -504,7 +504,7 @@ CREATE TABLE `pm_fav` (
   `goodsID` int(11) NOT NULL,
   `memberID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_fav
@@ -516,6 +516,7 @@ INSERT INTO `pm_fav` VALUES ('7', '15', '2');
 INSERT INTO `pm_fav` VALUES ('15', '19', '10001');
 INSERT INTO `pm_fav` VALUES ('16', '9', '10001');
 INSERT INTO `pm_fav` VALUES ('17', '11', '10001');
+INSERT INTO `pm_fav` VALUES ('18', '2', '10002');
 
 -- ----------------------------
 -- Table structure for `pm_feedback`
@@ -862,7 +863,7 @@ CREATE TABLE `pm_member` (
 -- Records of pm_member
 -- ----------------------------
 INSERT INTO `pm_member` VALUES ('10001', 'dsfsdfsdfsdfsdf', '', '', '张小黑', '10002', '月明', '张黑', '', '', 'http://thirdwx.qlogo.cn/mmopen/vi_32/PLh3YV0ZQhVw7n3D5kflfctMmErkic2CHHDEzTa36vuCLVCNNqTYgJCB4OxZrgz1Gqy4odIc97iblFFlF7u9DcIg/132', '0', '0', '7f92012aaa7c2d71d3415968311effaa0c923e45', '1570152556', '1563767631', '127.0.0.1');
-INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1570794474', '1566188328', '127.0.0.1');
+INSERT INTO `pm_member` VALUES ('10002', 'ob5wP1Phg9aYeeW_Q162FyDJ-LaA', '13500000001', '', '月明', '0', '', '张三', '', '3131313', 'http://thirdwx.qlogo.cn/mmopen/vi_32/zK1Fs3gpSSte4nOJlEepugE5HXA6t1rqs231iczJywgzVNlYh73CJQiaFlz6OoIBQgU9BxgsEjJn92FCrDNGZaEQ/132', '1', '0', 'b9a6fdf376af956a870d74e0a82e848603bf6779', '1571158724', '1566188328', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for `pm_member_code`
@@ -1171,7 +1172,7 @@ CREATE TABLE `pm_order` (
   `createTime` int(11) NOT NULL,
   `updateTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order
@@ -1190,6 +1191,7 @@ INSERT INTO `pm_order` VALUES ('71', '0', '10002', '0', '19090414103561', '60.00
 INSERT INTO `pm_order` VALUES ('72', '7', '10002', '0', '19091019574276', '35.00', '37', '10', '35.00', '0', '0.00', '0.00', '24.25', '0.00', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '测试店铺', '13500000000', '', null, '0', '0', '0', '0', '0', '0', '1568116662', '0');
 INSERT INTO `pm_order` VALUES ('73', '7', '10002', '0', '19091101002979', '79.00', '79', '20', '79.00', '0', '0.00', '0.00', '58.20', '0.00', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '测试店铺', '13500000000', '#', null, '0', '0', '0', '0', '0', '0', '1568134829', '0');
 INSERT INTO `pm_order` VALUES ('74', '8', '10002', '0', '19091101002954', '19.00', '19', '5', '19.00', '0', '0.00', '0.00', '14.55', '0.00', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '奶粉专卖店', '18700001111', '#', null, '0', '0', '0', '0', '0', '0', '1568134829', '0');
+INSERT INTO `pm_order` VALUES ('75', '7', '10002', '0', '19091523003212', '79.00', '79', '20', '79.00', '0', '0.00', '0.00', '58.20', '0.00', '2', '张明', '13500000000', '2222222', 'http://127.0.0.10/uploads/sn/10002/OJNDAUC5hJtJkWzl.png', '/uploads/sn/10002/UUW5WT0rAS08RIVq.png', '北京市', '北京市', '东城区', '1111111111', '测试店铺', '13500000000', '', null, '0', '0', '0', '0', '0', '0', '1568559632', '0');
 
 -- ----------------------------
 -- Table structure for `pm_order_baoguo`
@@ -1225,7 +1227,7 @@ CREATE TABLE `pm_order_baoguo` (
   `createTime` int(11) NOT NULL,
   `updateTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order_baoguo
@@ -1249,6 +1251,7 @@ INSERT INTO `pm_order_baoguo` VALUES ('36', '0', '71', '10002', '19090414103561'
 INSERT INTO `pm_order_baoguo` VALUES ('37', '7', '72', '10002', '19091019574276', '15', '0.00', '6.16', '1.10', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '测试店铺', '13500000000', '0', '0', '0', '0', '0', '1568116662', '0');
 INSERT INTO `pm_order_baoguo` VALUES ('38', '7', '73', '10002', '19091101002979', '15', '0.00', '6.16', '1.10', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '测试店铺', '13500000000', '0', '0', '0', '0', '0', '1568134829', '0');
 INSERT INTO `pm_order_baoguo` VALUES ('39', '8', '74', '10002', '19091101002954', '3', '0.00', '3.85', '1.10', '澳邮', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '奶粉专卖店', '18700001111', '0', '0', '0', '0', '0', '1568134829', '0');
+INSERT INTO `pm_order_baoguo` VALUES ('40', '7', '75', '10002', '19091523003212', '15', '0.00', '6.16', '1.10', '中环($6/kg)', '', '', '', '张明', '13500000000', '北京市', '北京市', '东城区', '1111111111', '测试店铺', '13500000000', '0', '0', '0', '0', '0', '1568559632', '0');
 
 -- ----------------------------
 -- Table structure for `pm_order_cart`
@@ -1268,7 +1271,7 @@ CREATE TABLE `pm_order_cart` (
   `number` int(11) NOT NULL,
   `trueNumber` int(11) NOT NULL COMMENT '真实商品数量比如2个3件的套餐就显示6',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order_cart
@@ -1293,6 +1296,7 @@ INSERT INTO `pm_order_cart` VALUES ('44', '10002', '71', '9', '0', '0', 'A2铂�
 INSERT INTO `pm_order_cart` VALUES ('45', '10002', '72', '2', '0', '0', '女装 花式条纹连衣裙(七分袖) 420839 优衣库UNIQLO', 'http://127.0.0.9/uploads/images/20190906/47ace50c26c486d99f3b332789348fda.jpg', '', '35.00', '1', '1');
 INSERT INTO `pm_order_cart` VALUES ('46', '10002', '73', '1', '0', '0', '男装 高级轻型羽绒无缝连帽外套 409325 优衣库UNIQLO', 'http://127.0.0.9/uploads/images/20190906/dd984f2c84cbf65421bf21da3b399dc5.jpg', '', '79.00', '1', '1');
 INSERT INTO `pm_order_cart` VALUES ('47', '10002', '74', '5', '0', '0', '赠品！拍下发货！Bellamy\'s 贝拉米有机婴儿米粉125g 燕麦米粉 5个月 8月31号', 'http://127.0.0.9/uploads/images/20190910/37b6ae1e06746329dc9a2745facd1aa4.png', '', '19.00', '1', '1');
+INSERT INTO `pm_order_cart` VALUES ('48', '10002', '75', '1', '0', '0', '男装 高级轻型羽绒无缝连帽外套 409325 优衣库UNIQLO', 'http://127.0.0.9/uploads/images/20190906/dd984f2c84cbf65421bf21da3b399dc5.jpg', '', '79.00', '1', '1');
 
 -- ----------------------------
 -- Table structure for `pm_order_detail`
@@ -1312,7 +1316,7 @@ CREATE TABLE `pm_order_detail` (
   `cancel` tinyint(4) NOT NULL COMMENT '取消订单',
   `createTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pm_order_detail
@@ -1339,6 +1343,7 @@ INSERT INTO `pm_order_detail` VALUES ('39', '71', '10002', '36', '9', '0', 'A2�
 INSERT INTO `pm_order_detail` VALUES ('40', '72', '10002', '37', '2', '0', '女装 花式条纹连衣裙(七分袖) 420839 优衣库UNIQLO', '222', '1', '35.00', '0', '1568116662');
 INSERT INTO `pm_order_detail` VALUES ('41', '73', '10002', '38', '1', '0', '男装 高级轻型羽绒无缝连帽外套 409325 优衣库UNIQLO', '优衣库', '1', '79.00', '0', '1568134829');
 INSERT INTO `pm_order_detail` VALUES ('42', '74', '10002', '39', '5', '0', '赠品！拍下发货！Bellamy\'s 贝拉米有机婴儿米粉125g 燕麦米粉 5个月 8月31号', '贝拉米有机婴儿米粉', '1', '19.00', '0', '1568134829');
+INSERT INTO `pm_order_detail` VALUES ('43', '75', '10002', '40', '1', '0', '男装 高级轻型羽绒无缝连帽外套 409325 优衣库UNIQLO', '优衣库', '1', '79.00', '0', '1568559632');
 
 -- ----------------------------
 -- Table structure for `pm_role`
@@ -1444,6 +1449,7 @@ CREATE TABLE `pm_shop` (
   `intr` varchar(200) NOT NULL,
   `mp4` varchar(300) DEFAULT NULL,
   `image` text NOT NULL,
+  `openTime` varchar(300) NOT NULL,
   `content` text NOT NULL,
   `py` varchar(10) NOT NULL,
   `comm` int(11) NOT NULL COMMENT '推荐栏目ID',
@@ -1458,8 +1464,8 @@ CREATE TABLE `pm_shop` (
 -- ----------------------------
 -- Records of pm_shop
 -- ----------------------------
-INSERT INTO `pm_shop` VALUES ('7', '1', '20', '1,3', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190906/786a1f147fbcd15c7c0d0affd6439e31.jpg', '', 'jack', '阿德莱德长安大街11号', '13500000000', '一家很不错的商店', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '0', '1', '1', '1566488164', '1568192298');
-INSERT INTO `pm_shop` VALUES ('8', '2', '21', '1,4', '奶粉专卖店', 'test1', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190906/8962d63087ef4eb6d11a5358b5f960d9.jpg', '/uploads/images/20190911/d706e6b2626161ecd26abedd991fdeac.jpg', '赵柳', '阿萨德饭大是大非ad', '18700001111', '我们只卖一种产品', '', '', '', 'N', '1', '0', '0', '1', '1567475240', '1568192288');
+INSERT INTO `pm_shop` VALUES ('7', '1', '20', '1,3', '测试店铺', 'test', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190906/786a1f147fbcd15c7c0d0affd6439e31.jpg', '', 'jack', '阿德莱德长安大街11号', '13500000000', '一家很不错的商店', '', '/uploads/images/20190822/292fc46c8c0fe690c4b7f4acbaf56fed.jpg,/uploads/images/20190822/86708d2a1662fa3ec163fbc1ab34af6d.jpg', '', '这个店铺\n嗯嗯\n很澳洲', 'C', '0', '0', '1', '1', '1566488164', '1568192298');
+INSERT INTO `pm_shop` VALUES ('8', '2', '21', '1,4', '奶粉专卖店', 'test1', 'e10adc3949ba59abbe56e057f20f883e', '/uploads/images/20190906/8962d63087ef4eb6d11a5358b5f960d9.jpg', '/uploads/images/20190911/d706e6b2626161ecd26abedd991fdeac.jpg', '赵柳', '阿萨德饭大是大非ad', '18700001111', '我们只卖一种产品', '', '', '', '', 'N', '1', '0', '0', '1', '1567475240', '1568192288');
 
 -- ----------------------------
 -- Table structure for `pm_shop_cate`

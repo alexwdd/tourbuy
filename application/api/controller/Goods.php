@@ -159,8 +159,8 @@ class Goods extends Common {
             $brandID = input('post.brandID');
             $keyword = input('param.keyword');
             $comm = input('param.comm');
-            $order = input('param.order');
-            $desc = input('param.desc');
+            $order = input('param.order','id');
+            $desc = input('param.desc','desc');
             $page = input('post.page/d',1);
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
@@ -191,7 +191,7 @@ class Goods extends Common {
             }
             $map['show'] = 1;
             $obj = db('Goods');
-            $count = $obj->where($map)->count();
+            $count = $obj->where($map)->count();            
             $totalPage = ceil($count/$pagesize);
             if ($page < $totalPage) {
                 $next = 1;
@@ -200,6 +200,7 @@ class Goods extends Common {
             }
 
             $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
+
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
                 $list[$key]['rmb'] = round($value['price']*$this->rate,1);
@@ -388,15 +389,14 @@ class Goods extends Common {
                 returnJson('-1','不存在的商品');
             }
             $list['marketPrice'] = $list['price'];
-            $list['picname'] = getThumb($list["picname"],200,200);
-            $list['picname'] = getRealUrl($list['picname']);
-
+            
             if ($list['image']=='') {
                 $list['image'] = array($list['picname']);            
             }else{
                 $list['image'] = explode(",", $list['image']);
             }
             foreach ($list['image'] as $key => $value) {
+                $value = getThumb($value,1000,1000);
                 $list['image'][$key] = getRealUrl($value);
             }                  
        
@@ -516,6 +516,129 @@ class Goods extends Common {
 
             returnJson(1,'success',['goods'=>$list,'flashTime'=>$flashTime,'tomorrow'=>$tomorrow,'shop'=>$shop,'cartNumber'=>$cartNumber,'fav'=>$fav,'coupon'=>$coupon,'pack'=>$pack,'spec'=>$spec,'filter_spec'=>$filter_spec]);
         }
+    }
+
+    //生成海报
+    public function poster(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $goodsID = input('post.goodsID');            
+            if ($goodsID=='' || !is_numeric($goodsID)) {
+                returnJson(0,'参数错误');
+            }
+            $map['id'] = $goodsID;
+            $map['show'] = 1;
+            $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
+            if (!$list) {
+                returnJson(0,'不存在的商品');
+            }
+
+            $list['rmb'] = number_format($this->rate*$list['price'],1); 
+
+            /*for($i = 0; $i < mb_strlen($list['name']); $i++) {
+                $letter[] = mb_substr($list['name'], $i, 1);
+            }
+            foreach ($letter as $l) {
+                $teststr = $str . " " . $l;
+                $testbox = imagettfbbox($size, $angle, $font, $teststr);
+                // 判断拼接后的字符串是否超过预设的宽度。超出宽度添加换行
+                if (($testbox[2] > $txt_max_width) && ($str !== "")) {
+                    $str .= "\n";
+                }
+                $str .= $l;
+            }*/
+
+            $header = array('User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0','Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3','Accept-Encoding: gzip, deflate',);
+             $url=$this->user['headimg'];
+             $curl = curl_init();
+             curl_setopt($curl, CURLOPT_URL, $url);
+             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+             curl_setopt($curl, CURLOPT_ENCODING, 'gzip');
+             curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+             $data = curl_exec($curl);
+             $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+             curl_close($curl);
+             if ($code == 200) {//把URL格式的图片转成base64_encode格式的！    
+                $imgBase64Code = "data:image/jpeg;base64," . base64_encode($data);
+             }
+
+             $img_content=$imgBase64Code;//图片内容
+             //echo $img_content;exit;
+             if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img_content, $result)){ 
+                $type = $result[2];//得到图片类型png?jpg?gif? 
+                $new_file = "./face.{$type}"; 
+                if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img_content)))){
+                    //echo '新文件保存成功：', $new_file; 
+                }
+            }
+
+            $url = 'http://' . $_SERVER['HTTP_HOST'] . url('Login/qrreg', array('sncode' => $sncode));
+
+            require_once EXTEND_PATH.'qrcode/qrcode.php';
+            $value = input("param.url");//二维码数据
+            $errorCorrectionLevel = 'Q';//纠错级别：L、M、Q、H
+            $matrixPointSize = 5;//二维码点的大小：1到10
+            $object = new \QRcode();
+            $object->png($url, './qrcode.png', $errorCorrectionLevel, $matrixPointSize, 2);//不带Logo二维码的文件名
+
+            $list['name'] = $this->break_string($list['name'],20);
+            
+            $list['picname'] = getThumb($list["picname"],700,700);
+            $image = \think\Image::open('./poster.jpg');
+            $image->water('.'.$list['picname'],[50,50])            
+                  ->text("AU$",'simhei.ttf',18,'#000',[50,780])
+                  ->text($list['price'],'simhei.ttf',32,'#000',[90,770])
+                  ->text('约 ￥'.$list['rmb'],'simhei.ttf',20,'#666666',[240,775])
+                  ->text($list['name'],'simhei.ttf',26,'#666666',[50,830])
+                  ->water($new_file,[50,1100])
+                  ->water('./qrcode.png',[570,1060])
+                  ->text($this->user['nickname'],'simhei.ttf',36,'#666666',[200,1120])
+                  ->text('为您推荐','simhei.ttf',24,'#666666',[200,1170])->save('01.png');
+            //$image->text('十年磨一剑 - 为API开发设计的高性能框架','simhei.ttf',20,'#000000')->save('text_image.png');
+        }
+    }
+
+    public function break_string($str,$num){
+        preg_match_all("/./u", $str, $arr);//将所有字符转成单个数组
+        
+        //print_r($arr);
+        
+        $strstr = '';
+        $width = 0;
+        $arr = $arr[0];
+        foreach($arr as $key=>$string){
+            $strlen = strlen($string);//计算当前字符的长度，一个字母的长度为1，一个汉字的长度为3
+            //echo $strlen;
+            
+            if($strlen == 3){
+                
+                $width += 1;
+                
+            }else{
+                
+                $width += 0.5;
+                
+            }
+            
+            $strstr .= $string;
+            
+            //计算当前字符的下一个
+            if(array_key_exists($key+1, $arr)){
+                $_strlen = strlen($arr[$key+1]);
+                 if($_strlen == 3){
+                    $_width = 1;
+                }else{
+                    $_width = 0.5;
+                }
+                if($width+$_width > $num){
+                    $width = 0;
+                    $strstr .= "\n";
+                }
+            }
+     
+        }
+        return $strstr;
     }
 
     public function get_spec($goods_id){
