@@ -534,53 +534,19 @@ class Goods extends Common {
             }
 
             $list['rmb'] = number_format($this->rate*$list['price'],1); 
+            
 
-            /*for($i = 0; $i < mb_strlen($list['name']); $i++) {
-                $letter[] = mb_substr($list['name'], $i, 1);
-            }
-            foreach ($letter as $l) {
-                $teststr = $str . " " . $l;
-                $testbox = imagettfbbox($size, $angle, $font, $teststr);
-                // 判断拼接后的字符串是否超过预设的宽度。超出宽度添加换行
-                if (($testbox[2] > $txt_max_width) && ($str !== "")) {
-                    $str .= "\n";
-                }
-                $str .= $l;
-            }*/
-
-            $header = array('User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0','Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3','Accept-Encoding: gzip, deflate',);
-             $url=$this->user['headimg'];
-             $curl = curl_init();
-             curl_setopt($curl, CURLOPT_URL, $url);
-             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-             curl_setopt($curl, CURLOPT_ENCODING, 'gzip');
-             curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-             $data = curl_exec($curl);
-             $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-             curl_close($curl);
-             if ($code == 200) {//把URL格式的图片转成base64_encode格式的！    
-                $imgBase64Code = "data:image/jpeg;base64," . base64_encode($data);
-             }
-
-             $img_content=$imgBase64Code;//图片内容
-             //echo $img_content;exit;
-             if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img_content, $result)){ 
-                $type = $result[2];//得到图片类型png?jpg?gif? 
-                $new_file = "./face.{$type}"; 
-                if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img_content)))){
-                    //echo '新文件保存成功：', $new_file; 
-                }
-            }
-
-            $url = 'http://' . $_SERVER['HTTP_HOST'] . url('Login/qrreg', array('sncode' => $sncode));
+            $url = 'http://tm.youyiqingshang.com/mobile/goodsDetail?id='.$list['id'].'&shareID='.$this->user['id'];
 
             require_once EXTEND_PATH.'qrcode/qrcode.php';
             $value = input("param.url");//二维码数据
             $errorCorrectionLevel = 'Q';//纠错级别：L、M、Q、H
             $matrixPointSize = 5;//二维码点的大小：1到10
             $object = new \QRcode();
-            $object->png($url, './qrcode.png', $errorCorrectionLevel, $matrixPointSize, 2);//不带Logo二维码的文件名
+            $qrcode = ".".config("UPLOAD_PATH")."qrcode.png";
+            $object->png($url, $qrcode , $errorCorrectionLevel, $matrixPointSize, 2);//不带Logo二维码的文件名
+
+            $face = $this->saveFace($this->user['headimg']);
 
             $list['name'] = $this->break_string($list['name'],20);
             
@@ -591,11 +557,41 @@ class Goods extends Common {
                   ->text($list['price'],'simhei.ttf',32,'#000',[90,770])
                   ->text('约 ￥'.$list['rmb'],'simhei.ttf',20,'#666666',[240,775])
                   ->text($list['name'],'simhei.ttf',26,'#666666',[50,830])
-                  ->water($new_file,[50,1100])
-                  ->water('./qrcode.png',[570,1060])
+                  ->water($face,[50,1100])
+                  ->water($qrcode,[570,1060])
                   ->text($this->user['nickname'],'simhei.ttf',36,'#666666',[200,1120])
-                  ->text('为您推荐','simhei.ttf',24,'#666666',[200,1170])->save('01.png');
-            //$image->text('十年磨一剑 - 为API开发设计的高性能框架','simhei.ttf',20,'#000000')->save('text_image.png');
+                  ->text('为您推荐','simhei.ttf',24,'#666666',[200,1170])->save(".".config("UPLOAD_PATH")."poster.png");
+            returnJson(1,'success',['url'=>config('site.domain').config("UPLOAD_PATH")."poster.png"]);
+        }
+    }
+
+    public function saveFace($face){
+        $first = substr($face,0,4);
+        if ($first != 'http') {
+            return ".".$face;
+        }
+
+        $header = array('User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0','Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3','Accept-Encoding: gzip, deflate',);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $face);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_ENCODING, 'gzip');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        $data = curl_exec($curl);
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        if ($code == 200) {//把URL格式的图片转成base64_encode格式的！    
+            $imgBase64Code = "data:image/jpeg;base64," . base64_encode($data);
+        }
+
+        $img_content=$imgBase64Code;//图片内容
+        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img_content, $result)){ 
+            $type = $result[2];//得到图片类型png?jpg?gif? 
+            $new_file = ".".config("UPLOAD_PATH")."face.{$type}"; 
+            if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img_content)))){
+                return $new_file;
+            }
         }
     }
 
