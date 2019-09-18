@@ -221,6 +221,8 @@ class Goods extends Common {
             $path = input('post.path');
             $page = input('post.page/d',1);
             $cityID = input('post.cityID');
+            $field = input('post.field');
+            $order = input('post.order');
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
 
@@ -236,7 +238,6 @@ class Goods extends Common {
                 $map['cityID'] = $cityID;
             }
 
-            $map['jingpin'] = 1;
             $obj = db('Goods');
             $count = $obj->where($map)->count();
             $totalPage = ceil($count/$pagesize);
@@ -245,7 +246,7 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('sort asc,id desc')->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
 
             foreach ($list as $key => $value) {
                 $value['banner'] = getThumb($value["picname"],760,300);
@@ -255,9 +256,9 @@ class Goods extends Common {
             
             $cate = db("GoodsCate")->field('id,name,path')->where('fid',$thisCate['id'])->order('sort asc,id asc')->select();
 
-            $city = db("City")->cache(true)->field('id,name')->select();
+            /*$city = db("City")->cache(true)->field('id,name')->select();*/
 
-            returnJson(1,'success',['next'=>$next,'data'=>$list,'cateName'=>$thisCate['name'],'cate'=>$cate,'city'=>$city]);
+            returnJson(1,'success',['next'=>$next,'data'=>$list,'cateName'=>$thisCate['name'],'cate'=>$cate]);
         }
     }
 
@@ -270,6 +271,8 @@ class Goods extends Common {
             $path = input('post.path');
             $page = input('post.page/d',1);
             $cityID = input('post.cityID');
+            $field = input('post.field');
+            $order = input('post.order');
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
 
@@ -290,7 +293,7 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('sort asc,id desc')->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
 
             foreach ($list as $key => $value) {
                 $value['banner'] = getThumb($value["picname"],760,300);
@@ -300,8 +303,8 @@ class Goods extends Common {
             
             $cate = db("GoodsCate")->field('id,name,path')->where('fid',0)->order('sort asc,id asc')->select();
 
-            $city = db("City")->cache(true)->field('id,name')->select();
-            returnJson(1,'success',['next'=>$next,'data'=>$list,'cate'=>$cate,'city'=>$city]);
+            //$city = db("City")->cache(true)->field('id,name')->select();
+            returnJson(1,'success',['next'=>$next,'data'=>$list,'cate'=>$cate]);
         }
     }
 
@@ -578,7 +581,7 @@ class Goods extends Common {
             $list['rmb'] = number_format($this->rate*$list['price'],1); 
             
 
-            $url = 'http://tm.youyiqingshang.com/mobile/goodsDetail?id='.$list['id'].'&shareID='.$this->user['id'];
+            $url = 'http://tm.youyiqingshang.com/mobile/goodsDetail?id='.$list['id'].'&shareUser='.$this->user['id'];
 
             require_once EXTEND_PATH.'qrcode/qrcode.php';
             $value = input("param.url");//二维码数据

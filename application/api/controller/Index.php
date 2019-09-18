@@ -42,7 +42,7 @@ class Index extends Common
             unset($map);
             $map['comm'] = 1;
             $brand = db("Brand")->field('id,name,logo')->where($map)->order('sort asc,id desc')->limit(4)->select();
-            foreach ($tehui as $key => $value) {
+            foreach ($brand as $key => $value) {
                 $value['logo'] = getThumb($value["logo"],200,200);
                 $brand[$key]['logo'] = getRealUrl($value['logo']);
             }

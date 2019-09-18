@@ -16,6 +16,7 @@ class Wechat extends Common {
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}
             $code = input('post.code');
+            $shareUser = input('post.shareUser');
             if($code){
                 $config = tpCache('weixin');
                 $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$config['APP_ID'].'&secret='.$config['APP_SECRET'].'&code='.$code.'&grant_type=authorization_code';
@@ -65,6 +66,13 @@ class Wechat extends Common {
                             returnJson(0,'登录失败');
                         }
                     }else{
+                        if($shareUser!='' && is_numeric($shareUser)){
+                            $father = db("Member")->where('id',$shareUser)->find();
+                            if($father){
+                                $data['tjID'] = $father['id'];
+                                $data['tjName'] = $father['nickname'];
+                            }
+                        }
                         $result = model('Member')->wechat($data);
                         if ($result['code']==1) { 
                             $user = db("Member")->field('nickname,headimg,token')->where('id',$result['msg'])->find();
