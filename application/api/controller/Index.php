@@ -38,18 +38,13 @@ class Index extends Common
                 $jingpin[$key]['rmb'] = round($value['price']*$this->rate,1);
             }
 
-            //特惠
+            //推荐品牌
             unset($map);
-            $map['show'] = 1;
-            $map['tehui'] = 1;
-            if($cityID>0){
-                $map['cityID'] = $cityID;
-            }
-            $tehui = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
+            $map['comm'] = 1;
+            $brand = db("Brand")->field('id,name,logo')->where($map)->order('sort asc,id desc')->limit(4)->select();
             foreach ($tehui as $key => $value) {
-                $value['picname'] = getThumb($value["picname"],400,400);
-                $tehui[$key]['picname'] = getRealUrl($value['picname']);
-                $tehui[$key]['rmb'] = round($value['price']*$this->rate,1);
+                $value['logo'] = getThumb($value["logo"],200,200);
+                $brand[$key]['logo'] = getRealUrl($value['logo']);
             }
    
             //今日抢购
@@ -130,7 +125,7 @@ class Index extends Common
                 'city'=>$city,
             	'category'=>$cate,
                 'jingpin'=>$jingpin,
-                'tehui'=>$tehui,
+                'brand'=>$brand,
                 'cateGoods'=>$cateGoods,
                 'flash'=>$flash,
                 'flashTime'=>$flashTime,

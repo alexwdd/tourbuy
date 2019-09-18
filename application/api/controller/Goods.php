@@ -211,32 +211,33 @@ class Goods extends Common {
         }
     }
 
-    public function push(){
+    public function cateGoods(){
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
             $config = tpCache('member');
-
-            $type = input('post.type',1);
-            $cid = input('post.cid');
-            $keyword = input('param.keyword');
+    
+            $fid = input('post.fid');
+            $path = input('post.path');
             $page = input('post.page/d',1);
+            $cityID = input('post.cityID');
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
 
-            if($keyword!=''){
-                $map['goodsName'] = array('like','%'.$keyword.'%');
-            }
-            if(!in_array($type,[1,2,3])){
-                returnJson(0,'type参数错误');
-            }
-            $map['cateID'] = $type;
+            $thisCate = db("GoodsCate")->where('id',$fid)->find();
 
-            if($cid!=''){
-                $map['cid'] = $cid;
+            if($path!=''){
+                $map['path'] = array('like',$path.'%');
+            }else{
+                $map['path'] = array('like',$thisCate['path'].'%');
             }
 
-            $obj = db('GoodsPush');
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
+
+            $map['jingpin'] = 1;
+            $obj = db('Goods');
             $count = $obj->where($map)->count();
             $totalPage = ceil($count/$pagesize);
             if ($page < $totalPage) {
@@ -244,22 +245,63 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('goodsID')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
-            if($list){
-                $cateID = $obj->where($map)->group('cid')->column("cid");
-                $where['id'] = array('in',$cateID);
-                $cate = db('GoodsCate')->field('id,path,name')->where($where)->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('sort asc,id desc')->select();
+
+            foreach ($list as $key => $value) {
+                $value['banner'] = getThumb($value["picname"],760,300);
+                $list[$key]['picname'] = getRealUrl($value['picname']);
+                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
             }
             
-            foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();   
+            $cate = db("GoodsCate")->field('id,name,path')->where('fid',$thisCate['id'])->order('sort asc,id asc')->select();
 
-                unset($list[$key]['goodsID']);
-                $goods['picname'] = getRealUrl($goods['picname']);
-                $goods['rmb'] = round($goods['price']*$this->rate,1);
-                $list[$key] = $goods;
+            $city = db("City")->cache(true)->field('id,name')->select();
+
+            returnJson(1,'success',['next'=>$next,'data'=>$list,'cateName'=>$thisCate['name'],'cate'=>$cate,'city'=>$city]);
+        }
+    }
+
+    public function jingpin(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $config = tpCache('member');
+    
+            $path = input('post.path');
+            $page = input('post.page/d',1);
+            $cityID = input('post.cityID');
+            $pagesize = input('post.pagesize',10);
+            $firstRow = $pagesize*($page-1); 
+
+            if($path!=''){
+                $map['path'] = array('like',$path.'%');
             }
-            returnJson(1,'success',['next'=>$next,'data'=>$list,'cate'=>$cate]);
+
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
+
+            $map['jingpin'] = 1;
+            $obj = db('Goods');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order('sort asc,id desc')->select();
+
+            foreach ($list as $key => $value) {
+                $value['banner'] = getThumb($value["picname"],760,300);
+                $list[$key]['picname'] = getRealUrl($value['picname']);
+                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
+            }
+            
+            $cate = db("GoodsCate")->field('id,name,path')->where('fid',0)->order('sort asc,id asc')->select();
+
+            $city = db("City")->cache(true)->field('id,name')->select();
+            returnJson(1,'success',['next'=>$next,'data'=>$list,'cate'=>$cate,'city'=>$city]);
         }
     }
 
