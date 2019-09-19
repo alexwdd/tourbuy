@@ -25,6 +25,15 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">banner</label>
+        <div class="layui-input-block">
+            <a href="{$list.banner}" target="_blank">
+            <img src="{$list.banner}" style="width:300px"/>
+            </a>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">城市</label>
         <div class="layui-form-mid">{$list.intr}</div>
     </div>
@@ -99,6 +108,17 @@
         <div class="layui-inline">
             <button type="button" class="layui-btn" id="upload-single">上传图片</button>
             <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">banner</label>
+        <div class="layui-input-inline" style="width:400px">
+            <input type="text" id="banner" name="banner" value="{$list.banner}" class="layui-input">
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-single1">上传图片</button>
+            <i class="layui-icon showImage" tag="banner">&#xe64a;</i>
         </div>
     </div>
 
@@ -194,6 +214,15 @@ layui.config({
         size:5120,
         tag : '#picname'
     }); 
+
+    myupload.single({
+        elem : '#upload-single1',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#banner'
+    });
 
     myupload.mult({
         elem : '#upload-mult',

@@ -36,20 +36,9 @@ class Order extends Admin {
     	}
 	}
 
-	public function peihuo() {
-		if (request()->isPost()) {
-			$map['status'] = 2;
-			$result = model('Order')->getList($map);			
-			echo json_encode($result);
-    	}else{
-    		$this->assign('url',url('order/peihuo'));
-	    	return view('normal');
-    	}
-	}
-
 	public function fahuo() {
 		if (request()->isPost()) {
-			$map['status'] = 3;
+			$map['status'] = 2;
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
@@ -111,6 +100,8 @@ class Order extends Admin {
                         $baoguo[$k]['eimg'] = explode(",", $val['eimg']);
                     }
                 }
+
+                $list['shopName'] = db("Shop")->where('id',$list['shopID'])->value("name");
 	            $this->assign('baoguo',$baoguo);
 	            $this->assign('list',$list);
 	            return view();

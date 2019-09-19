@@ -49,6 +49,11 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">商铺</label>
+                        <div class="layui-form-mid">{$list.shopName}</div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">商品金额</label>
                         <div class="layui-form-mid">{$list.goodsMoney}</div>
                     </div>                    
@@ -56,7 +61,17 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">运费</label>
                         <div class="layui-form-mid">{$list.payment}</div>
-                    </div>     
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">优惠</label>
+                        <div class="layui-form-mid">{$list.discount}</div>
+                    </div> 
+                      
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单金额</label>
+                        <div class="layui-form-mid">{$list.total}</div>
+                    </div> 
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">提交日期</label>
@@ -67,25 +82,6 @@
                         <label class="layui-form-label">支付方式</label>
                         <div class="layui-form-mid">{$list.payType|getPayType}</div>
                     </div>
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">优惠</label>
-                        <div class="layui-form-mid">{$list.discount}</div>
-                    </div>                    
-
-                    {gt name="list.wallet" value="0"}
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">余额支付</label>
-                        <div class="layui-form-mid">{$list.wallet}</div>
-                    </div>
-                    {/gt}
-                    
-                    {gt name="list.money" value="0"}
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">在线支付</label>
-                        <div class="layui-form-mid">{$list.money}</div>
-                    </div>
-                    {/gt}
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">留言</label>

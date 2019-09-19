@@ -114,10 +114,10 @@ function getFundBack($point){
 //获取支付方式
 function getPayType($v){
     if ($v==1) {
-        $name = 'OMI支付';
+        $name = '支付宝';
     }
     if ($v==2) {
-        $name = '余额支付';
+        $name = '微信';
     }
     return $name;
 }
