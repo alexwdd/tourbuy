@@ -41,9 +41,15 @@ class Shop extends Admin
         $field = input('post.field','id');
         $order = input('post.order','desc');
         $keyword = input('post.keyword');
+        $group  = input('post.group');
 
         $map['id'] = array('gt',0);
-        $map['name'] = array('like','%'.$keyword.'%');
+        if($keyword!=''){
+            $map['name'] = array('like','%'.$keyword.'%');
+        }
+        if($group!=''){
+            $map['group'] = $group;
+        }
 
         $total = $this->where($map)->count();
         $pages = ceil($total/$pageSize);

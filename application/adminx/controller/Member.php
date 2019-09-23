@@ -27,6 +27,9 @@ class Member extends Admin {
 	        if(!$data['team']) {
 	        	$data['team'] = 0;
 	        }
+	        if(!$data['group']) {
+	        	$data['group'] = 0;
+	        }
 	        if ($data['id']!='') {
 	    		$user = db("Member")->where(array('id'=>$data['id']))->find();
 	    		if ($user['mobile']!=$data['mobile'] && $data['mobile']!='') {

@@ -32,6 +32,18 @@
             </div>
 
             <div class="layui-inline">
+                <label class="layui-form-mid">身份</label>
+                <div class="layui-input-inline">
+                    <select name="group">
+                        <option value="">--请选择--</option>
+                        <option value="1">特惠用户</option>
+                        <option value="0">普通用户</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
                 <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                 </button>
@@ -63,6 +75,7 @@
             <p field="name" title="姓名" width="120"/>
             <p field="wechat" title="微信" width="150"/>
             <p title="团队" width="80" templet="#teamTpl"/>
+            <p title="身份" width="80" templet="#groupTpl"/>
             <p field="disable" title="状态" width="80" templet="#statusTpl"/>
             <p field="createTime" title="注册日期" width="180" sort="true"/>
             <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="100"/>
@@ -74,6 +87,13 @@
             {{# }else{ }}
             <img src="{{d.headimg}}" style="height:40px"/>
             {{# } }}                
+        </script>
+        <script type="text/html" id="groupTpl">
+            {{# if(d.group == 1){ }}
+            <span style="color:blue">特惠</span>      
+            {{# }else{ }}
+            普通
+            {{# } }}           
         </script>
         <script type="text/html" id="teamTpl">
             {{# if(d.team == 1){ }}

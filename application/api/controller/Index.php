@@ -28,6 +28,7 @@ class Index extends Common
             unset($map);
             $map['show'] = 1;
             $map['jingpin'] = 1;
+            $map['group'] = array('elt',$this->user['group']);
             if($cityID>0){
                 $map['cityID'] = $cityID;
             }
@@ -65,6 +66,7 @@ class Index extends Common
                     $map['cityID'] = $cityID;
                 }
                 $map['id'] = $value['goodsID'];
+                $map['group'] = array('elt',$this->user['group']);
                 $goods = db("Goods")->field('id,name,picname,price,say')->where($map)->find();
                 $flashGoods[$key]['marketPrice'] = $goods['price'];
                 $flashGoods[$key]['name'] = $goods['name'];
@@ -93,6 +95,7 @@ class Index extends Common
                 $map['path'] = array('like',$value['path'].'%');
                 $map['show'] = 1;
                 $map['comm'] = 1;
+                $map['group'] = array('elt',$this->user['group']);
                 if($cityID>0){
                     $map['cityID'] = $cityID;
                 }
@@ -111,6 +114,7 @@ class Index extends Common
                 }
                 $map['comm'] = $value['id'];
                 $map['banner'] = array('neq','');
+                $map['group'] = array('elt',$this->user['group']);
                 $shop = db("Shop")->field('id,banner')->where($map)->limit(5)->select();
                 foreach ($shop as $k => $val) {
                     $val['banner'] = getThumb($val["banner"],760,300);

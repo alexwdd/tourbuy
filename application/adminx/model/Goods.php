@@ -121,6 +121,7 @@ class Goods extends Admin
         $shop = db('Shop')->where('id',$data['shopID'])->find();
         $data['shopName'] = $shop['name'];
         $data['cityID'] = $shop['cityID'];
+        $data['group'] = $shop['group'];
         if( isset( $data['id']) && !empty($data['id'])) {
             $result = $this->edit( $data );
         } else {

@@ -18,6 +18,7 @@ class Member extends Admin
         $keyword = input('post.keyword');
         $disable  = input('post.disable');
         $team  = input('post.team');
+        $group  = input('post.group');
 
         $map['id'] = array('gt',0);
         if($keyword!=''){
@@ -28,6 +29,9 @@ class Member extends Admin
         }
         if($team!=''){
             $map['team'] = $team;
+        }
+        if($group!=''){
+            $map['group'] = $group;
         }
 
         $total = $this->where($map)->count();

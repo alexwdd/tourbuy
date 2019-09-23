@@ -138,6 +138,14 @@
     <hr>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="group" value="1" title="特惠商家" {php}if($list['group']=='1')echo 'checked';{/php}>
+            <input type="radio" name="group" value="0" title="普通商家" {php}if($list['group']=='0')echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">账户</label>
         {empty name="list.id"}
         <div class="layui-input-inline">

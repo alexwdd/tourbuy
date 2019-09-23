@@ -16,6 +16,7 @@ class Common extends Base {
         $token = input('post.token');
         if (!$token) {
             $this->user['id'] = 0;
+            $this->user['group'] = 0;
         }
         $map['token'] = $token;
         $map['disable'] = 0;
@@ -27,6 +28,7 @@ class Common extends Base {
             $r = db('Member')->where($map)->update($data);
         }else{
             $this->user['id'] = 0;
+            $this->user['group'] = 0;
         }
 
         //今日抢购的商品

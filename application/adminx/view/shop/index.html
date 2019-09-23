@@ -1,4 +1,32 @@
 <div class="layui-card">
+    <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" name="keyword" autocomplete="off" placeholder="店铺名称" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-mid">类型</label>
+                <div class="layui-input-inline">
+                    <select name="group">
+                        <option value="">--请选择--</option>
+                        <option value="1">特惠商家</option>
+                        <option value="0">普通商家</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">            
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('shop/pub')}" topWidth="80%" topHeight="80%" topTitle="新增">添加</button>
@@ -13,6 +41,7 @@
             <p field="city" title="城市" width="100"/> 
             <p field="shopCate" title="分类" width="200"/> 
             <p field="name" title="店铺" width="200"/> 
+            <p title="类型" width="80" templet="#groupTpl"/>
             <p field="account" title="账号" width="150"/> 
             <p field="linkman" title="联系人" width="120"/>
             <p field="tel" title="电话" width="120"/>
@@ -24,7 +53,13 @@
             <p field="createTime" title="发布日期" width="180"/>
             <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="80"/>
         </div>
-        
+        <script type="text/html" id="groupTpl">
+            {{# if(d.group == 1){ }}
+            <span style="color:blue">特惠</span>      
+            {{# }else{ }}
+            普通
+            {{# } }}           
+        </script>
         <script type="text/html" id="commTpl">
             {{# if(d.comm == 1){ }}
             <i class="layui-icon layui-icon-ok"></i>

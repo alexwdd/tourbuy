@@ -41,6 +41,7 @@ class Goods extends Common {
             foreach ($cate as $key => $value) {
                 $map['cid|cid1'] = $value['id'];
                 $map['show'] = 1;
+                $map['group'] = array('elt',$this->user['group']);
                 $goods = db("Goods")->where($map)->field('id,name,picname,say,price,comm')->order('sort asc,id desc')->select();
                 foreach ($goods as $k => $val) {
                     $val['picname'] = getThumb($val["picname"],400,400);
@@ -139,7 +140,10 @@ class Goods extends Common {
             $map['cate'] = 5;
             $list = db('OptionItem')->field('id as cid,name')->where($map)->order('sort asc,id asc')->select();
             foreach ($list as $key => $value) {
-                $child = db('Shop')->field('id,name,picname')->where('cid',$value['cid'])->order('id desc,py asc')->limit(5)->select();
+                unset($map);
+                $map['cid'] = $value['cid'];
+                $map['group'] = array('elt',$this->user['group']);
+                $child = db('Shop')->field('id,name,picname')->where($map)->order('id desc,py asc')->limit(6)->select();
                 foreach ($child as $k => $val) {
                     $val['picname'] = getThumb($val["picname"],200,150);
                     $child[$k]['picname'] = getRealUrl($val['picname']);
@@ -190,6 +194,7 @@ class Goods extends Common {
                 $map['name|short|keyword'] = array('like','%'.$keyword.'%');
             }
             $map['show'] = 1;
+            $map['group'] = array('elt',$this->user['group']);
             $obj = db('Goods');
             $count = $obj->where($map)->count();            
             $totalPage = ceil($count/$pagesize);
@@ -238,6 +243,8 @@ class Goods extends Common {
                 $map['cityID'] = $cityID;
             }
 
+            $map['group'] = array('elt',$this->user['group']);
+            $map['show'] = 1;
             $obj = db('Goods');
             $count = $obj->where($map)->count();
             $totalPage = ceil($count/$pagesize);
@@ -285,6 +292,8 @@ class Goods extends Common {
             }
 
             $map['jingpin'] = 1;
+            $map['group'] = array('elt',$this->user['group']);
+            $map['show'] = 1;
             $obj = db('Goods');
             $count = $obj->where($map)->count();
             $totalPage = ceil($count/$pagesize);
@@ -389,6 +398,7 @@ class Goods extends Common {
             }
             $map['id'] = $goodsID;
             $map['show'] = 1;
+            $map['group'] = array('elt',$this->user['group']);
             $list = db('Goods')->field('id,fid,name,picname,price,comm,tehui,flash,baoyou')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
@@ -429,6 +439,7 @@ class Goods extends Common {
             }
             $map['id'] = $goodsID;
             $map['show'] = 1;
+            $map['group'] = array('elt',$this->user['group']);
             $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
@@ -573,6 +584,7 @@ class Goods extends Common {
             }
             $map['id'] = $goodsID;
             $map['show'] = 1;
+            $map['group'] = array('elt',$this->user['group']);
             $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
             if (!$list) {
                 returnJson(0,'不存在的商品');

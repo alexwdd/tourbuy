@@ -47,6 +47,7 @@ class Shop extends Admin {
                 $this->assign('cateIds', $cateIds);
 			}else{
 				$list['status'] = 1;
+				$list['group'] = 0;
 			}
 			$this->assign('list', $list);
 

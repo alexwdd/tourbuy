@@ -17,6 +17,8 @@ class Shop extends Auth {
             if($cityID>0){
                 $map['cityID'] = $cityID;
             }
+            $map['group'] = array('elt',$this->user['group']);
+            $map['status'] = 1;
             $shop = db("Shop")->where($map)->field('id,name,picname,intr,cityID')->select();
             foreach ($shop as $key => $value) {
                 $value['picname'] = getThumb($value['picname'],200,200);
@@ -43,6 +45,8 @@ class Shop extends Auth {
                 returnJson(0,'参数错误');
             }
             $map['id'] = $shopID;
+            $map['group'] = array('elt',$this->user['group']);
+            $map['status'] = 1;
             $shop = db('Shop')->field('id,name,picname,cate')->where($map)->find();
             if(!$shop){
                 returnJson(0,'店铺不存在');
@@ -103,6 +107,8 @@ class Shop extends Auth {
                 returnJson(0,'参数错误');
             }
             $map['id'] = $shopID;
+            $map['group'] = array('elt',$this->user['group']);
+            $map['status'] = 1;
             $shop = db('Shop')->field('id,name,picname,intr,mp4,image,content,address')->where($map)->find();
             if(!$shop){
                 returnJson(0,'店铺不存在');
