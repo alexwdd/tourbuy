@@ -4,6 +4,37 @@ use think\Db;
 
 class Shop extends Auth {
 
+    public function lists(){
+        if (request()->isPost()) {
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $cityID = input('post.cityID');
+            $fid = input('post.fid',0);
+            //店铺
+            unset($map);
+            $ids = db("ShopCate")->where('cateID',$fid)->column("shopID");
+            $map['id'] = array('in',$ids);
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
+            $shop = db("Shop")->where($map)->field('id,name,picname,intr,cityID')->select();
+            foreach ($shop as $key => $value) {
+                $value['picname'] = getThumb($value['picname'],200,200);
+                $shop[$key]['picname'] = getRealUrl($value['picname']);
+                $shop[$key]['cityName'] = db("City")->where('id',$value['cityID'])->value("name");
+
+                $goods = db("Goods")->field('id,picname')->where('shopID',$value['id'])->order('id desc')->limit(3)->select();
+                foreach ($goods as $k => $val) {
+                    $val['picname'] = getThumb($val["picname"],400,400);
+                    $goods[$k]['picname'] = getRealUrl($val['picname']);
+                }
+                $shop[$key]['goods'] = $goods;
+            }
+
+            returnJson(1,'success',['shop'=>$shop]);
+        }
+    }
+
     public function index(){
         if (request()->isPost()) {
             if(!checkFormDate()){returnJson(0,'ERROR');}
