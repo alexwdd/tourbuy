@@ -37,6 +37,32 @@ class Shop extends Auth {
         }
     }
 
+    public function shopWall(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $cityID = input('post.cityID');
+
+            $map['cate'] = 5;
+            $list = db('OptionItem')->field('id as cid,name')->where($map)->order('sort asc,id asc')->select();
+            foreach ($list as $key => $value) {
+                unset($map);
+                $map['cid'] = $value['cid'];
+                if($cityID>0){
+                    $map['cityID'] = $cityID;
+                }
+                $map['group'] = array('elt',$this->user['group']);
+                $child = db('Shop')->field('id,name,picname')->where($map)->order('id desc,py asc')->limit(6)->select();
+                foreach ($child as $k => $val) {
+                    $val['picname'] = getThumb($val["picname"],200,150);
+                    $child[$k]['picname'] = getRealUrl($val['picname']);
+                }
+                $list[$key]['child'] = $child;
+            }
+            returnJson(1,'success',['shop'=>$list]);
+        }
+    }
+
     public function index(){
         if (request()->isPost()) {
             if(!checkFormDate()){returnJson(0,'ERROR');}

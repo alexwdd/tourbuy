@@ -50,9 +50,18 @@ class Index extends Common
    
             //今日抢购
             $flashGoods = [];
-            foreach ($this->flash as $key => $value) {
-                if($key<15){
-                    array_push($flashGoods,$value);
+            foreach ($this->flash as $key => $value){
+                if(count($flashGoods)==15){
+                    break;
+                }
+                if($cityID>0){
+                    if($value['cityID']==$cityID && $value['group']<=$this->user['group']){
+                        array_push($flashGoods,$value);
+                    }
+                }else{
+                    if($value['group']<=$this->user['group']){
+                        array_push($flashGoods,$value);
+                    }
                 }
             }
             $flash = [];

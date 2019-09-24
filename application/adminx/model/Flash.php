@@ -117,6 +117,8 @@ class Flash extends Admin
         $temp = explode("-",$goods['path']);
         $data['cid'] = $temp[1];
         $data['goodsName'] = $goods['name'];
+        $data['cityID'] = $goods['cityID'];
+        $data['group'] = $goods['group'];
 
         $this->allowField(true)->save($data);
         if($this->id > 0){

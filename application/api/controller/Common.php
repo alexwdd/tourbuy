@@ -40,7 +40,7 @@ class Common extends Base {
             $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
             $map['startDate'] = array('elt',$beginToday);
             $map['endDate'] = array('egt',$endToday);
-            $flash = db("Flash")->field('goodsID,number,price,spec,pack')->where($map)->order('endDate asc')->select();
+            $flash = db("Flash")->field('goodsID,cityID,group,number,price,spec,pack')->where($map)->order('endDate asc')->select();
             cache('flash',$flash,60);
             $this->flash = $flash;
 

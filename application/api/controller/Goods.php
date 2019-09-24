@@ -132,27 +132,7 @@ class Goods extends Common {
             }
             returnJson(1,'success',['brand'=>$list]);
         }
-    }
-
-    public function shopWall(){
-        if(request()->isPost()){
-            if(!checkFormDate()){returnJson(0,'ERROR');}
-            $map['cate'] = 5;
-            $list = db('OptionItem')->field('id as cid,name')->where($map)->order('sort asc,id asc')->select();
-            foreach ($list as $key => $value) {
-                unset($map);
-                $map['cid'] = $value['cid'];
-                $map['group'] = array('elt',$this->user['group']);
-                $child = db('Shop')->field('id,name,picname')->where($map)->order('id desc,py asc')->limit(6)->select();
-                foreach ($child as $k => $val) {
-                    $val['picname'] = getThumb($val["picname"],200,150);
-                    $child[$k]['picname'] = getRealUrl($val['picname']);
-                }
-                $list[$key]['child'] = $child;
-            }
-            returnJson(1,'success',['shop'=>$list]);
-        }
-    }
+    }    
 
     public function lists(){
         if(request()->isPost()){
@@ -323,6 +303,7 @@ class Goods extends Common {
 
             $config = tpCache('member');
 
+            $cityID = input('post.cityID');
             $type = input('post.type',1);
             $cid = input('post.cid');
             $keyword = input('param.keyword');
@@ -350,6 +331,10 @@ class Goods extends Common {
             $map['startDate'] = array('elt',$beginToday);
             $map['endDate'] = array('egt',$endToday);
 
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
+            $map['group'] = array('elt',$this->user['group']);
             $obj = db('Flash');
             $count = $obj->where($map)->count();
             $totalPage = ceil($count/$pagesize);
