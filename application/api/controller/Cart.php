@@ -264,7 +264,7 @@ class Cart extends Auth {
                 returnJson(0,'购物车中没有商品');
             }
 
-            $shop = db("Shop")->field('id,name')->whereIn('id',$shopIds)->select();
+            $shop = db("Shop")->field('id,name,ziti')->whereIn('id',$shopIds)->select();
             $goodsMoney = 0;
             $point = 0;
             $total = 0;
@@ -284,6 +284,7 @@ class Cart extends Auth {
                 $shop[$key]['total'] = $result['total'];
                 $shop[$key]['point'] = $result['point'];
                 $shop[$key]['coupons'] = $result['coupons'];
+                $shop[$key]['quhuoType'] = 0;
 
                 $total += $result['total'];
                 $point += $result['point'];

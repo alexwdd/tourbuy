@@ -119,6 +119,7 @@ class Flash extends Admin
         $data['goodsName'] = $goods['name'];
         $data['cityID'] = $goods['cityID'];
         $data['group'] = $goods['group'];
+        $data['shopID'] = $goods['shopID'];
 
         $this->allowField(true)->save($data);
         if($this->id > 0){

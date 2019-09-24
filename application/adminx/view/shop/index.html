@@ -41,13 +41,14 @@
             <p field="city" title="城市" width="100"/> 
             <p field="shopCate" title="分类" width="200"/> 
             <p field="name" title="店铺" width="200"/> 
-            <p title="类型" width="80" templet="#groupTpl"/>
+            <p title="类型" width="80" templet="#groupTpl"/>            
             <p field="account" title="账号" width="150"/> 
             <p field="linkman" title="联系人" width="120"/>
             <p field="tel" title="电话" width="120"/>
             <p field="address" title="地址" width="200"/>
-            <p title="推荐" width="100" templet="#commTpl"/>
-            <p title="状态" width="100" templet="#statusTpl"/>
+            <p title="自提" width="70" templet="#zitiTpl"/>
+            <p title="推荐" width="70" templet="#commTpl"/>
+            <p title="状态" width="70" templet="#statusTpl"/>
             <p title="发布商品" width="100" templet="#submitTpl"/>
             <p title="编辑资料" width="100" templet="#editTpl"/>
             <p field="createTime" title="发布日期" width="180"/>
@@ -59,6 +60,11 @@
             {{# }else{ }}
             普通
             {{# } }}           
+        </script>
+        <script type="text/html" id="zitiTpl">
+            {{# if(d.ziti == 1){ }}
+            <i class="layui-icon layui-icon-ok"></i>
+            {{# } }}                
         </script>
         <script type="text/html" id="commTpl">
             {{# if(d.comm == 1){ }}

@@ -154,11 +154,16 @@ class Order extends Auth {
             $ids = input('post.ids');
             $couponIds = input('post.couponID');
             $intr = input('post.intr');
+            $quhuoType = input('post.quhuoType');
+
             if($couponIds){
                 $intr = explode("##",$intr);
             }
             if($couponIds){
                 $couponIds = explode(",",$couponIds);
+            }
+            if($quhuoType){
+                $quhuoType = explode(",",$quhuoType);
             }
             if ($ids=='') {
                 returnJson(0,'缺少参数');
@@ -182,6 +187,7 @@ class Order extends Auth {
                     $couponID = $this->getCouponID($couponIds,$value['id']);
                 }     
                 $result = $this->getShopOrder($shopGoods,$value,$address,$couponID);
+                $result['quhuoType'] = $quhuoType[$key];
                 $result['intr'] = $intr[$key];
                 $result['shopID'] = $value['id'];
                 $result['shopName'] = $value['name'];
@@ -221,54 +227,57 @@ class Order extends Auth {
         $data['sender'] = $orderData['shopName'];
         $data['senderTel'] = $orderData['shopTel'];
         $data['intr'] = $orderData['intr'];   
+        $data['quhuoType'] = $orderData['quhuoType'];
         $data['createTime'] = time();    
         $data['status'] = 0;
         $data['payType'] = 0;
         $data['payStatus'] = 0;
         $orderID = db('Order')->insertGetId( $data );
         if ($orderID) {
-            foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
-                //保存详单
-                $detail['orderID'] = $orderID;
-                $detail['shopID'] = $data['shopID'];
-                $detail['order_no'] = $data['order_no'];
-                $detail['memberID'] = $this->user['id'];  
-                $detail['payment'] = $value['yunfei'];
-                $detail['wuliuInprice'] = $value['inprice'];//物流成本
-                $detail['type'] = $value['type'];
-                $detail['weight'] = $value['totalWuliuWeight'];
-                $detail['kuaidi'] = $value['kuaidi'];
-                $detail['kdNo'] = '';
-                $detail['name'] = $data['name'];
-                $detail['tel'] = $data['tel'];
-                $detail['province'] = $data['province'];            
-                $detail['city'] = $data['city'];
-                $detail['county'] = $data['county'];
-                $detail['addressDetail'] = $data['addressDetail'];
-                $detail['sender'] = $data['sender'];
-                $detail['senderTel'] = $data['senderTel'];
-                $detail['createTime'] = time();          
-                $detail['status'] = 0;              
-                $detail['snStatus'] = 0;
-                $baoguoID = db('OrderBaoguo')->insertGetId($detail);
-                if ($baoguoID) {
-                    foreach ($value['goods'] as $k => $val) {   
-                        $gData = [
-                            'orderID'=>$orderID,
-                            'memberID'=>$this->user['id'],
-                            'baoguoID'=>$baoguoID,
-                            'goodsID'=>$val['goodsID'],
-                            'specID'=>$val['specID'],
-                            'name'=>$val['name'],
-                            'short'=>$val['short'],
-                            'number'=>$val['trueNumber'],    
-                            'price'=>$val['price'],    
-                            'createTime'=>time()
-                        ];
-                        db('OrderDetail')->insert($gData);      
+            if($data['quhuoType']==0){
+                foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
+                    //保存详单
+                    $detail['orderID'] = $orderID;
+                    $detail['shopID'] = $data['shopID'];
+                    $detail['order_no'] = $data['order_no'];
+                    $detail['memberID'] = $this->user['id'];  
+                    $detail['payment'] = $value['yunfei'];
+                    $detail['wuliuInprice'] = $value['inprice'];//物流成本
+                    $detail['type'] = $value['type'];
+                    $detail['weight'] = $value['totalWuliuWeight'];
+                    $detail['kuaidi'] = $value['kuaidi'];
+                    $detail['kdNo'] = '';
+                    $detail['name'] = $data['name'];
+                    $detail['tel'] = $data['tel'];
+                    $detail['province'] = $data['province'];            
+                    $detail['city'] = $data['city'];
+                    $detail['county'] = $data['county'];
+                    $detail['addressDetail'] = $data['addressDetail'];
+                    $detail['sender'] = $data['sender'];
+                    $detail['senderTel'] = $data['senderTel'];
+                    $detail['createTime'] = time();          
+                    $detail['status'] = 0;              
+                    $detail['snStatus'] = 0;
+                    $baoguoID = db('OrderBaoguo')->insertGetId($detail);
+                    if ($baoguoID) {
+                        foreach ($value['goods'] as $k => $val) {   
+                            $gData = [
+                                'orderID'=>$orderID,
+                                'memberID'=>$this->user['id'],
+                                'baoguoID'=>$baoguoID,
+                                'goodsID'=>$val['goodsID'],
+                                'specID'=>$val['specID'],
+                                'name'=>$val['name'],
+                                'short'=>$val['short'],
+                                'number'=>$val['trueNumber'],    
+                                'price'=>$val['price'],    
+                                'createTime'=>time()
+                            ];
+                            db('OrderDetail')->insert($gData);      
+                        }
                     }
+                    unset($detail);
                 }
-                unset($detail);
             }
 
             //作废优惠券

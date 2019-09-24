@@ -95,7 +95,11 @@ class Shop extends Admin
 
         $data['py'] = getfirstchar($data['name']);
         if( isset( $data['id']) && !empty($data['id'])) {
-            db("Goods")->where('shopID',$data['id'])->setField("cityID",$data['cityID']);
+            $update['cityID'] = $data['cityID'];
+            $update['group'] = $data['group'];
+            $update['cityID'] = $data['cityID'];
+            db("Goods")->where('shopID',$data['id'])->update($update);
+            db("Flash")->where('shopID',$data['id'])->update($update);
             $result = $this->edit( $data );
         } else {
             $result = $this->add( $data );
