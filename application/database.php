@@ -18,7 +18,7 @@ return [
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => '',
+    'password'        => 'root',
     // 端口
     'hostport'        => '',
     // 连接dsn
@@ -26,7 +26,7 @@ return [
     // 数据库连接参数
     'params'          => [],
     // 数据库编码默认采用utf8
-    'charset'         => 'utf8',
+    'charset'         => 'utf8mb4',
     // 数据库表前缀
     'prefix'          => 'pm_',
     // 数据库调试模式
