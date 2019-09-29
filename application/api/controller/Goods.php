@@ -540,9 +540,11 @@ class Goods extends Common {
             }
 
             //店铺信息
-            $shop = db("Shop")->field('id,name,picname')->where('id',$list['shopID'])->find();
+            $shop = db("Shop")->field('id,name,intr,picname')->where('id',$list['shopID'])->find();
             $shop['picname'] = getThumb($shop['picname'],200,200);
             $shop['picname'] = getRealUrl($shop['picname']);
+            $shop['faved'] = db("ShopFav")->where(['shopID'=>$shop['id'],'memberID'=>$this->user['id']])->count();
+
             unset($map);
             $map['shopID'] = $shop['id'];
             $map['id'] = array('neq',$goodsID);

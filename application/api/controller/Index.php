@@ -42,9 +42,9 @@ class Index extends Common
             //推荐品牌
             unset($map);
             $map['comm'] = 1;
-            $brand = db("Brand")->field('id,name,logo')->where($map)->order('sort asc,id desc')->limit(4)->select();
+            $brand = db("Brand")->field('id,name,logo')->where($map)->order('sort asc,id desc')->select();
             foreach ($brand as $key => $value) {
-                $value['logo'] = getThumb($value["logo"],200,200);
+                $value['logo'] = getThumb($value["logo"],200,125);
                 $brand[$key]['logo'] = getRealUrl($value['logo']);
             }
    
