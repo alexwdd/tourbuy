@@ -62,4 +62,15 @@ class Common extends Base {
         }
         return null;
     }
+
+    public function shopQrcode(){
+        $shopID = input('param.shopID');
+        $url = 'http://m.tourbuy.net//shop?='.$shopID;
+        require_once EXTEND_PATH.'qrcode/qrcode.php';
+        $value = input("param.url");//二维码数据
+        $errorCorrectionLevel = 'Q';//纠错级别：L、M、Q、H
+        $matrixPointSize = 10;//二维码点的大小：1到10
+        $object = new \QRcode();
+        $object->png($url, false , $errorCorrectionLevel, $matrixPointSize, 2);//
+    }
 }

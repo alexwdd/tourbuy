@@ -95,6 +95,11 @@
         <div class="layui-input-inline">
             <input type="text" name="tel" value="{$list.tel}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
         </div>
+
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-inline">
+            <input type="text" name="email" value="{$list.email}" placeholder="" autocomplete="off" class="layui-input" />
+        </div>
     </div>
 
     <div class="layui-form-item">
@@ -107,7 +112,7 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">营业时间</label>
         <div class="layui-input-block">
-            <textarea name="openTime" class="layui-textarea">{$list.openTime}</textarea>
+            <input type="text" name="openTime" value="{$list.openTime}" placeholder="" autocomplete="off" class="layui-input" />
         </div>
     </div>
 
@@ -255,6 +260,7 @@ layui.config({
         url : '/adminx/upload/image.html',
         ext:'jpg|png|gif|jpeg',
         mime:'image/*',
+        name:'image',
         size:5120
     });
 

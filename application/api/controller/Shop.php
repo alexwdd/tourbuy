@@ -104,7 +104,7 @@ class Shop extends Auth {
             $map['id'] = $shopID;
             $map['group'] = array('elt',$this->user['group']);
             $map['status'] = 1;
-            $shop = db('Shop')->field('id,name,picname,cate')->where($map)->find();
+            $shop = db('Shop')->field('id,name,intr,picname,cate')->where($map)->find();
             if(!$shop){
                 returnJson(0,'店铺不存在');
             }
@@ -166,7 +166,7 @@ class Shop extends Auth {
             $map['id'] = $shopID;
             $map['group'] = array('elt',$this->user['group']);
             $map['status'] = 1;
-            $shop = db('Shop')->field('id,name,picname,intr,mp4,image,content,address')->where($map)->find();
+            $shop = db('Shop')->field('id,name,picname,intr,mp4,image,content,tel,openTime,address,email')->where($map)->find();
             if(!$shop){
                 returnJson(0,'店铺不存在');
             }     

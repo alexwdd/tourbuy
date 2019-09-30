@@ -580,7 +580,7 @@ class Goods extends Common {
             $list['rmb'] = number_format($this->rate*$list['price'],1); 
             
 
-            $url = 'http://tm.youyiqingshang.com/mobile/goodsDetail?id='.$list['id'].'&shareUser='.$this->user['id'];
+            $url = 'http://m.tourbuy.net/goodsDetail?id='.$list['id'].'&shareUser='.$this->user['id'];
 
             require_once EXTEND_PATH.'qrcode/qrcode.php';
             $value = input("param.url");//二维码数据
