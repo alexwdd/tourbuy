@@ -145,12 +145,23 @@ class Shop extends Auth {
             }
 
             //优惠券
-            $coupon = Db::query("select * from pm_coupon where status=1 and (shopID=0 or shopID=".$shopID.") order by id desc");
+            unset($map);
+            $map['status'] = 1;
+            $map['shopID'] = $shopID;
+            $coupon = db('Coupon')->where($map)->order('id desc')->find();
+            if($coupon){
+                $coupon['number'] = db("CouponLog")->where('couponID',$coupon['id'])->count();
+
+                unset($map);
+                $map['couponID'] = $coupon['id'];
+                $map['memberID'] = $this->user['id'];
+                $coupon['flag'] = db("CouponLog")->where($map)->count();
+            }            
 
             returnJson(1,'success',[
                 'shop'=>$shop,
                 'cate'=>$cate,
-                'commend'=>$commend,
+                'commend'=>$commend,    
                 'coupon'=>$coupon
             ]);
         }
@@ -197,8 +208,25 @@ class Shop extends Auth {
                 $shop['faved'] = 0;
             }
 
+            //评论
+            unset($map);
+            $map['status'] = 1;
+            $map['shopID'] = $shopID;
+            $comment = db("ShopComment")->where($map)->limit(5)->order('id desc')->select();
+            foreach ($comment as $key => $value) {
+                $comment[$key]['headimg'] = getUserFace($value['headimg']);
+                if($value['images']!=''){
+                    $images = explode("|", $value['images']);
+                    foreach ($images as $k => $val) {
+                        $images[$k] = getRealUrl($val);
+                    }
+                    $comment[$key]['images'] = $images;
+                }
+            }
+
             returnJson(1,'success',[
                 'shop'=>$shop,
+                'comment'=>$comment,
             ]);
         }
     }
@@ -226,6 +254,90 @@ class Shop extends Auth {
                     returnJson(0,'操作失败');
                 }                
             }
+        }
+    }
+
+    //写评论
+    public function doComment(){
+        if (request()->isPost()) {
+            //if(!checkFormDate()){returnJson(0,'ERROR');}
+            $shopID = input('post.shopID');
+            $content = input('post.content');
+            $images = input('post.images');
+            if ($shopID=='' && !is_numeric($shopID)) {
+                returnJson(0,'参数错误');
+            }
+            if ($content=='') {
+                returnJson(0,'请输入评论内容');
+            }
+
+            if ($images!='') {
+                $imgArr = explode("###",$images);
+                $images = '';
+                $thumb = '';
+                foreach ($imgArr as $key => $value) {
+                    $path = config('UPLOAD_PATH').'comment/';
+                    $fileName = createNonceStr();
+                    $fileUrl = $this->base64ToImg($path,$fileName,$value);       
+                    if ($key==0) {
+                        $images = $fileUrl;     
+                    }else{
+                        $images .= '|'.$fileUrl; 
+                    }
+                }
+            }
+
+            $data['shopID'] = $shopID;
+            $data['content'] = $content;
+            $data['images'] = $images;
+            $data['memberID'] = $this->user['id'];
+            $data['headimg'] = $this->user['headimg'];
+            $data['nickname'] = $this->user['nickname'];
+            $data['status'] = 1;
+            $data['createTime'] = time();
+            $res = db("ShopComment")->insert($data);
+            if($res){
+                returnJson(1,'品论发布成功');
+            }else{
+                returnJson(0,'操作失败');
+            }
+        }
+    }
+
+    public function comment(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $page = input('post.page/d',1);
+            $shopID = input('post.shopID/d',0);
+            $pagesize = input('post.pagesize',10);
+
+            $firstRow = $pagesize*($page-1); 
+            
+            if($shopID>0){
+                $map['shopID'] = $shopID;
+            }
+            $map['status'] = 1;
+            $obj = db('ShopComment');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']); 
+                $list[$key]['headimg'] = getUserFace($value['headimg']);
+                if($value['images']!=''){
+                    $images = explode("|", $value['images']);
+                    foreach ($images as $k => $val) {
+                        $images[$k] = getRealUrl($val);
+                    }
+                    $list[$key]['images'] = $images;
+                }        
+            }
+            returnJson(1,'success',['next'=>$next,'data'=>$list]);
         }
     }
 }

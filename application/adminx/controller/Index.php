@@ -5,7 +5,10 @@ class Index extends Admin {
 
     public function index(){
         $menu = $this->getMenu();
-        $this->assign('menu',$menu);        
+        $this->assign('menu',$menu);      
+
+        $user = db("Member")->field('id,nickname,headimg,token')->where('id',10000)->find();
+        $this->autoCoupon($user);  
     	return view();
     }
 

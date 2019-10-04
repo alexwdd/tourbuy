@@ -330,10 +330,10 @@ class Base extends Controller {
                     'endTime'=>time()+$value['day']*86400
                 ];
                 array_push($data,$temp);
-            }
-            if (count($data)>0) {
-                db("CouponLog")->insertAll($data);
-            }
+            }            
+        }
+        if (count($data)>0) {
+            db("CouponLog")->insertAll($data);
         }
     }
 
@@ -375,9 +375,10 @@ class Base extends Controller {
         $data['product_title'] = urldecode('途买在线支付');
         $data['merchant_trade_no'] = $order['out_trade_no'];
         $data['currency'] = 'AUD';
-        $data['total_amount'] = $order['money'];
+        //$data['total_amount'] = $order['money'];
+        $data['total_amount'] = 0.01;
         $data['create_time'] = urldecode(date("Y-m-d H:i:s",time()));
-        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/alinotify.html';
+        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/index.html';
         $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
         $data['mobile_flag'] = 'T';
         $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
@@ -395,9 +396,10 @@ class Base extends Controller {
         $data['product_title'] = '途买在线支付';
         $data['merchant_trade_no'] = $order['out_trade_no'];
         $data['currency'] = 'AUD';
-        $data['total_amount'] = $order['money'];
+        //$data['total_amount'] = $order['money'];
+        $data['total_amount'] = 0.01;
         $data['create_time'] = date("Y-m-d H:i:s",time());
-        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/wxnotify.html';
+        $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/index.html';
         $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
         $data['return_target'] = 'WX';
         $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];

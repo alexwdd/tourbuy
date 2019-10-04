@@ -9,66 +9,41 @@ class Notify extends Base {
         parent::_initialize();
     }
 
-	public function ominotify(){
-		header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
-        header('Access-Control-Allow-Methods: GET, POST, PUT');
-        header('Content-type:text/json;charset="utf-8"');
-        ini_set('date.timezone', 'Asia/Shanghai');
+	public function index(){
+        $notice_id = input('param.notice_id');
+        $merchant_trade_no = input('param.merchant_trade_no');
+        $token = input('param.token');
+        file_put_contents("note".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."通知ID:" .$notice_id."订单:".$merchant_trade_no."token:".$token. "\r\n", FILE_APPEND);
 
-        require_once EXTEND_PATH.'omipay/OmiPayApi.php';
-        require_once EXTEND_PATH.'omipay/OmiPayData.php';
+        $order_no = $merchant_trade_no;
 
-        $response = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if($response){
-        	$config = tpCache('omi');
-            $input = new \OmiData();  
-            $input -> setMerchantNo($config['OMI_ID']);
-            $input -> setSercretKey($config['OMI_KEY']);
-            $input->setTime($response['timestamp']);
-            $input->setNonceStr($response['nonce_str']);
-            $input->setSign();
-            if ($input->getSign() == $response['sign']) {   //验证成功
-                $content = json_encode($response)."\r\n";
-                $file = date('Y-m-d') . '.log';
-                file_put_contents($file, $content,FILE_APPEND);
-                $order_no = $response['out_order_no'];
-                $map['order_no'] = $order_no;
-                $list = db('Order')->where($map)->find();
-                if ($list) {
-                    if ($list['payStatus'] > 0) {
-                        exit('该订单已经支付完成，请不要重复操作');  
-                    }else{
-                        //更新订单状态
-                        $data['payStatus'] = 1;
-                        $data['status'] = 1;
-                        $data['payType'] = 1;
-                        db('Order')->where($map)->update($data);
-                        db('OrderBaoguo')->where('orderID',$list['id'])->setField('status',1);
+        $order_no = explode("_", $order_no);
 
-                        $detail = db("OrderCart")->where('orderID',$list['id'])->select();
-                        foreach ($detail as $key => $value) {
-                        	unset($map);
-                        	if($value['fid']>0){
-                        		$map['id'] = $value['fid'];
-                        		$map['fid'] = $value['fid'];
-                            	db("Goods")->whereOr($map)->setDec("stock",$value['trueNumber']);
-                        	}else{
-                        		$map['id'] = $value['goodsID'];
-                            	db("Goods")->where($map)->setDec("stock",$value['trueNumber']);
-                        	}                        	
-                        }
-                        $this->saveJiangjin($list);
-                        echo 'success';               
-                    }
-                }else{
-                    exit('订单不存在');  
+        foreach ($order_no as $key => $value) {
+            $map['id'] = $value;
+            $list = db('Order')->where($map)->find();
+            if ($list) {
+                if ($list['payStatus'] == 0) {          
+                    //更新订单状态
+                    $data['status'] = 1;
+                    $data['payStatus'] = 1;
+                    $data['updateTime'] = time();
+                    db('Order')->where($map)->update($data);
+                    db('OrderBaoguo')->where('orderID',$list['id'])->setField('status',1);
+
+                    $detail = db("OrderCart")->where('orderID',$list['id'])->select();
+                    foreach ($detail as $key => $val) {
+                        unset($map);
+                        if($val['fid']>0){
+                            $map['id'] = $val['fid'];
+                            $map['fid'] = $val['fid'];
+                            db("Goods")->whereOr($map)->setDec("stock",$val['trueNumber']);
+                        }else{
+                            $map['id'] = $val['goodsID'];
+                            db("Goods")->where($map)->setDec("stock",$val['trueNumber']);
+                        }                           
+                    }              
                 }
-
-                $result = array('return_code' => 'SUCCESS');
-                echo json_encode($result);exit;
-            } else {//验证失败
-                echo "fail";
             }
         }
 	}

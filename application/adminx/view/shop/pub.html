@@ -91,14 +91,31 @@
             <input type="text" name="linkman" value="{$list.linkman}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
         </div>
 
-        <label class="layui-form-label">联系电话</label>
+        <label class="layui-form-label">店铺电话</label>
         <div class="layui-input-inline">
             <input type="text" name="tel" value="{$list.tel}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
         </div>
 
-        <label class="layui-form-label">邮箱</label>
+        <label class="layui-form-label">店铺邮箱</label>
         <div class="layui-input-inline">
             <input type="text" name="email" value="{$list.email}" placeholder="" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">店主电话</label>
+        <div class="layui-input-inline">
+            <input type="text" name="masterTel" value="{$list.masterTel}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+
+        <label class="layui-form-label">店主邮箱</label>
+        <div class="layui-input-inline">
+            <input type="text" name="masterEmail" value="{$list.masterEmail}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
+        </div>
+
+        <label class="layui-form-label">CBN</label>
+        <div class="layui-input-inline">
+            <input type="text" name="cbn" value="{$list.cbn}" placeholder="" autocomplete="off" class="layui-input" />
         </div>
     </div>
 
@@ -187,6 +204,30 @@
         <p class="layui-form-mid layui-word-aux">不修改请留空</p>
     </div>
     {/empty}
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">Bank Name</label>
+        <div class="layui-input-inline">
+            <input type="text" name="bank" value="{$list.bank}" placeholder="" autocomplete="off" class="layui-input" />
+        </div>
+
+        <label class="layui-form-label">Account Name</label>
+        <div class="layui-input-inline">
+            <input type="text" name="bankAccount" value="{$list.bankAccount}" placeholder="" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">BSB</label>
+        <div class="layui-input-inline">
+            <input type="text" name="bsb" value="{$list.bsb}" placeholder="" autocomplete="off" class="layui-input" />
+        </div>
+
+        <label class="layui-form-label">Account Number</label>
+        <div class="layui-input-inline">
+            <input type="text" name="bankNumber" value="{$list.bankNumber}" placeholder="" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">自提</label>

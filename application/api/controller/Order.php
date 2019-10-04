@@ -542,11 +542,18 @@ class Order extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
             $order_no = input('post.order_no');
-            $map['order_no'] = $order_no;            
+            $order_no = explode('_',$order_no);
+
+            $map['id'] = array('in',$order_no);
             $map['memberID'] = $this->user['id'];
-            $order = db('Order')->field('id,order_no,fund,point,payStatus')->where($map)->find();
+            $order = db("Order")->field('id,order_no,total,money,point,payStatus')->where($map)->select();
             if(!$order){
                 returnJson(0,'订单不存在');
+            }
+
+            $total = 0;
+            foreach ($order as $key => $value) {
+                $total += $value['point'];
             }
 
             //为您推荐 
@@ -561,8 +568,7 @@ class Order extends Auth {
                 $goods['rmb'] = round($goods['price']*$this->rate,1);
                 $list[$key] = $goods;
             }
-
-            returnJson(1,'success',['data'=>$order,'goods'=>$list]);
+            returnJson(1,'success',['data'=>$order,'point'=>$total,'goods'=>$list]);
         }
     }
 
