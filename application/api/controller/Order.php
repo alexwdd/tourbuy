@@ -49,7 +49,7 @@ class Order extends Auth {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,order_no,total,front,back,sn,status,createTime')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,shopID,order_no,total,front,back,sn,status,createTime')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
                 if($value['sn']=='' || $value['front']=='' || $value['back']==''){
@@ -497,6 +497,7 @@ class Order extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
             $order_no = input('post.order_no');
+            $shopID = input('post.shopID');
             $payType = input('post.type');
 
             $order_no = explode(',',$order_no);
@@ -529,7 +530,7 @@ class Order extends Auth {
                 $url = 'http://'.$_SERVER['HTTP_HOST'].url('www/alipay/index','out_trade_no='.$out_trade_no);
                 returnJson(1,'success',['url'=>$url]);
             }elseif($payType==2){
-                $result = $this->getWeixinUrl($order);
+                $result = $this->getWeixinUrl($order,$shopID);
                 if($result['result']=='SUCCESS'){
                     returnJson(1,'success',['url'=>$result['QRCodeURL']]);
                 }else{

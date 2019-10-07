@@ -4,13 +4,16 @@ namespace app\adminx\model;
 class Goods extends Admin
 {
     protected $auto = ['updateTime','cid','path','cid1','path1','image','comm','jingpin','tehui','baoyou'];
-    protected $insert = ['createTime'];  
+    protected $insert = ['createTime','createDate'];  
 
     public function setUpdateTimeAttr(){
         return time();
     }
     public function setCreateTimeAttr(){
         return time();
+    }
+    public function setCreateDateAttr(){
+        return date("Y-m-d",time());
     }
     public function setCidAttr(){
         $class = explode(',', input('post.cid'));

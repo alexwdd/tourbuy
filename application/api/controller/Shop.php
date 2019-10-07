@@ -407,4 +407,30 @@ class Shop extends Auth {
             returnJson(1,'success',['next'=>$next,'data'=>$list]);
         }
     }
+
+    //最新上架
+    public function newGoods(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $shopID = input('post.shopID/d',0);
+
+            $map['shopID'] = $shopID;
+            $map['show'] = 1;
+            $list = db("Goods")->field('createDate')->where($map)->order('createDate desc')->group('createDate')->limit(10)->select();
+            foreach ($list as $key => $value) {
+                unset($map);
+                $map['createDate'] = $value['createDate'];
+                $map['shopID'] = $shopID;
+                $map['show'] = 1;
+                $goods = db("Goods")->where($map)->field('id,name,picname,say,price,comm')->order('sort asc,id desc')->select();
+                foreach ($goods as $k => $val) {
+                    $val['picname'] = getThumb($val["picname"],400,400);
+                    $goods[$k]['picname'] = getRealUrl($val['picname']);
+                    $goods[$k]['rmb'] = round($val['price']*$this->rate,1);
+                }
+                $list[$key]['goods'] = $goods;
+            }
+            returnJson(1,'success',['data'=>$list]);
+        }
+    }
 }

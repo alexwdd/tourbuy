@@ -389,7 +389,7 @@ class Base extends Controller {
         return $url;
     }
 
-    public function getWeixinUrl($order){ 
+    public function getWeixinUrl($order,$shopID=null){
         $config = tpCache("supay");
         $data['merchant_id'] = $config['SUPAY_ID'];
         $data['authentication_code'] = $config['SUPAY_KEY'];
@@ -400,7 +400,11 @@ class Base extends Controller {
         $data['total_amount'] = 0.01;
         $data['create_time'] = date("Y-m-d H:i:s",time());
         $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/index.html';
-        $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
+        if($shopID){
+            $data['return_url'] = 'http://shop.tourbuy.net/pay/return/'.$order['out_trade_no'].'?shopID='.$shopID;
+        }else{
+            $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
+        } 
         $data['return_target'] = 'WX';
         $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];
 
