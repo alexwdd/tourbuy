@@ -9,11 +9,15 @@ class Order extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
             $keyword = input('param.keyword');
+            $shopID = input('param.shopID');
             $type = input('param.type',0);
             $page = input('post.page/d',1);
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
 
+            if($shopID>0){
+                $map['shopID'] = $shopID;
+            }
             if($keyword!=''){
                 $map['order_no'] = $keyword;
             }

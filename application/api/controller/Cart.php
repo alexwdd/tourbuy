@@ -7,6 +7,10 @@ class Cart extends Auth {
     public function lists(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
+            $shopID = input('post.shopID');
+            if($shopID>0){
+                $map['shopID'] = $shopID;
+            }
             $map['memberID'] = $this->user['id'];
             $shopIds = db('Cart')->where($map)->group('shopID')->column('shopID');
             $shop = db("Shop")->field('id,name')->whereIn('id',$shopIds)->select();

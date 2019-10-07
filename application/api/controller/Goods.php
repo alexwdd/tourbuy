@@ -138,6 +138,7 @@ class Goods extends Common {
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}
             $cityID = input('post.cityID');
+            $shopID = input('post.shopID');
             $path = input('post.path');
             $cid = input('post.cid');
             $brandID = input('post.brandID');
@@ -151,6 +152,9 @@ class Goods extends Common {
 
             if($cityID>0){
                 $map['cityID'] = $cityID;
+            }
+            if($shopID>0){
+                $map['shopID'] = $shopID;
             }
             if($comm!=''){
                 $map['comm'] = $comm;
@@ -203,6 +207,7 @@ class Goods extends Common {
             $config = tpCache('member');
     
             $fid = input('post.fid');
+            $shopID = input('post.shopID');
             $path = input('post.path');
             $page = input('post.page/d',1);
             $cityID = input('post.cityID');
@@ -222,7 +227,9 @@ class Goods extends Common {
             if($cityID>0){
                 $map['cityID'] = $cityID;
             }
-
+            if($shopID>0){
+                $map['shopID'] = $shopID;
+            }
             $map['group'] = array('elt',$this->user['group']);
             $map['show'] = 1;
             $obj = db('Goods');
@@ -304,6 +311,7 @@ class Goods extends Common {
             $config = tpCache('member');
 
             $cityID = input('post.cityID');
+            $shopID = input('post.shopID');
             $type = input('post.type',1);
             $cid = input('post.cid');
             $keyword = input('param.keyword');
@@ -333,6 +341,9 @@ class Goods extends Common {
 
             if($cityID>0){
                 $map['cityID'] = $cityID;
+            }
+            if($shopID>0){
+                $map['shopID'] = $shopID;
             }
             $map['group'] = array('elt',$this->user['group']);
             $obj = db('Flash');

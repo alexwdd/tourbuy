@@ -370,9 +370,14 @@ class Account extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
             $type = input('param.type');
+            $shopID = input('param.shopID');
             $page = input('post.page/d',1);
             $pagesize = input('post.pagesize',10);
             $firstRow = $pagesize*($page-1); 
+
+            if($shopID!=''){
+                $map['shopID'] = $shopID;
+            }
 
             $map['status'] = 0;
             $map['endTime'] = array('gt',time());

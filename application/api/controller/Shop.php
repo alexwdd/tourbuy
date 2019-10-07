@@ -148,21 +148,54 @@ class Shop extends Auth {
             unset($map);
             $map['status'] = 1;
             $map['shopID'] = $shopID;
-            $coupon = db('Coupon')->where($map)->order('id desc')->find();
-            if($coupon){
-                $coupon['number'] = db("CouponLog")->where('couponID',$coupon['id'])->count();
-
+            $list = db('Coupon')->where($map)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                $list[$key]['number'] = db("CouponLog")->where('couponID',$value['id'])->count();
                 unset($map);
-                $map['couponID'] = $coupon['id'];
+                $map['couponID'] = $value['id'];
                 $map['memberID'] = $this->user['id'];
-                $coupon['flag'] = db("CouponLog")->where($map)->count();
-            }            
+                $list[$key]['flag'] = db("CouponLog")->where($map)->count();       
+            }       
 
             returnJson(1,'success',[
                 'shop'=>$shop,
                 'cate'=>$cate,
                 'commend'=>$commend,    
-                'coupon'=>$coupon
+                'coupon'=>$list
+            ]);
+        }
+    }
+
+    public function base(){
+        if (request()->isPost()) {
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $shopID = input('post.shopID');
+            if ($shopID=='' && !is_numeric($shopID)) {
+                returnJson(0,'参数错误');
+            }
+            $map['id'] = $shopID;
+            $map['group'] = array('elt',$this->user['group']);
+            $map['status'] = 1;
+            $shop = db('Shop')->field('id,name,intr,picname,cate')->where($map)->find();
+            if(!$shop){
+                returnJson(0,'店铺不存在');
+            }
+            $shop['picname'] = getThumb($shop['picname'],200,200);
+            $shop['picname'] = getRealUrl($shop['picname']);
+            $shop['fav'] = db("ShopFav")->where('shopID',$shop['id'])->count();
+
+            unset($map);
+            $map['shopID'] = $shopID;
+            $map['memberID'] = $this->user['id'];
+            $res = db("ShopFav")->where($map)->find();
+            if($res){
+                $shop['faved'] = 1;
+            }else{
+                $shop['faved'] = 0;
+            }           
+
+            returnJson(1,'success',[
+                'shop'=>$shop
             ]);
         }
     }
@@ -336,6 +369,40 @@ class Shop extends Auth {
                     }
                     $list[$key]['images'] = $images;
                 }        
+            }
+            returnJson(1,'success',['next'=>$next,'data'=>$list]);
+        }
+    }
+
+    public function coupon(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $page = input('post.page/d',1);
+            $shopID = input('post.shopID/d',0);
+            $pagesize = input('post.pagesize',10);
+
+
+            $firstRow = $pagesize*($page-1); 
+            
+            if($shopID>0){
+                $map['shopID'] = $shopID;
+            }
+            $map['status'] = 1;
+            $obj = db('Coupon');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                $list[$key]['number'] = db("CouponLog")->where('couponID',$value['id'])->count();
+                unset($map);
+                $map['couponID'] = $value['id'];
+                $map['memberID'] = $this->user['id'];
+                $list[$key]['flag'] = db("CouponLog")->where($map)->count();       
             }
             returnJson(1,'success',['next'=>$next,'data'=>$list]);
         }
