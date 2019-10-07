@@ -7,6 +7,9 @@ class Account extends Auth {
     public function index(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $shopID = input('post.shopID');
+
             $user['headimg'] = getUserFace($this->user['headimg']);
             $user['nickname'] = $this->user['nickname'];
             $user['name'] = $this->user['name'];
@@ -16,6 +19,9 @@ class Account extends Auth {
             $user['id'] = $this->user['id'];
 
             unset($map);
+            if($shopID>0){
+                $map['shopID'] = $shopID;
+            }
             $map['hide'] = 0;
             $map['memberID'] = $this->user['id'];
             $map['status'] = 0;
