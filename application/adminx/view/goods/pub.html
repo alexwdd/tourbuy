@@ -47,7 +47,7 @@
 
                     <label class="layui-form-label">包裹类型</label>
                     <div class="layui-input-inline">
-                        <select name="typeID" default="{$list.typeID}" lay-verify="required">
+                        <select name="typeID" default="{$list.typeID}">
                             <option value="">请选择</option>
                             {volist name="type" id="vo"}
                             <option value="{$vo.id}">{$vo.name}</option>
@@ -85,7 +85,7 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">封面</label>
                     <div class="layui-input-inline" style="width:400px">
-                        <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
+                        <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input" lay-verify="required"/>
                     </div>
                     <div class="layui-inline">
                         <button type="button" class="layui-btn" id="upload-single">上传图片</button>
@@ -142,14 +142,23 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">标签</label>
                     <div class="layui-input-block">  
-                        <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>
-                        <input type="checkbox" name="baoyou" value="1" lay-skin="primary" title="包邮" {php}if($list['baoyou']=='1')echo 'checked';{/php}>  
+                        <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>  
                         <input type="checkbox" name="jingpin" value="1" lay-skin="primary" title="精品" {php}if($list['jingpin']=='1')echo 'checked';{/php}>            
                         <input type="checkbox" name="tehui" value="1" lay-skin="primary" title="特惠" {php}if($list['tehui']=='1')echo 'checked';{/php}>
-                    </div>
+                     </div>
                 </div>
 
                 <div class="layui-form-item">
+                    <label class="layui-form-label">包邮</label>
+                    <div class="layui-input-inline">         
+                        <input type="radio" name="baoyou" value="1" title="是" {php}if($list['baoyou']==1) echo 'checked';{/php}>
+                        <input type="radio" name="baoyou" value="0" title="否" {php}if($list['baoyou']==0) echo 'checked';{/php}>
+                    </div>
+                    <label class="layui-form-label">强制自提</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="ziti" value="1" title="是" {php}if($list['ziti']==1) echo 'checked';{/php}>
+                        <input type="radio" name="ziti" value="0" title="否" {php}if($list['ziti']==0) echo 'checked';{/php}>
+                    </div>
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-inline">
                         <input type="radio" name="show" value="1" title="显示" {php}if($list['show']==1) echo 'checked';{/php}>

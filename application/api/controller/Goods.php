@@ -42,7 +42,7 @@ class Goods extends Common {
                 $map['cid|cid1'] = $value['id'];
                 $map['show'] = 1;
                 $map['group'] = array('elt',$this->user['group']);
-                $goods = db("Goods")->where($map)->field('id,name,picname,say,price,comm')->order('sort asc,id desc')->select();
+                $goods = db("Goods")->where($map)->field('id,name,picname,say,price,comm,tehui,flash,baoyou,ziti')->order('sort asc,id desc')->select();
                 foreach ($goods as $k => $val) {
                     $val['picname'] = getThumb($val["picname"],400,400);
                     $goods[$k]['picname'] = getRealUrl($val['picname']);
@@ -188,7 +188,7 @@ class Goods extends Common {
                 $next = 0;
             }
 
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
 
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
@@ -240,7 +240,7 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
 
             foreach ($list as $key => $value) {
                 $value['banner'] = getThumb($value["picname"],760,300);
@@ -289,7 +289,7 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
+            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
 
             foreach ($list as $key => $value) {
                 $value['banner'] = getThumb($value["picname"],760,300);
@@ -362,7 +362,7 @@ class Goods extends Common {
             }
             
             foreach ($list as $key => $value) {                
-                $goods = db("Goods")->field('id,name,picname,price,say,comm,tehui,flash,baoyou')->where('id',$value['goodsID'])->find();             
+                $goods = db("Goods")->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where('id',$value['goodsID'])->find();             
                 $sellNumber = $this->getFlashNumber($value['goodsID']);
 
                 $list[$key]['per'] = floor(($sellNumber/$value['number'])*100);
@@ -395,7 +395,7 @@ class Goods extends Common {
             $map['id'] = $goodsID;
             $map['show'] = 1;
             $map['group'] = array('elt',$this->user['group']);
-            $list = db('Goods')->field('id,fid,name,picname,price,comm,tehui,flash,baoyou')->where($map)->find();
+            $list = db('Goods')->field('id,fid,name,picname,price,comm,tehui,flash,baoyou,ziti')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }
@@ -436,7 +436,7 @@ class Goods extends Common {
             $map['id'] = $goodsID;
             $map['show'] = 1;
             $map['group'] = array('elt',$this->user['group']);
-            $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr')->where($map)->find();
+            $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr,comm,tehui,flash,baoyou,ziti')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }

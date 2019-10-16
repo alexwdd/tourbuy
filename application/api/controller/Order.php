@@ -190,13 +190,13 @@ class Order extends Auth {
                 if($couponIds){
                     $couponID = $this->getCouponID($couponIds,$value['id']);
                 }     
-                $result = $this->getShopOrder($shopGoods,$value,$address,$couponID);
+                $result = $this->getShopOrder($shopGoods,$value,$address,$couponID,$quhuoType[$key]);
                 $result['quhuoType'] = $quhuoType[$key];
                 $result['intr'] = $intr[$key];
                 $result['shopID'] = $value['id'];
                 $result['shopName'] = $value['name'];
                 $result['shopTel'] = $value['tel'];
-                //保存订单
+                //保存订单        
                 $order_no = $this->saveShopOrder($address,$result);
                 array_push($orders,$order_no);
             }
@@ -237,52 +237,51 @@ class Order extends Auth {
         $data['payType'] = 0;
         $data['payStatus'] = 0;
         $orderID = db('Order')->insertGetId( $data );
-        if ($orderID) {
-            if($data['quhuoType']==0){
-                foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
-                    //保存详单
-                    $detail['orderID'] = $orderID;
-                    $detail['shopID'] = $data['shopID'];
-                    $detail['order_no'] = $data['order_no'];
-                    $detail['memberID'] = $this->user['id'];  
-                    $detail['payment'] = $value['yunfei'];
-                    $detail['wuliuInprice'] = $value['inprice'];//物流成本
-                    $detail['type'] = $value['type'];
-                    $detail['weight'] = $value['totalWuliuWeight'];
-                    $detail['kuaidi'] = $value['kuaidi'];
-                    $detail['kdNo'] = '';
-                    $detail['name'] = $data['name'];
-                    $detail['tel'] = $data['tel'];
-                    $detail['province'] = $data['province'];            
-                    $detail['city'] = $data['city'];
-                    $detail['county'] = $data['county'];
-                    $detail['addressDetail'] = $data['addressDetail'];
-                    $detail['sender'] = $data['sender'];
-                    $detail['senderTel'] = $data['senderTel'];
-                    $detail['createTime'] = time();          
-                    $detail['status'] = 0;              
-                    $detail['snStatus'] = 0;
-                    $baoguoID = db('OrderBaoguo')->insertGetId($detail);
-                    if ($baoguoID) {
-                        foreach ($value['goods'] as $k => $val) {   
-                            $gData = [
-                                'orderID'=>$orderID,
-                                'memberID'=>$this->user['id'],
-                                'baoguoID'=>$baoguoID,
-                                'goodsID'=>$val['goodsID'],
-                                'specID'=>$val['specID'],
-                                'name'=>$val['name'],
-                                'short'=>$val['short'],
-                                'number'=>$val['trueNumber'],    
-                                'price'=>$val['price'],    
-                                'createTime'=>time()
-                            ];
-                            db('OrderDetail')->insert($gData);      
-                        }
+        if ($orderID) {            
+            foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
+                //保存详单
+                $detail['orderID'] = $orderID;
+                $detail['shopID'] = $data['shopID'];
+                $detail['order_no'] = $data['order_no'];
+                $detail['memberID'] = $this->user['id'];  
+                $detail['payment'] = $value['yunfei'];
+                //$detail['wuliuInprice'] = $value['inprice'];//物流成本
+                $detail['wuliuInprice'] = 0;//物流成本
+                $detail['type'] = $value['type'];
+                $detail['weight'] = $value['totalWuliuWeight'];
+                $detail['kuaidi'] = $value['kuaidi'];
+                $detail['kdNo'] = '';
+                $detail['name'] = $data['name'];
+                $detail['tel'] = $data['tel'];
+                $detail['province'] = $data['province'];            
+                $detail['city'] = $data['city'];
+                $detail['county'] = $data['county'];
+                $detail['addressDetail'] = $data['addressDetail'];
+                $detail['sender'] = $data['sender'];
+                $detail['senderTel'] = $data['senderTel'];
+                $detail['createTime'] = time();          
+                $detail['status'] = 0;              
+                $detail['snStatus'] = 0;
+                $baoguoID = db('OrderBaoguo')->insertGetId($detail);
+                if ($baoguoID) {
+                    foreach ($value['goods'] as $k => $val) {   
+                        $gData = [
+                            'orderID'=>$orderID,
+                            'memberID'=>$this->user['id'],
+                            'baoguoID'=>$baoguoID,
+                            'goodsID'=>$val['goodsID'],
+                            'specID'=>$val['specID'],
+                            'name'=>$val['name'],
+                            'short'=>$val['short'],
+                            'number'=>$val['trueNumber'],    
+                            'price'=>$val['price'],    
+                            'createTime'=>time()
+                        ];
+                        db('OrderDetail')->insert($gData);      
                     }
-                    unset($detail);
                 }
-            }
+                unset($detail);
+            }           
 
             //作废优惠券
             if($orderData['coupon']['id']>0){
@@ -323,7 +322,7 @@ class Order extends Auth {
         }
     }
 
-    public function getShopOrder($cart,$shop,$address,$couponID=null){
+    public function getShopOrder($cart,$shop,$address,$couponID=null,$quhuoType=0){
         $goodsMoney = 0;
         $inprice = 0;
         $point = 0;
@@ -358,7 +357,7 @@ class Order extends Auth {
             $bonus += $goods['tjPoint'] * $value['trueNumber'];
         }
 
-        $baoguo = $this->getYunfeiJson($cart,$address['province']);
+        $baoguo = $this->getYunfeiJson($cart,$address['province'],$quhuoType);
 
         //判断优惠券
         if ($couponID>0 && is_numeric($couponID)) {

@@ -195,19 +195,50 @@ class Base extends Controller {
     }
 
     //获取包裹
-    public function getYunfeiJson($cart,$province=null){
+    public function getYunfeiJson($cart,$province=null,$quhuoType=0){
         foreach ($cart as $key => $value) {
             $goods = db('Goods')->where('id',$value['goodsID'])->find(); 
+            if($quhuoType==0){
+                $cart[$key]['ziti'] = $goods['ziti'];
+            }else{
+                $cart[$key]['ziti'] = 1;
+            }            
             $cart[$key]['name'] = $goods['name'];
             $cart[$key]['short'] = $goods['short'];
             $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $cart[$key]['weight'] = $goods['weight'];
             $cart[$key]['singleNumber'] = $goods['number'];
-        } 
+        }
+
+        $ziti = [];
+        foreach ($cart as $key => $value) {
+            if ($value['ziti']==1) {
+                array_push($ziti, $cart[$key]);
+                unset($cart[$key]);
+            }
+        }              
+
+        $cart = array_values($cart);//创建索引
 
         $cart = new \cart\Zhongyou($cart,$kuaidi,$province,$user);
         $baoguoArr = $cart->getBaoguo();
-           
+        
+        if(count($ziti)>0){
+            $zitiBaoguo = [
+                'type'=>0,               //类型
+                'totalNumber'=>1,       //总数量
+                'totalWeight'=>0,        //商品总重量
+                'totalWuliuWeight'=>0,  //包装后总重量
+                'totalPrice'=>0,          //商品中金额
+                'yunfei'=>0,            //运费
+                'extend'=>0,
+                'kuaidi'=>'自提',
+                'status'=>1,
+                'goods'=>$ziti,
+            ];
+            $baoguoArr = array_merge($baoguoArr,[$zitiBaoguo]);
+        } 
+
         $totalWeight = 0;
         $totalWuliuWeight = 0;
         $totalPrice = 0;
@@ -220,13 +251,14 @@ class Base extends Controller {
             $totalExtend += $value['extend'];
             $totalInprice += $value['inprice'];
         }
+
         $data = [
             'totalWeight'=>fix_number_precision($totalWeight,2),
             'totalWuliuWeight'=>fix_number_precision($totalWuliuWeight,2),
             'totalPrice'=>fix_number_precision($totalPrice,2),
             'totalExtend'=>fix_number_precision($totalExtend,2),
             'totalInprice'=>fix_number_precision($totalInprice,2),
-            'baoguo'=>$baoguoArr
+            'baoguo'=>$baoguoArr,
         ];     
         return $data;
     }

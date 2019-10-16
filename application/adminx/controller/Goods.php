@@ -37,6 +37,10 @@ class Goods extends Admin
     public function pub() {
         if(request()->isPost()){
             $data = input('post.');
+            if($data['ziti']==0 && $data['typeID']==''){
+                $this->error('请选择包裹类型');
+            }
+
             $goods = model('Goods');
             $result = $goods->saveData( $data );
             if ($result['code']==1) {
