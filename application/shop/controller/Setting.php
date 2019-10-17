@@ -10,6 +10,12 @@ class Setting extends Admin{
 	        return model('Shop')->saveData( $data );
         }else{
         	$list = db('Shop')->where('id',$this->admin['id'])->find();
+
+            $list['cityName'] = db("City")->where('id',$list['cityID'])->value("name");
+
+            $shopCate = db("GoodsCate")->where('id','in',$list['cate'])->column("name");
+            $list['shopCate'] = implode(",",$shopCate);
+
         	if ($list['image']) {
                 $image = explode(",", $list['image']);
             } else {

@@ -10,7 +10,7 @@ class OrderBaoguo extends Admin
     }
 
     //获取列表
-    public function getList($del=0){        
+    public function getList($map){        
         $pageNum = input('post.page',1);
         $pageSize = input('post.limit',config('page.size'));
         $field = input('post.field','id');

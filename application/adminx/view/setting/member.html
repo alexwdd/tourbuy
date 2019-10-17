@@ -57,13 +57,13 @@
                 <div class="layui-form-mid layui-word-aux">积分</div>
             </div>           
 
-            <!-- <div class="layui-form-item">
-                <label class="layui-form-label">砍价</label>
-                <div class="layui-input-block">             
-                    <input type="radio" name="isCut" value="1" title="开启" <?php if($config['isCut']==='1')echo 'checked'; ?>>   
-                    <input type="radio" name="isCut" value="0" title="关闭" <?php if($config['isCut']==='0')echo 'checked'; ?>>           
+            <div class="layui-form-item">
+                <label class="layui-form-label">抵扣必须是</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="beishu" value="{$config.beishu}" lay-verify="required" class="layui-input">
                 </div>
-            </div> -->
+                <div class="layui-form-mid layui-word-aux">的倍数</div>
+            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">订单保留</label>

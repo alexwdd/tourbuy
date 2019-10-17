@@ -1,5 +1,6 @@
 <?php
 namespace app\adminx\controller;
+use think\Session;
 
 class Shop extends Admin {
 
@@ -63,6 +64,16 @@ class Shop extends Admin {
             $this->assign('shopCate', $shopCate);
 			return view();
 		}
+	}
+
+	public function go(){
+		$id = input('get.id');		
+		$list = model('Shop')->find($id);
+		if (!$list) {
+			$this->error('信息不存在');
+		}
+        Session::set('shopinfo', $list, 'shop');
+        $this->redirect('shop/index/index');
 	}
 
 	#删除

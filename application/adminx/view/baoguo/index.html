@@ -22,6 +22,7 @@
                     <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
                 </div>
             </div>
+
             <div class="layui-input-inline" style="width: 100px">
                 <select name="type" id="type">
                     <option value="">包裹类型</option>
@@ -31,25 +32,21 @@
                 </select>
             </div>  
 
-            <div class="layui-input-inline" style="width: 100px">
+            <!-- <div class="layui-input-inline" style="width: 100px">
                 <select name="flag" id="flag">
                     <option value="">状态</option>
                     <option value="1">已导出</option>
                     <option value="0">未导出</option>
                 </select>
             </div>
-
+            
             <div class="layui-input-inline" style="width: 100px">
                 <select name="print" id="print">
                     <option value="">是否打印</option>
                     <option value="1">已打印</option>
                     <option value="0">未打印</option>
                 </select>
-            </div>
-
-            <div class="layui-inline">
-                <input type="checkbox" name="image" value="1" title="缺发货图片" lay-skin="primary">
-            </div>
+            </div> -->
 
             <div class="layui-inline">
                 <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
@@ -63,30 +60,30 @@
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
 
-            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="400px" topTitle="批量导入">批量导入</button>
-
+            <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="400px" topTitle="批量导入">批量导入</button>
+            
             <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="toExp" data-tableId="lay-common-table">导出
             </button>
             
             <button class="layui-btn layui-btn-sm layui-btn-warm tools-btn" data-type="selectOpen" window="1" data-tableId="lay-common-table" url="{:url('baoguo/mprint')}">批量打印</button>
-
+            
             <button type="button" class="layui-btn layui-btn-sm" id="imageBtn">
             <i class="layui-icon">&#xe67c;</i> 批量上传图片
-            </button>
+            </button> -->
         </div>
 
         <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('baoguo/index')}" lay-filter="lay-common-table"></table>
         <div class="fsDatagridCols">
             <p checkbox="true"/>        
             <p field="memberID" title="会员ID" width="100"/>
-            <p field="order_no" title="订单号" width="150"/>           
+            <p field="order_no" title="订单号" width="150"/>  
+            <p field="kuaidi" title="快递" width="100" />         
             <p field="kdNo" title="快递单号" width="150"/>
-            <p field="payment" title="运费" width="100"/>
-            <p field="weight" title="重量" width="100" />     
-            <p field="kuaidi" title="快递" width="100" />     
             <p field="eimg" title="面单" width="60" templet="#jietu"/>
-            <p title="发货图" width="80" templet="#image"/>
-            <p title="打印" width="100" templet="#print"/>
+            <p field="payment" title="运费" width="100"/>
+            <p field="weight" title="重量" width="100" />
+            <!-- <p title="发货图" width="80" templet="#image"/>
+            <p title="打印" width="100" templet="#print"/> -->
             <p field="name" title="收件人" width="160" templet="#shoujianren"/>
             <p field="sender" title="发件人" width="160" templet="#fajianren"/>
             <p title="状态" width="100" templet="#status"/>
