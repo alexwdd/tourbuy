@@ -25,16 +25,6 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">商家</label>
-                    <div class="layui-input-inline">
-                        <select name="shopID" default="{$list.shopID}" lay-verify="required" lay-filter="shop">
-                            <option value="">请选择</option>
-                            {volist name="shop" id="vo"}
-                            <option value="{$vo.id}" data-city="{$vo.cityID}">{$vo.name}</option>
-                            {/volist}
-                        </select>
-                    </div>
-
                     <label class="layui-form-label">快递</label>
                     <div class="layui-input-inline">
                         <select name="expressID" id="expressID" default="{$list.expressID}" lay-verify="required" lay-verify="required">
@@ -142,49 +132,54 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">标签</label>
                     <div class="layui-input-block">  
-                        <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>
-                        <input type="checkbox" name="baoyou" value="1" lay-skin="primary" title="包邮" {php}if($list['baoyou']=='1')echo 'checked';{/php}>              
+                        <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>  
+                        <input type="checkbox" name="jingpin" value="1" lay-skin="primary" title="精品" {php}if($list['jingpin']=='1')echo 'checked';{/php}>            
                         <input type="checkbox" name="tehui" value="1" lay-skin="primary" title="特惠" {php}if($list['tehui']=='1')echo 'checked';{/php}>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-inline">
-                        <input type="radio" name="show" value="1" title="显示" {php}if($list['show']==1) echo 'checked';{/php}>
-                        <input type="radio" name="show" value="0" title="隐藏" {php}if($list['show']==0) echo 'checked';{/php}>
+                    <label class="layui-form-label">包邮</label>
+                    <div class="layui-input-inline">         
+                        <input type="radio" name="baoyou" value="1" title="是" {php}if($list['baoyou']==1) echo 'checked';{/php}>
+                        <input type="radio" name="baoyou" value="0" title="否" {php}if($list['baoyou']==0) echo 'checked';{/php}>
                     </div>
+                    <label class="layui-form-label">强制自提</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="ziti" value="1" title="是" {php}if($list['ziti']==1) echo 'checked';{/php}>
+                        <input type="radio" name="ziti" value="0" title="否" {php}if($list['ziti']==0) echo 'checked';{/php}>
+                    </div>  
                 </div>      
 
-                <div class="layui-form-item"> 
+                <!-- <div class="layui-form-item"> 
                     <label class="layui-form-label">售价</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="price" id="price" value="{$list.price}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>  
-
+                
                     <label class="layui-form-label">结算价</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="jiesuan" id="jiesuan" value="{$list.jiesuan}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
-
+                
                     <label class="layui-form-label">服务费</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="servePrice" id="servePrice" value="{$list.servePrice}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
                     <div class="layui-form-mid layui-word-aux">%</div>
-
+                
                     <label class="layui-form-label">进价</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="inprice" id="inprice" value="{$list.inprice}" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly" />
                     </div>
-                </div>
+                </div> -->
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">单品数量</label>
                     <div class="layui-input-inline">
                         <input type="text" name="number" id="number" value="{$list.number|default=1}" class="layui-input" lay-verify="required">
                     </div>
-                    <label class="layui-form-label">邮费单价</label>
+                    <!-- <label class="layui-form-label">邮费单价</label>
                     <div class="layui-input-inline">
                         <input type="text" name="payment" id="payment" value="{$list.payment}" class="layui-input" lay-verify="required">
                     </div>
@@ -192,10 +187,10 @@
                     <div class="layui-input-inline">
                         <input type="text" name="gst" id="gst" value="{$list.gst|default=0}" class="layui-input" lay-verify="required">
                     </div>
-                    <div class="layui-form-mid layui-word-aux">%</div>
+                    <div class="layui-form-mid layui-word-aux">%</div> -->
                 </div>
 
-                <div class="layui-form-item">
+                <!-- <div class="layui-form-item">
                     <label class="layui-form-label">购物积分</label>
                     <div class="layui-input-inline">
                         <input type="text" name="point" id="point" value="{$list.point|default=0}" class="layui-input" lay-verify="required">
@@ -204,7 +199,7 @@
                     <div class="layui-input-inline">
                         <input type="text" name="tjPoint" id="tjPoint" value="{$list.tjPoint|default=0}" class="layui-input" lay-verify="required">
                     </div>
-                </div>
+                </div> -->
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">商品重量</label>

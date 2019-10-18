@@ -7,7 +7,8 @@ class Baoguo extends Admin {
 	#列表
 	public function index() {
 		if (request()->isPost()) {
-			$map['payStatus'] = 0;
+			$map['type'] = array('gt',0);
+            $map['shopID'] = $this->admin['id'];
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
     	}else{

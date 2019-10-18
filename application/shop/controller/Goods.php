@@ -34,6 +34,8 @@ class Goods extends Admin
     public function pub() {
         if(request()->isPost()){
             $data = input('post.');
+            $data['shopID'] = $this->admin['id'];
+            $data['shopName'] = $this->admin['name'];
             $goods = model('Goods');
             $result = $goods->saveData( $data );
             if ($result['code']==1) {
@@ -60,10 +62,6 @@ class Goods extends Admin
                 if (!$list) {
                     $this->error('信息不存在');
                 }
-
-                $expressID = db("CityExpress")->where('cityID',$list['cityID'])->column("expressID");
-                $express = db("Express")->where('id','in',$expressID)->select();
-                $this->assign('express',$express);
 
                 if ($list['image']) {
                     $image = explode(",", $list['image']);
@@ -98,8 +96,9 @@ class Goods extends Admin
             $model = db("GoodsModel")->field('id,name')->select();
             $this->assign('model', $model);
 
-            $shop = db("Shop")->field('id,name,cityID')->select();
-            $this->assign('shop', $shop);
+            $expressID = db("CityExpress")->where('cityID',$this->admin['cityID'])->column("expressID");
+            $express = db("Express")->where('id','in',$expressID)->select();
+            $this->assign('express',$express);
 
             $this->assign('type',config('BAOGUO_TYPE'));
 

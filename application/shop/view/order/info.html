@@ -56,7 +56,17 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">运费</label>
                         <div class="layui-form-mid">{$list.payment}</div>
-                    </div>     
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">优惠</label>
+                        <div class="layui-form-mid">{$list.discount}</div>
+                    </div> 
+                      
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单金额</label>
+                        <div class="layui-form-mid">{$list.total}</div>
+                    </div> 
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">提交日期</label>
@@ -67,25 +77,6 @@
                         <label class="layui-form-label">支付方式</label>
                         <div class="layui-form-mid">{$list.payType|getPayType}</div>
                     </div>
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">优惠</label>
-                        <div class="layui-form-mid">{$list.discount}</div>
-                    </div>                    
-
-                    {gt name="list.wallet" value="0"}
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">余额支付</label>
-                        <div class="layui-form-mid">{$list.wallet}</div>
-                    </div>
-                    {/gt}
-                    
-                    {gt name="list.money" value="0"}
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">在线支付</label>
-                        <div class="layui-form-mid">{$list.money}</div>
-                    </div>
-                    {/gt}
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">留言</label>
@@ -114,9 +105,7 @@
 
                     <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label">订单备注</label>
-                        <div class="layui-input-block">
-                            <textarea name="remark" class="layui-textarea">{$list.remark}</textarea>
-                        </div>
+                        <div class="layui-form-mid">{$list.remark}</div>                 
                     </div>
 
                     <div class="layui-form-item layui-hide">
@@ -233,13 +222,6 @@
                             <a href="javascript:void(0)" class="photo" data-url="{$img}"><img src="{$img}"></a>
                             {/volist}
                         </div>
-                        {eq name="list.cancel" value="0"}
-                        <div style="float: right">          
-                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal snBtn">上传身份证</button>
-                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal createBtn">生成运单</button>
-                        <button type="button" data-url="{:url("Order/wuliu","id=".$f['id'])}" class="layui-btn wuliuBtn">运单信息</button>
-                        </div>
-                        {/eq}
                     </div>                      
                 </div>
                 {/volist}

@@ -63,11 +63,13 @@
             <p field="short" title="短名称" width="150" templet="#short"/>
             <p field="cate" title="分类" width="150"/>
             <p field="brand" title="品牌" width="150"/>            
+            <p title="自提" width="60" templet="#ziti"/>            
+            <p title="包邮" width="60" templet="#baoyou"/>            
             <p field="price" title="售价" width="80"/>
             <p field="inprice" title="进价" width="80"/>
             <p field="point" title="积分" width="80"/> 
             <p field="weight" title="重量" width="80"/>
-            <p field="stock" title="库存" width="100"/>
+            <p field="stock" title="库存" width="80"/>
             <p title="标签" width="90" templet="#flagTpl"/> 
             {eq name="admin.submit" value="1"}           
             <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
@@ -81,12 +83,24 @@
             {{# if(d.comm == 1){ }}
             <span style="color:blue">荐</span>       
             {{# } }}
-            {{# if(d.baoyou == 1){ }}
-            <span style="color:#black">邮</span>     
-            {{# } }}
+            {{# if(d.jingpin == 1){ }}
+            <span style="color:#0099FF">精</span>        
+            {{# } }} 
             {{# if(d.tehui == 1){ }}
             <span style="color:red">惠</span>        
-            {{# } }}                
+            {{# } }}               
+        </script>
+
+        <script type="text/html" id="baoyou">
+        {{# if(d.baoyou==1){ }}
+        <i class="layui-icon layui-icon-ok"></i>
+        {{# } }}
+        </script>
+
+        <script type="text/html" id="ziti">
+        {{# if(d.ziti==1){ }}
+        <i class="layui-icon layui-icon-ok"></i>
+        {{# } }}
         </script>
 
         <script type="text/html" id="goodsShow">

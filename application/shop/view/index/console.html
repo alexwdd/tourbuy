@@ -1,5 +1,6 @@
 <style type="text/css">
 .item{background: #f2f2f2; clear: both; overflow: hidden; padding: 10px;}
+.charts{width: 100%; height:500px;}
 </style>
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md12">
@@ -34,11 +35,7 @@
         <div class="layui-card">
             <div class="layui-card-header">概览</div>
             <div class="layui-card-body">          
-                <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
-                    <div carousel-item id="LAY-index-dataview">
-                        <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-                    </div>
-                </div>  
+                <div class="charts" id="myChart"></div>  
             </div>
         </div>
     </div>
@@ -48,5 +45,40 @@ layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index', 'console']);
+}).use(['index','admin','echarts'],function(){
+    var $ = layui.$;
+    var options = {      
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b} : {c}元"
+            },
+            xAxis :{
+                type : 'category',
+                boundaryGap : false,
+                data: []
+            },
+            yAxis :{
+                type : 'value'
+            },
+            series: [{
+                name: '数量',
+                type: 'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: []
+            }]
+        };
+
+    getData("month");
+
+    function getData(type){
+        $.post('{:url('index/ajax')}',{type:type},function(res){
+            options.xAxis.data = res.date.split(",");
+            options.series[0].data = res.money;
+
+            let myChart = echarts.init(document.getElementById('myChart'), layui.echartsTheme);
+            myChart.setOption(options);
+        },'json');
+    }
+});
 </script>

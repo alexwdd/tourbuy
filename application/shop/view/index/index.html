@@ -101,12 +101,30 @@
                         </a>
                     </li>
 
-                    <li data-name="order" class="layui-nav-item layui-nav-itemed">
-                        <a lay-href="{:url('order/index')}">
-                            <i class="layui-icon layui-icon-dollar"></i>
-                            <cite>我的订单</cite>
-                        </a>
-                    </li>                                
+                    <li class="layui-nav-item ">
+                        <a href="javascript:;" lay-tips="财务管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-dollar"></i>
+                        <cite>财务管理</cite>
+                        </a>                 
+                        <dl class="layui-nav-child">                            
+                            <dd>
+                                <a href="javascript:;">订单管理</a>
+                                <dl class="layui-nav-child">
+                                    <dd><a lay-href="{:url('order/index')}">全部</a></dd>
+                                    <dd><a lay-href="{:url('order/nopay')}">待支付</a></dd>
+                                    <dd><a lay-href="{:url('order/peing')}">待发货</a></dd>
+                                    <dd><a lay-href="{:url('order/fahuo')}">已发货</a></dd>
+                                    <dd><a lay-href="{:url('order/close')}">交易关闭</a></dd>
+                                </dl>
+                            </dd>
+                            <dd>
+                                <a lay-href="{:url('baoguo/index')}">直邮包裹</a>
+                            </dd>
+                            <dd>
+                                <a lay-href="{:url('ziti/index')}">自提包裹</a>
+                            </dd>                                                        
+                        </dl>
+                    </li>                        
                 </ul>
             </div>
         </div>
