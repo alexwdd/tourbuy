@@ -130,7 +130,7 @@ function getOrderStatus($order){
         return '待发货';
     }elseif($order['status']==2){
         return '已发货';
-    }elseif($order['status']==3){
+    }elseif($order['status']==2 && $order['comment']==0){
         return '待评价';
     }elseif($order['status']==99){
         return '取消订单';

@@ -35,7 +35,10 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
-            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定吗？">取消订单</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定要取消吗？">取消订单</button>
+            {eq name="peing" value="1"}
+            <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/change','status=2')}" alert="1" alertMsg="选中订单的货物已经发走，确定吗？">批量发货</button>
+            {/eq}
             <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/del')}" alert="1" alertMsg="删除后不能恢复确定吗，确定吗？">删除</button>
         </div>
 

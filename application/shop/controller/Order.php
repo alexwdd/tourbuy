@@ -39,21 +39,9 @@ class Order extends Admin {
     	}
 	}
 
-	public function peihuo() {
-		if (request()->isPost()) {
-			$map['status'] = 2;
-			$map['shopID'] = $this->admin['id'];
-			$result = model('Order')->getList($map);			
-			echo json_encode($result);
-    	}else{
-    		$this->assign('url',url('order/peihuo'));
-	    	return view('normal');
-    	}
-	}
-
 	public function fahuo() {
 		if (request()->isPost()) {
-			$map['status'] = 3;
+			$map['status'] = 2;
 			$map['shopID'] = $this->admin['id'];
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);

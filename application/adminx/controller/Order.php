@@ -31,6 +31,7 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
+    		$this->assign('peing',1);
     		$this->assign('url',url('order/peing'));
 	    	return view('normal');
     	}
@@ -106,6 +107,18 @@ class Order extends Admin {
 	            $this->assign('list',$list);
 	            return view();
 			}
+		}
+	}
+
+	public function change(){
+		$id = explode(",",input('post.id'));
+		$status = input("param.status");
+		if (count($id)==0) {
+			$this->error('请选择要取消的数据');
+		}else{
+            $map['id'] = array('in',$id);
+			db("Order")->where($map)->setField('status',$status);
+			$this->success("操作成功");
 		}
 	}
 

@@ -93,14 +93,8 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">订单总金额</label>
-                        {eq name="list.status" value="0"}
-                        <div class="layui-input-inline">
-                            <input type="number" step="0.01" name="total" value="{$list.total}" lay-verType="tips" lay-verify="required" autocomplete="off" class="layui-input"/>
-                        </div>
-                        {else/}
-                        <div class="layui-form-mid">{$list.total}</div>
-                        {/eq}
+                        <label class="layui-form-label">订单总金额</label>  
+                        <div class="layui-form-mid">{$list.total}</div>               
                     </div>
 
                     <div class="layui-form-item layui-form-text">
@@ -189,7 +183,11 @@
             <div class="layui-field-box">
                 {volist name="baoguo" id="f"}
                 <div class="orderList">
+                    {eq name="f.type" value="0"}
+                    <div class="hd">包裹ID【{$f.id}】 【自提】 【{eq name="f.hexiao" value="0"}<span style="color: #f00">未核销</span>{else/}已核销{/eq}】</div>
+                    {else/}
                     <div class="hd">包裹ID【{$f.id}】 身份证【{eq name="f.snStatus" value="0"}<span style="color: #f00">未上传</span>{else/}已上传{/eq}】 {$f.kuaidi} 运单号【{$f.kdNo|default="-"}】 【{eq name="f.flag" value="0"}<span style="color: #f00">未发货</span>{else/}已发货{/eq}】</div>
+                    {/eq}
                     <table class="layui-table" style="margin: 0">
                         <colgroup>
                             <col>
@@ -212,7 +210,8 @@
                             </tr>       
                             {/volist}
                         </tbody>
-                    </table>                        
+                    </table>     
+                    {gt name="f.type" value="0"}                   
                     <div class="fd">  
                         <div class="wuliu">
                             {volist name="f.eimg" id="img"}
@@ -222,7 +221,8 @@
                             <a href="javascript:void(0)" class="photo" data-url="{$img}"><img src="{$img}"></a>
                             {/volist}
                         </div>
-                    </div>                      
+                    </div>  
+                    {/gt}                    
                 </div>
                 {/volist}
             </div>

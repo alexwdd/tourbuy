@@ -9,6 +9,16 @@ class OrderBaoguo extends Admin
         return date("Y-m-d H:i:s",$value);
     }
 
+    public function getUpdateTimeAttr($value)
+    {
+        if($value==0){
+            return '-';
+        }else{
+            return date("Y-m-d H:i:s",$value);
+        }
+        
+    }
+
     //获取列表
     public function getList($map){        
         $pageNum = input('post.page',1);
@@ -18,6 +28,7 @@ class OrderBaoguo extends Admin
         $status = input('post.status');        
         $keyword = input('post.keyword');
         $payType = input('post.payType');
+        $hexiao = input('post.hexiao');
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
 
@@ -26,6 +37,9 @@ class OrderBaoguo extends Admin
         }        
         if ($payType!='') {
             $map['payType'] = $payType;
+        }
+        if ($hexiao!='') {
+            $map['hexiao'] = $hexiao;
         }
         if ($keyword!='') {
             $map['name|sender'] = $keyword;
@@ -48,6 +62,11 @@ class OrderBaoguo extends Admin
             $list = collection($list)->toArray();
             foreach ($list as $key => $value) {
                 $list[$key]['type'] = getBaoguoType($value['type']);
+                $goods = db("OrderDetail")->field('name,number,price')->where('baoguoID',$value['id'])->select();
+                $list[$key]['goods'] = "";
+                foreach ($goods as $k => $val) {
+                    $list[$key]['goods'] .= '<p>'.$val['name'].' X '.$val['number'].'</p>';
+                }                
             }
         }
 
