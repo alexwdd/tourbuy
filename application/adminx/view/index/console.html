@@ -16,13 +16,13 @@
                         </li>
                         <li class="layui-col-xs3">
                             <div class="layadmin-backlog-body item">
-                              <h3>商品总数</h3>
-                              <p><cite>{$goods}</cite></p>
+                              <h3>入驻商家</h3>
+                              <p><cite>{$shop}</cite></p>
                             </div>
                         </li>
                         <li class="layui-col-xs3">
                             <div class="layadmin-backlog-body item">
-                              <h3>订单总数</h3>
+                              <h3>有效订单总数</h3>
                               <p><cite>{$order}</cite></p>
                             </div>
                         </li>
@@ -41,9 +41,7 @@
             <div class="layui-card-header">概览</div>
             <div class="layui-card-body">          
                 <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
-                    <div carousel-item id="LAY-index-dataview">
-                        <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-                    </div>
+                    <div id="myChart" style="width: 100%; height:100%"></div>
                 </div>  
             </div>
         </div>
@@ -54,5 +52,40 @@ layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index', 'console']);
+}).use(['index','admin','echarts'],function(){
+    var $ = layui.$,
+        admin = layui.admin,
+        echarts = layui.echarts;
+
+    var options = {
+            title: {
+                text: '当月交易量',
+                x: 'center',
+                textStyle: {
+                    fontSize: 14
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b} : {c}元"
+            },
+            xAxis : [{
+                type : 'category',
+                boundaryGap : false,
+                data: [{$monthData.date}]
+            }],
+            yAxis : [{
+                type : 'value'
+            }],
+            series: [{
+                name: '数量',
+                type: 'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: [{$monthData.money}]
+            }]
+        };
+    let myChart = echarts.init(document.getElementById('myChart'), layui.echartsTheme);
+    myChart.setOption(options);
+});
 </script>

@@ -11,9 +11,11 @@ class Index extends Admin {
 
     public function console(){
         $member = db("Member")->count();
-        $goods = db("Goods")->count();
-        $order = db("Order")->count();
+        $shop = db("Shop")->count();
+        $map['payStatus'] = 1;
+        $order = db("Order")->where($map)->count();
 
+        unset($map);
         $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
         $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
         $map['createTime'] = array('between',array($beginToday,$endToday));
@@ -21,9 +23,33 @@ class Index extends Admin {
         $today = db('Order')->where($map)->sum('total');
 
         $this->assign('member',$member);
-        $this->assign('goods',$goods);
+        $this->assign('shop',$shop);
         $this->assign('order',$order);
         $this->assign('today',$today);
+
+        //本月销量
+        $dayNumber = date('t', strtotime(date("Y-m")));
+        $dateArr = [];
+        $moneyArr = [];
+        for ($i=1; $i <= $dayNumber ; $i++) { 
+            unset($map);
+            $start = date("Y-m").'-'.$i;
+            $end = date('Y-m-d H:i:s', strtotime("$start +1 day -1 second")); 
+            $start=strtotime($start);
+            $end=strtotime($end);
+            $map['createTime'] = array('between',array($start,$end));
+            $map['payStatus'] = 1;
+            $money = db('Order')->where($map)->sum('total');
+            array_push($dateArr, '"'.date("m-d",$start).'"');
+            array_push($moneyArr, $money);
+        } 
+        $dateArr = implode(",",$dateArr);
+        $moneyArr = implode(",",$moneyArr);
+        $monthData = [
+            'date'=>$dateArr,
+            'money'=>$moneyArr
+        ];
+        $this->assign('monthData',$monthData);
         return view();
     }
 

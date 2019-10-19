@@ -48,7 +48,8 @@
             <p field="id" title="ID" width="80"/>  
             <p field="memberID" title="会员ID" width="80"/> 
             <p field="shopName" title="商铺" width="150"/> 
-            <p field="order_no" title="订单号" width="190"/> 
+            <p field="order_no" title="订单号" width="150"/> 
+            <p title="配送" width="80" templet="#send"/>
             <p field="status" title="订单状态" width="100" templet="#status"/>           
             <p field="total" title="总金额" width="100"/>
             <p field="goodsMoney" title="商品金额" width="100"/>
@@ -62,6 +63,14 @@
             <p field="createTime" title="创建日期" width="180" sort="true"/>
             <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
         </div>
+        
+        <script type="text/html" id="send">
+            {{# if(d.send==0){ }}
+            未配送
+            {{# }else{ }}
+            <span style="color: blue">已配送</span>
+            {{# } }}
+        </script>
 
         <script type="text/html" id="pay">
             {{# if(d.payType==1){ }}

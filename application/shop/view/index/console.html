@@ -33,7 +33,14 @@
         </div>
 
         <div class="layui-card">
-            <div class="layui-card-header">概览</div>
+            <div class="layui-card-header">
+                概览
+                <div class="layui-btn-group" style="float: right;">
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="day">当日</button>
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="week">本周</button>
+                    <button type="button" class="layui-btn layui-btn-sm" data-type="month">本月</button>
+                </div>
+            </div>
             <div class="layui-card-body">          
                 <div class="charts" id="myChart"></div>  
             </div>
@@ -80,5 +87,11 @@ layui.config({
             myChart.setOption(options);
         },'json');
     }
+
+    $(".layui-btn-group button").click(function(){
+        $(".layui-btn-group button").addClass("layui-btn-primary");
+        $(this).removeClass("layui-btn-primary");
+        getData($(this).attr('data-type'));
+    })
 });
 </script>

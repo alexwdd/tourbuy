@@ -35,17 +35,22 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            {eq name="peing" value="1"}
+            <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/send')}" alert="1" alertMsg="选中订单的货物已经配送，确定吗？">批量配送</button>
+            {/eq}
             <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定吗？">取消订单</button>
             <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/del')}" alert="1" alertMsg="删除后不能恢复确定吗，确定吗？">删除</button> -->
         </div>
 
         <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{$url}" lay-filter="lay-common-table"></table>
         <div class="fsDatagridCols">
-            <!-- <p checkbox="true"/> -->
+            {eq name="peing" value="1"}
+            <p checkbox="true"/>
+            {/eq}
             <p field="id" title="ID" width="80"/>  
             <p field="memberID" title="会员ID" width="80"/> 
-            <p field="shopName" title="商铺" width="150"/> 
-            <p field="order_no" title="订单号" width="190"/> 
+            <p field="order_no" title="订单号" width="150"/> 
+            <p title="配送" width="80" templet="#send"/>
             <p field="status" title="订单状态" width="100" templet="#status"/>           
             <p field="total" title="总金额" width="100"/>
             <p field="goodsMoney" title="商品金额" width="100"/>
@@ -59,7 +64,13 @@
             <p field="createTime" title="创建日期" width="180" sort="true"/>
             <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
         </div>
-
+        <script type="text/html" id="send">
+            {{# if(d.send==0){ }}
+            未配送
+            {{# }else{ }}
+            <span style="color: blue">已配送</span>
+            {{# } }}
+        </script>
         <script type="text/html" id="pay">
             {{# if(d.payType==1){ }}
             支付宝
