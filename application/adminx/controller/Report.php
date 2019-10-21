@@ -32,13 +32,12 @@ class Report extends Admin {
 				if($shopID!=''){
 					$map['shopID'] = $shopID;
 				}
-				if($ids){
+				if($cityID!=''){
 					$map['shopID'] = array('in',$ids);
 				}
-				$list = db("Order")->field('total,wallet,money,inprice,discount,payment,payType')->where($map)->select();			
+				$list = db("Order")->field('total,wallet,inprice,discount,payment,payType')->where($map)->select();			
 				$total = 0;
 				$wallet = 0;
-				$money = 0;
 				$inprice = 0;
 				$payment = 0;
 				$discount = 0;
@@ -49,22 +48,22 @@ class Report extends Admin {
 					$total += $value['total'];
 					$wallet += $value['wallet'];
 					$discount += $value['discount'];
-					$money += $value['money'];
 					$inprice += $value['inprice'];
 					$payment += $value['payment'];
 					if($payType==1){
-						$alipay += $value['money'];
+						$alipay += $value['total'];
 					}else{
 						$weixin += $value['money'];
 					}
-					$lirun += $value['money'] - $value['inprice']; 
+					$lirun += $value['total'] - $value['inprice'] - $value['payment']; 
 				}
 				array_push($arr,[
 					'date'=>date("Y-m-d",$i),
 					'number'=>count($list),
 					'total'=>$total,
 					'wallet'=>$wallet,
-					'money'=>$money,
+					'weixin'=>$weixin,
+					'alipay'=>$alipay,
 					'inprice'=>$inprice,
 					'discount'=>$discount,
 					'payment'=>$payment,

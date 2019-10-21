@@ -59,13 +59,14 @@ layui.config({
         ,totalRow: true
         ,cols: [[
             {field:'date', title:'日期', width:120, unresize: true, sort: true, totalRowText: '合计'}
-            ,{field:'total', title:'订单数量', width:100, sort: true, totalRow: true}
-            ,{field:'wallet', title:'销售额', width:100, edit: 'text', sort: true, totalRow: true}
-            ,{field:'wallet', title:'微信支付', width:100, edit: 'text', sort: true, totalRow: true}
-            ,{field:'wallet', title:'支付宝', width:100, edit: 'text', sort: true, totalRow: true}
-            ,{field:'money', title:'成本', width:100, sort: true, totalRow: true}
-            ,{field:'inprice', title:'运费',width:100, totalRow: true}
-            ,{field:'inprice', title:'优惠',width:100, totalRow: true}
+            ,{field:'number', title:'订单数量', width:100, sort: true, totalRow: true}
+            ,{field:'total', title:'销售额', width:100, sort: true, totalRow: true}
+            ,{field:'weixin', title:'微信支付', width:110, sort: true, totalRow: true}
+            ,{field:'alipay', title:'支付宝', width:100, sort: true, totalRow: true}
+            ,{field:'inprice', title:'成本', width:100, sort: true, totalRow: true}
+            ,{field:'payment', title:'运费',width:100, totalRow: true}
+            ,{field:'wallet', title:'抵扣',width:100, totalRow: true}
+            ,{field:'discount', title:'优惠',width:100, totalRow: true}
             ,{field:'lirun', title:'利润', width:100, totalRow: true}
         ]]
     });
