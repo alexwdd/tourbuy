@@ -27,30 +27,77 @@ class Index extends Admin {
         $this->assign('order',$order);
         $this->assign('today',$today);
 
-        //本月销量
-        $dayNumber = date('t', strtotime(date("Y-m")));
-        $dateArr = [];
-        $moneyArr = [];
-        for ($i=1; $i <= $dayNumber ; $i++) { 
-            unset($map);
-            $start = date("Y-m").'-'.$i;
-            $end = date('Y-m-d H:i:s', strtotime("$start +1 day -1 second")); 
-            $start=strtotime($start);
-            $end=strtotime($end);
-            $map['createTime'] = array('between',array($start,$end));
-            $map['payStatus'] = 1;
-            $money = db('Order')->where($map)->sum('total');
-            array_push($dateArr, '"'.date("m-d",$start).'"');
-            array_push($moneyArr, $money);
-        } 
-        $dateArr = implode(",",$dateArr);
-        $moneyArr = implode(",",$moneyArr);
-        $monthData = [
-            'date'=>$dateArr,
-            'money'=>$moneyArr
-        ];
-        $this->assign('monthData',$monthData);
         return view();
+    }
+
+    public function ajax(){
+        if(request()->isPost()){
+            $type = input('post.type');
+            $dateArr = [];
+            $moneyArr = [];
+
+            if($type=='day'){
+                //当日销量
+                for ($i=0; $i < 24 ; $i++) { 
+                    unset($map);
+                    $start = date("Y-m-d ".$i.":0:0");
+                    $end = date("Y-m-d ".$i.":59:59"); 
+                    $start=strtotime($start);
+                    $end=strtotime($end);
+                    $map['createTime'] = array('between',array($start,$end));
+                    $map['payStatus'] = 1;
+                    $money = db('Order')->where($map)->sum('total');
+                    array_push($dateArr, date("H时",$start));
+                    array_push($moneyArr, $money);
+                } 
+            }
+
+            if($type=='week'){
+                //本月销量
+                $weekarray=array("一","二","三","四","五","六","日");
+                $time = $data['time'];
+                $end = date("Y-m-d 23:59:59",strtotime("$time Sunday"));
+                $start = date("Y-m-d 00:00:00",strtotime("$end - 6 days"));     
+                for ($i=0; $i < 7 ; $i++) { 
+                    unset($map);
+                    $end = date('Y-m-d H:i:s', strtotime("$start +1 day -1 second")); 
+                    $start=strtotime($start);
+                    $end=strtotime($end);
+                    $map['createTime'] = array('between',array($start,$end));
+                    $map['payStatus'] = 1;
+                    $money = db('Order')->where($map)->sum('total');
+                    array_push($dateArr, '周'.$weekarray[$i]);
+                    array_push($moneyArr, $money);
+                    $start = date("Y-m-d H:i:s",$start);
+                    $start = date('Y-m-d H:i:s', strtotime("$start +1 day")); 
+                } 
+            }
+
+            if($type=='month'){
+                //本月销量
+                $dayNumber = date('t', strtotime(date("Y-m")));                
+                for ($i=1; $i <= $dayNumber ; $i++) { 
+                    unset($map);
+                    $start = date("Y-m").'-'.$i;
+                    $end = date('Y-m-d H:i:s', strtotime("$start +1 day -1 second")); 
+                    $start=strtotime($start);
+                    $end=strtotime($end);
+                    $map['createTime'] = array('between',array($start,$end));
+                    $map['payStatus'] = 1;
+                    $money = db('Order')->where($map)->sum('total');
+                    array_push($dateArr, date("m-d",$start));
+                    array_push($moneyArr, $money);
+                } 
+            }
+            
+            $dateArr = implode(",",$dateArr);
+            $moneyArr = implode(",",$moneyArr);
+            $monthData = [
+                'date'=>$dateArr,
+                'money'=>$moneyArr
+            ];
+            echo json_encode($monthData);
+        }
     }
 
     public function getMenu(){

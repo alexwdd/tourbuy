@@ -2,11 +2,11 @@
     <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
         <div class="layui-form-item">
             
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" style="width: 130px">
                 <input type="text" name="order_no" placeholder="订单号" class="layui-input layui-btn-small">
             </div>
 
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" style="width: 130px">
                 <input type="text" name="keyword" placeholder="收件人/发件人" class="layui-input layui-btn-small">
             </div>
 
@@ -15,7 +15,17 @@
                 <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input" placeholder=" - "/>
             </div> 
 
+            <label class="layui-form-mid">店铺</label>
             <div class="layui-input-inline">
+                <select name="shopID">
+                    <option value="">--请选择--</option>
+                    {volist name="shop" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>         
+
+            <div class="layui-input-inline" style="width: 100px">
                 <select name="payType">
                     <option value="">支付方式</option>
                     <option value="1">支付宝</option>
@@ -23,7 +33,7 @@
                 </select>
             </div>  
 
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" style="width: 100px">
                 <select name="status">
                     <option value="">订单状态</option>
                     <option value="0">待支付</option>
@@ -45,7 +55,13 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
-            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定吗？">取消订单</button>
+            {neq name="Request.action" value="close"}
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定要取消吗？">取消订单</button>
+            {/neq}
+
+            {eq name="Request.action" value="peing"}
+            <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/change','status=2')}" alert="1" alertMsg="选中订单的货物已经发走，确定吗？">批量发货</button>
+            {/eq}
             <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/del')}" alert="1" alertMsg="删除后不能恢复确定吗，确定吗？">删除</button>
         </div>
 

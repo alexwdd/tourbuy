@@ -44,6 +44,7 @@ class Index extends Admin {
                     $end=strtotime($end);
                     $map['createTime'] = array('between',array($start,$end));
                     $map['payStatus'] = 1;
+                    $map['shopID'] = $this->admin['id'];
                     $money = db('Order')->where($map)->sum('total');
                     array_push($dateArr, date("H时",$start));
                     array_push($moneyArr, $money);
@@ -63,6 +64,7 @@ class Index extends Admin {
                     $end=strtotime($end);
                     $map['createTime'] = array('between',array($start,$end));
                     $map['payStatus'] = 1;
+                    $map['shopID'] = $this->admin['id'];
                     $money = db('Order')->where($map)->sum('total');
                     array_push($dateArr, '周'.$weekarray[$i]);
                     array_push($moneyArr, $money);
@@ -82,23 +84,7 @@ class Index extends Admin {
                     $end=strtotime($end);
                     $map['createTime'] = array('between',array($start,$end));
                     $map['payStatus'] = 1;
-                    $money = db('Order')->where($map)->sum('total');
-                    array_push($dateArr, date("m-d",$start));
-                    array_push($moneyArr, $money);
-                } 
-            }
-
-            if($type=='month'){
-                //本月销量
-                $dayNumber = date('t', strtotime(date("Y-m")));                
-                for ($i=1; $i <= $dayNumber ; $i++) { 
-                    unset($map);
-                    $start = date("Y-m").'-'.$i;
-                    $end = date('Y-m-d H:i:s', strtotime("$start +1 day -1 second")); 
-                    $start=strtotime($start);
-                    $end=strtotime($end);
-                    $map['createTime'] = array('between',array($start,$end));
-                    $map['payStatus'] = 1;
+                    $map['shopID'] = $this->admin['id'];
                     $money = db('Order')->where($map)->sum('total');
                     array_push($dateArr, date("m-d",$start));
                     array_push($moneyArr, $money);

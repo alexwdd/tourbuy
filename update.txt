@@ -1,6 +1,1 @@
-goods表 增加ziti
-shop表 删除ziti
-orderBaoguo 增加hexiao 字段
-order表增加 comment字段
-order表增加	send字段
-后台修改包裹节点
+节点增加 销售报表

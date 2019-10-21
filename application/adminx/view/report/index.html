@@ -1,0 +1,83 @@
+<div class="layui-card">
+    <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+        <div class="layui-form-item">  
+            <label class="layui-form-mid">日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="date" id="date" value="{$date} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
+            </div> 
+            <label class="layui-form-mid">城市</label>
+            <div class="layui-input-inline">
+                <select name="cityID" id="cityID">
+                    <option value="">--请选择--</option>
+                    {volist name="city" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+            <label class="layui-form-mid">店铺</label>
+            <div class="layui-input-inline">
+                <select name="shopID" id="shopID">
+                    <option value="">--请选择--</option>
+                    {volist name="shop" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn" type="button" id="myBtn" style="display: block;">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="layui-card-body">
+        <table id="test" class="lay-common-table"></table>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','table','laydate'],function(){
+    var form = layui.form,
+        table = layui.table,
+        laydate = layui.laydate,
+        $ = layui.$;
+
+    laydate.render({
+        elem: '#date',
+        range: true
+    });
+
+    var tableIns = table.render({
+        elem: '#test'
+        ,url:'{:url('report/index')}'
+        ,method:'post'
+        ,title: '每日结算'
+        ,totalRow: true
+        ,cols: [[
+            {field:'date', title:'日期', width:120, unresize: true, sort: true, totalRowText: '合计'}
+            ,{field:'total', title:'订单数量', width:100, sort: true, totalRow: true}
+            ,{field:'wallet', title:'销售额', width:100, edit: 'text', sort: true, totalRow: true}
+            ,{field:'wallet', title:'微信支付', width:100, edit: 'text', sort: true, totalRow: true}
+            ,{field:'wallet', title:'支付宝', width:100, edit: 'text', sort: true, totalRow: true}
+            ,{field:'money', title:'成本', width:100, sort: true, totalRow: true}
+            ,{field:'inprice', title:'运费',width:100, totalRow: true}
+            ,{field:'inprice', title:'优惠',width:100, totalRow: true}
+            ,{field:'lirun', title:'利润', width:100, totalRow: true}
+        ]]
+    });
+
+    $("#myBtn").click(function(){
+        tableIns.reload({
+            where:{
+                date:$("#date").val(),
+                shopID:$("#shopID").val(),
+                cityID:$("#cityID").val(),
+            }
+        });
+    });
+});
+</script>

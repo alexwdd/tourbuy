@@ -1,5 +1,6 @@
 <style type="text/css">
 .item{background: #f2f2f2; clear: both; overflow: hidden; padding: 10px;}
+.charts{width: 100%; height:500px;}
 </style>
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md12">
@@ -38,11 +39,16 @@
         </div>
 
         <div class="layui-card">
-            <div class="layui-card-header">概览</div>
+            <div class="layui-card-header">
+                概览
+                <div class="layui-btn-group" style="float: right;">
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="day">当日</button>
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="week">本周</button>
+                    <button type="button" class="layui-btn layui-btn-sm" data-type="month">本月</button>
+                </div>
+            </div>
             <div class="layui-card-body">          
-                <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
-                    <div id="myChart" style="width: 100%; height:100%"></div>
-                </div>  
+                <div class="charts" id="myChart"></div>   
             </div>
         </div>
     </div>
@@ -53,39 +59,45 @@ layui.config({
 }).extend({
     index: 'lib/index' //主入口模块
 }).use(['index','admin','echarts'],function(){
-    var $ = layui.$,
-        admin = layui.admin,
-        echarts = layui.echarts;
-
-    var options = {
-            title: {
-                text: '当月交易量',
-                x: 'center',
-                textStyle: {
-                    fontSize: 14
-                }
-            },
+    var $ = layui.$;
+    var options = {      
             tooltip: {
                 trigger: 'item',
                 formatter: "{b} : {c}元"
             },
-            xAxis : [{
+            xAxis :{
                 type : 'category',
                 boundaryGap : false,
-                data: [{$monthData.date}]
-            }],
-            yAxis : [{
+                data: []
+            },
+            yAxis :{
                 type : 'value'
-            }],
+            },
             series: [{
                 name: '数量',
                 type: 'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data: [{$monthData.money}]
+                data: []
             }]
         };
-    let myChart = echarts.init(document.getElementById('myChart'), layui.echartsTheme);
-    myChart.setOption(options);
+
+    getData("month");
+
+    function getData(type){
+        $.post('{:url('index/ajax')}',{type:type},function(res){
+            options.xAxis.data = res.date.split(",");
+            options.series[0].data = res.money;
+
+            let myChart = echarts.init(document.getElementById('myChart'), layui.echartsTheme);
+            myChart.setOption(options);
+        },'json');
+    }
+
+    $(".layui-btn-group button").click(function(){
+        $(".layui-btn-group button").addClass("layui-btn-primary");
+        $(this).removeClass("layui-btn-primary");
+        getData($(this).attr('data-type'));
+    })
 });
 </script>

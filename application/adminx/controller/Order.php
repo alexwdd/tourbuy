@@ -10,6 +10,9 @@ class Order extends Admin {
 			$result = model('Order')->getList();			
 			echo json_encode($result);
     	}else{
+
+    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
 	    	return view();
     	}
 	}
@@ -20,6 +23,8 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
+    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
     		$this->assign('url',url('order/nopay'));
 	    	return view('normal');
     	}
@@ -31,7 +36,8 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$this->assign('peing',1);
+    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
     		$this->assign('url',url('order/peing'));
 	    	return view('normal');
     	}
@@ -43,6 +49,8 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
+    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
     		$this->assign('url',url('order/fahuo'));
 	    	return view('normal');
     	}
@@ -54,6 +62,8 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
+    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
     		$this->assign('url',url('order/close'));
 	    	return view('normal');
     	}
