@@ -108,7 +108,7 @@ class Goods extends Admin
             $shop = db("Shop")->field('id,name,cityID')->select();
             $this->assign('shop', $shop);
 
-            $this->assign('type',config('BAOGUO_TYPE'));
+            $this->assign('type',config('EWE_BAOGUO_TYPE'));
 
             $this->assign('list', $list);
 

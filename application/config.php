@@ -267,50 +267,14 @@ return [
     same 相同商品一个包裹最多几个
     can 能和哪些商品混寄
     */
-    'BAOGUO_TYPE' => array(         
-        array('id'=>1,'name'=>'罐装奶粉','max'=>3,'same'=>99,'can'=>[]),
-        array('id'=>2,'name'=>'袋装奶粉','max'=>3,'same'=>99,'can'=>[]),
-        array('id'=>3,'name'=>'小罐奶粉','max'=>3,'same'=>99,'can'=>[]),
-        
-        array('id'=>4,'name'=>'保健品','max'=>8,'same'=>6,'can'=>[6,7,8,9,10,11]),
-        array('id'=>5,'name'=>'鞋子','max'=>1,'same'=>99,'can'=>[]),
-
-        
-        array('id'=>6,'name'=>'15++蜂蜜','max'=>1,'same'=>1,'can'=>[4,9,10,11]),
-        array('id'=>7,'name'=>'30元以上','max'=>1,'same'=>1,'can'=>[4,8,9,10,11]),
-        array('id'=>8,'name'=>'15-30元','max'=>2,'same'=>2,'can'=>[4,7,9,10,11]),
-        array('id'=>9,'name'=>'15元以下','max'=>4,'same'=>4,'can'=>[4,6,7,8,10,11]), 
-
-        array('id'=>10,'name'=>'日用品','max'=>6,'same'=>6,'can'=>[4,6,7,8,9,11]),
-        array('id'=>15,'name'=>'1个不混(保健品)','max'=>1,'same'=>1,'can'=>[]),
-        array('id'=>11,'name'=>'2个可混(保健品)','max'=>2,'same'=>2,'can'=>[4,6,7,8,9,10]),
-
-        array('id'=>12,'name'=>'红酒','max'=>999,'same'=>999,'can'=>[]),
-        array('id'=>13,'name'=>'手动面单','max'=>999,'same'=>999,'can'=>[]),
-        array('id'=>14,'name'=>'生鲜','max'=>999,'same'=>999,'can'=>[])
-    ),
-
-    "GOODS_TAG"=>array(
-        array("id"=>1,"name"=>"包邮"),
-        array("id"=>2,"name"=>"三罐包邮"),
-        array("id"=>3,"name"=>"三袋包邮"),
-        array("id"=>4,"name"=>"六袋包邮"),
-        array("id"=>5,"name"=>"x2包邮"),
-        array("id"=>6,"name"=>"x3包邮"),
-        array("id"=>7,"name"=>"x4包邮"),
-        array("id"=>8,"name"=>"x5包邮"),
-        array("id"=>9,"name"=>"x6包邮"),
-        array("id"=>10,"name"=>"x7包邮"),
-        array("id"=>11,"name"=>"x8包邮"),
-        array("id"=>12,"name"=>"x9包邮"),
-        array("id"=>13,"name"=>"x10包邮"),
-        array("id"=>14,"name"=>"x11包邮"),
-        array("id"=>15,"name"=>"x12包邮"),
-        array("id"=>16,"name"=>"x13包邮"),
-        array("id"=>17,"name"=>"x14包邮"),
-        array("id"=>18,"name"=>"x15包邮"),
-        array("id"=>19,"name"=>"x20包邮"),
-        array("id"=>20,"name"=>"买一赠一"),
+    'EWE_BAOGUO_TYPE' => array(         
+        array('id'=>1,'name'=>'罐装奶粉','max'=>6,'same'=>99,'can'=>[]),
+        array('id'=>2,'name'=>'袋装奶粉','max'=>6,'same'=>99,'can'=>[]),
+        array('id'=>3,'name'=>'保健品/食品','max'=>8,'same'=>6,'can'=>[4,5,6]),
+        array('id'=>4,'name'=>'洗护类','max'=>1,'same'=>99,'can'=>[3,5,6]),
+        array('id'=>5,'name'=>'日用品/杂货','max'=>1,'same'=>1,'can'=>[3,4,6]),
+        array('id'=>6,'name'=>'化妆品','max'=>1,'same'=>1,'can'=>[3,4,5]),
+        array('id'=>7,'name'=>'1个不混','max'=>1,'same'=>1,'can'=>[]),
     ),
 
     //财务类型

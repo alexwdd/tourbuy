@@ -208,6 +208,8 @@ class Base extends Controller {
             $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $cart[$key]['weight'] = $goods['weight'];
             $cart[$key]['singleNumber'] = $goods['number'];
+            $cart[$key]['baoyou'] = $goods['baoyou'];
+            $cart[$key]['price'] = $goods['price'];
         }
 
         $ziti = [];
@@ -220,7 +222,7 @@ class Base extends Controller {
 
         $cart = array_values($cart);//创建索引
 
-        $cart = new \cart\Zhongyou($cart,$kuaidi,$province,$user);
+        $cart = new \pack\Ewe($cart,$kuaidi,$province,$user);
         $baoguoArr = $cart->getBaoguo();
         
         if(count($ziti)>0){

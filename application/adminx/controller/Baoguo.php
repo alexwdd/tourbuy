@@ -12,7 +12,7 @@ class Baoguo extends Admin {
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
     	}else{
-            $this->assign('type',config('BAOGUO_TYPE'));
+            $this->assign('type',config('EWE_BAOGUO_TYPE'));
 	    	return view();
     	}
 	}

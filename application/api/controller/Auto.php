@@ -9,6 +9,12 @@ class Auto extends Base {
         parent::_initialize();        
     }
 
+    public function test(){
+        $list = db("Cart")->where('memberID',10002)->select();
+        $result = $this->getYunfeiJson($list);
+        dump($result);
+    }
+
     public function delete(){
         $config = tpCache('member');
         $map['payStatus'] = 0;
