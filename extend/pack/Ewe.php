@@ -10,16 +10,16 @@ class Ewe {
 	private $province;
 	private $extendArea = [];
 	private $maxNumber = 10; 	//单个包裹中最多商品个数
-	private $maxWeight = 3.3; 	//单个包裹最大重量(kg)
+	private $maxWeight = 4; 	//单个包裹最大重量(kg)
 	private $maxPrice = 200; 	//单个包裹最大金额
+	private $kuaidi = ['name'=>'EWE'];
 
 	/*
 	$cart中的trueNumber是实际单品数量，比如商品A单品数量是3个，如果购物车中有2个，单品数量总数是6，这里的trueNumber不是数据库中单个商品的trueNumber！！！
 	包裹的status属性如果是1就是该包裹不再跟别的包裹2次混编
 	*/
-	public function __construct($cart,$province) {
+	public function __construct($cart,$province) {		
 		foreach ($cart as $key => $value) {
-			unset($cart[$key]['number']);
 			unset($cart[$key]['memberID']);
 
 			if ($value['typeID']==1) {
@@ -40,13 +40,15 @@ class Ewe {
 
 	public function getBaoguo(){
 		//处理包邮
-		$this->getBaoyou();
+		$this->setBaoyou();
+
+		//处理一个不混
+		$this->singleBaoguo();
 
 		//处理奶粉
 		if(count($this->guanzhuangnaifen)>0){
 			$this->setNaifenBaoguo($this->guanzhuangnaifen);
 		}
-
 		if(count($this->daizhuangnaifen)>0){
 			$this->setNaifenBaoguo($this->daizhuangnaifen);
 		}
@@ -57,9 +59,7 @@ class Ewe {
             }
 		}
 
-		dump($this->baoguoArr);die;
-
-		foreach ($this->cart as $key => $value) {
+		/*foreach ($this->cart as $key => $value) {
 			if ($value['typeID']==4) {
 				$this->goodsInsertBaoguo($value);
             }
@@ -69,7 +69,7 @@ class Ewe {
 			if ($value['typeID']==5) {
 				$this->goodsInsertBaoguo($value);
             }
-		}
+		}*/
 
 		foreach ($this->cart as $key => $value) {			
 			$this->goodsInsertBaoguo($value);           
@@ -104,7 +104,7 @@ class Ewe {
 	
 	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
 	        	$danjia = getDanjia(1);
-	        	$this->baoguoArr[$key]['kuaidi'] = '澳邮';
+	        	$this->baoguoArr[$key]['kuaidi'] = $this->kuaidi['name'];
 	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
 	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
 	        	}else{
@@ -114,7 +114,7 @@ class Ewe {
 	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
 	        	$danjia = getDanjia(3);
-	        	$this->baoguoArr[$key]['kuaidi'] = '中环';
+	        	$this->baoguoArr[$key]['kuaidi'] = $this->kuaidi['name'];
 	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
 	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
 	        	}else{
@@ -127,6 +127,7 @@ class Ewe {
 	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
 	        }
 		}
+		dump($this->baoguoArr);die;
 		return $this->baoguoArr;
 	}
 
@@ -147,7 +148,7 @@ class Ewe {
             'yunfei'=>0,	  		//运费
             'extend'=>0,
             'kuaidi'=>'',
-            'status'=>0,
+            'status'=>1,
             'baoyou'=>0,
             'goods'=>[],
         ];
@@ -184,8 +185,8 @@ class Ewe {
 			            'totalPrice'=>0,  		//商品中金额
 			            'yunfei'=>0,	  		//运费
 			            'extend'=>0,
-			            'kuaidi'=>'',
-			            'status'=>0,
+			            'kuaidi'=>$this->kuaidi['name'],
+			            'status'=>1,
 			            'baoyou'=>0,
 			            'goods'=>[],
 			        ];
@@ -197,7 +198,7 @@ class Ewe {
 		}
 	}
 
-	private function goodsInsertBaoguo($item){
+	private function goodsInsertBaoguo($item){		
 		if(count($this->baoguoArr)==0){
 			$baoguo = [
 				'type'=>0, 				//类型
@@ -207,7 +208,7 @@ class Ewe {
 	            'totalPrice'=>0,  		//商品中金额
 	            'yunfei'=>0,	  		//运费
 	            'extend'=>0,
-	            'kuaidi'=>'',
+	            'kuaidi'=>$this->kuaidi['name'],
 	            'status'=>0,
 	            'baoyou'=>0,
 	            'goods'=>[],
@@ -216,10 +217,9 @@ class Ewe {
 		}
 
 		//$totalNumber = 0;//计算遍历包裹后该商品一共插入了几个
-		
 		foreach ($this->baoguoArr as $key => $value) {
-			if($value['status']==0){
-				$number = $this->canInsert($value,$item,false);
+			if($value['status']==0){				
+				$number = $this->canInsert($value,$item);	
 				if ($number) {
 					$oldNumber = $item['trueNumber'];
 	            	//可以放入包裹中商品的单品总数量
@@ -239,8 +239,7 @@ class Ewe {
 	           		}
 	            }
             }
-		}
-
+		}		
 		if($item['trueNumber']>0){
 			$baoguo = [
 				'type'=>0, 				//类型
@@ -264,7 +263,7 @@ class Ewe {
 	private function moveGoods($from,$to){
 		foreach ($from['goods'] as $key => $value) {
 			$maxNumber = ceil((1-$to['totalWeight'])/$value['weight']);//最多几个就凑够1公斤了	
-			$number = $this->canInsert($to,$value,false);
+			$number = $this->canInsert($to,$value);
 			if ($number>0 && $maxNumber>0) {
             	$number = $number>$value['trueNumber'] ? $value['trueNumber'] : $number;
             	$number = $number>$maxNumber ? $maxNumber : $number;  
@@ -306,7 +305,7 @@ class Ewe {
 	}
 
 	//处理包邮类包裹
-	private function getBaoyou(){
+	private function setBaoyou(){
 		foreach ($this->cart as $key => $value) {
 			if ($value['baoyou']==1) {
 			   	for ($i=0; $i < $value['number']; $i++) {
@@ -324,7 +323,7 @@ class Ewe {
                         'yunfei'=>0,
                         'inprice'=>0,
                         'extend'=>0,
-                        'kuaidi'=>'中环',
+                        'kuaidi'=>$this->kuaidi['name'],
                         'status'=>1,
                         'baoyou'=>1,
                         'goods'=>array($goods),
@@ -336,29 +335,46 @@ class Ewe {
         }
 	}
 
-	//判断当前商品是否能放入包裹
-	/*flag 是否判断被插入的商品必须要与包裹的类型相同*/
-	private function canInsert($baoguo,$item,$flag=true){
+	//处理一个不混包裹
+	private function singleBaoguo(){
+		foreach ($this->cart as $key => $value) {
+			if ($value['typeID']==7) {
+			   	for ($i=0; $i < $value['number']; $i++) {		
+			   		$goods = $value;
+			   		$goods['number'] = 1;
+			   		$goods['trueNumber'] = $value['singleNumber'];
+                    $baoguo = [
+                        'type'=>$goods['typeID'],
+                        'totalNumber'=>$goods['singleNumber'],
+                        'totalWeight'=>$goods['weight'],
+                        'totalWuliuWeight'=>$goods['wuliuWeight'],
+                        'totalPrice'=>$goods['price'],
+                        'yunfei'=>0,
+                        'inprice'=>0,
+                        'extend'=>0,
+                        'kuaidi'=>$this->kuaidi['name'],
+                        'status'=>1,
+                        'baoyou'=>0,
+                        'goods'=>array($goods),
+                    ];
+                    array_push($this->baoguoArr,$baoguo);
+                    $this->deleteGoods($value,$goods['singleNumber']);
+                }
+			}
+        }
+	}	
 
-		$thisMaxNumber = $this->maxNumber;
-		//12是类特殊的包裹，只有同一类商品的话允许超过上限
-		if($this->canOutMaxNumber($baoguo,$item)){
-			$thisMaxNumber = 15;
-		}
+	//判断当前商品是否能放入包裹
+	private function canInsert($baoguo,$item){
+
+		$typeNumberArr = $this->getNumberWeight($baoguo,$item);
 		
+		$thisMaxNumber = $typeNumberArr['maxNumber'];
+
 		//总数不能超过包裹商品数量
 		if ($baoguo['totalNumber']>=$thisMaxNumber) {			
 			return false;
 		}		
-		
-		if ($flag) {	
-			//商品是否与当前包裹类型相同
-			if ($baoguo['type']>0) {
-				if ($baoguo['type']!=$item['typeID']) {
-					return false;
-				}
-			}
-		}
 
 		if(!$this->canHybrid($baoguo,$item)){
 			return false;
@@ -369,13 +385,14 @@ class Ewe {
 
 		//本类型商品还能放几个
 		$itemNumber = $this->getTypeNumber($baoguo,$item);
-		$tNum = $type['max'] - $itemNumber['typeNumber'];
+
+		$tNum = $thisMaxNumber - $itemNumber['typeNumber'];
 		if ($tNum < 1) {
 			return false;
 		}
 
 		//单品允许放几个
-		$sNum = $type['same'] - $itemNumber['sameNumber'];
+		$sNum = $typeNumberArr['sameNumber'] - $itemNumber['sameNumber'];
 		if ($sNum < 1) {
 			return false;
 		}
@@ -391,34 +408,65 @@ class Ewe {
 			$number = $thisMaxNumber - $baoguo['totalNumber'];
 		}
 
-		if (!in_array($item['typeID'],[1,2,3])) {//奶粉类不考虑重量和金额
-			//是否超过总重量，在不超过总重量的情况下最多可以放几个商品
-			$weightNumber = $this->getMaxNumber($this->maxWeight,$baoguo['totalWeight'],$item['weight']);
+		
+		//是否超过总重量，在不超过总重量的情况下最多可以放几个商品
+		$weightNumber = $this->getMaxNumber($typeNumberArr['weight'],$baoguo['totalWeight'],$item['weight']);
 
-			$number = $number > $weightNumber ? $weightNumber : $number;
+		$number = $number > $weightNumber ? $weightNumber : $number;
 
-			//是否超过总金额，在不超过总金额的情况下最多可以放几个商品
-			$priceNumber = $this->getMaxNumber($this->maxPrice,$baoguo['totalPrice'],$item['price']);
+		//是否超过总金额，在不超过总金额的情况下最多可以放几个商品
+		$priceNumber = $this->getMaxNumber($this->maxPrice,$baoguo['totalPrice'],$item['price']);
 
-			$number = $number > $priceNumber ? $priceNumber : $number;
-		}
+		$number = $number > $priceNumber ? $priceNumber : $number;
+	
 		return $number;
 	}
 
-	//处理type这类特殊的商品，只有同一类商品的话允许超过上限
-	private function canOutMaxNumber($baoguo,$item){
-		$flag = true;
+	//返回当前包裹+新商品，组合后包裹商品最大数和最大重量
+	private function getNumberWeight($baoguo,$item){
+		$ids = [];
 		foreach ($baoguo['goods'] as $key => $value) {
-			if ($value['typeID'] != 12) {				
-				$flag = false;
-				break;
+			if(!in_array($value['typeID'],$ids)){
+				array_push($ids,$value['typeID']);
 			}
 		}
-		if($item['typeID']!=12){
-			$flag = false;
+		$typeNumber = count($ids);
+		if($typeNumber>=3){
+			if($item['typeID']==6){
+				return ['weight'=>4,'maxNumber'=>6,'sameNumber'=>2];
+			}else{
+				return ['weight'=>4,'maxNumber'=>8,'sameNumber'=>99];
+			}			
 		}
-		return $flag;
+		if($typeNumber==2){
+			if(in_array(3,$ids) && in_array(4,$ids) && in_array($item['typeID'],$ids)){
+				return ['weight'=>4,'maxNumber'=>10,'sameNumber'=>99];
+			}elseif($item['typeID']==6){
+				return ['weight'=>4,'maxNumber'=>6,'sameNumber'=>2];
+			}else{
+				return ['weight'=>4,'maxNumber'=>8,'sameNumber'=>99];
+			}	
+		}
+		if($typeNumber==1){
+			if($item['typeID']==3 && in_array(3,$ids)){
+				return ['weight'=>4.5,'maxNumber'=>15,'sameNumber'=>99];
+			}
+			if($item['typeID']==6 && in_array(6,$ids)){
+				return ['weight'=>4,'maxNumber'=>3,'sameNumber'=>3];
+			}
+			return ['weight'=>4,'maxNumber'=>10,'sameNumber'=>99];
+		}
+		if($typeNumber==0){
+			if($item['typeID']==3){
+				return ['weight'=>4.5,'maxNumber'=>15,'sameNumber'=>99];
+			}
+			if($item['typeID']==6){
+				return ['weight'=>4,'maxNumber'=>3,'sameNumber'=>3];
+			}
+			return ['weight'=>4,'maxNumber'=>10,'sameNumber'=>99];
+		}
 	}
+
 	
 	//判断与当前包裹中的商品能否混寄
 	private function canHybrid($baoguo,$item){
@@ -434,7 +482,7 @@ class Ewe {
 
 	//获取当前商品包裹类型
 	private function getBaoguoType($item){
-		foreach (config('BAOGUO_ZH') as $key => $value) {
+		foreach (config('EWE_BAOGUO_TYPE') as $key => $value) {
 			if ($item['typeID'] == $value['id']) {
 				return $value;
 				break;
@@ -481,7 +529,7 @@ class Ewe {
 			if ($value['typeID']==$item['typeID']) {
 				$typeNumber += $value['trueNumber'];
 			}
-			if ($value['id']==$item['id']) {
+			if ($value['goodsID']==$item['goodsID']) {
 				$sameNumber += $value['trueNumber'];
 			}
 		}

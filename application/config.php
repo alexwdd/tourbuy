@@ -270,10 +270,10 @@ return [
     'EWE_BAOGUO_TYPE' => array(         
         array('id'=>1,'name'=>'罐装奶粉','max'=>6,'same'=>99,'can'=>[]),
         array('id'=>2,'name'=>'袋装奶粉','max'=>6,'same'=>99,'can'=>[]),
-        array('id'=>3,'name'=>'保健品/食品','max'=>8,'same'=>6,'can'=>[4,5,6]),
-        array('id'=>4,'name'=>'洗护类','max'=>1,'same'=>99,'can'=>[3,5,6]),
-        array('id'=>5,'name'=>'日用品/杂货','max'=>1,'same'=>1,'can'=>[3,4,6]),
-        array('id'=>6,'name'=>'化妆品','max'=>1,'same'=>1,'can'=>[3,4,5]),
+        array('id'=>3,'name'=>'保健品/食品','max'=>8,'same'=>99,'can'=>[4,5,6]),
+        array('id'=>4,'name'=>'洗护类','max'=>10,'same'=>99,'can'=>[3,5,6]),
+        array('id'=>5,'name'=>'日用品/杂货','max'=>10,'same'=>99,'can'=>[3,4,6]),
+        array('id'=>6,'name'=>'化妆品','max'=>10,'same'=>99,'can'=>[3,4,5]),
         array('id'=>7,'name'=>'1个不混','max'=>1,'same'=>1,'can'=>[]),
     ),
 
