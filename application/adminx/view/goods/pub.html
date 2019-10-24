@@ -40,7 +40,7 @@
                         <select name="expressID" id="expressID" default="{$list.expressID}" lay-verify="required" lay-filter="express">
                             <option value="">请选择</option>
                             {volist name="express" id="vo"}
-                            <option value="{$vo.id}">{$vo.name}</option>
+                            <option value="{$vo.id}" data-model="{$vo.model}">{$vo.name}</option>
                             {/volist}
                         </select>
                     </div>
