@@ -48,14 +48,11 @@ class Goods extends Admin
     public function getUpdateTimeAttr($value){
         return date("Y-m-d H:i:s",$value);
     }
-    /*public function setFlashAttr(){        
-        if(input('post.flash')==''){return 0;}else{return 1;}
-    }*/
+    public function setJingpinAttr(){        
+        if(input('post.jingpin')==''){return 0;}else{return 1;}
+    }
     public function setCommAttr(){        
         if(input('post.comm')==''){return 0;}else{return 1;}
-    }
-    public function setBaoyouAttr(){        
-        if(input('post.baoyou')==''){return 0;}else{return 1;}
     }
     public function setTehuiAttr(){        
         if(input('post.tehui')==''){return 0;}else{return 1;}

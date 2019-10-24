@@ -210,8 +210,9 @@ class Base extends Controller {
             $cart[$key]['singleNumber'] = $goods['number'];
             $cart[$key]['baoyou'] = $goods['baoyou'];
             $cart[$key]['price'] = $goods['price'];
+            $cart[$key]['expressID'] = $goods['expressID'];
+            $cart[$key]['extra'] = ($goods['jiesuan']/$goods['number'])*0.25 + 5;//附加费
         }
-
         $ziti = [];
         foreach ($cart as $key => $value) {
             if ($value['ziti']==1) {
@@ -220,11 +221,13 @@ class Base extends Controller {
             }
         }              
 
-        $cart = array_values($cart);//创建索引
-
-        $cart = new \pack\Ewe($cart,$kuaidi,$province,$user);
-        $baoguoArr = $cart->getBaoguo();
-        
+        $express = $this->getExpressGoods($cart);
+        foreach ($express as $key => $value) {
+            $className = "\\pack\\".$value['express']['model'];
+            $cart = new $className($value['goods'],$value['express']);
+            $baoguoArr = $cart->getBaoguo();
+        }
+           
         if(count($ziti)>0){
             $zitiBaoguo = [
                 'type'=>0,               //类型
@@ -234,7 +237,8 @@ class Base extends Controller {
                 'totalPrice'=>0,          //商品中金额
                 'yunfei'=>0,            //运费
                 'extend'=>0,
-                'kuaidi'=>'自提',
+                'express'=>'自提',
+                'expressID'=>0,
                 'status'=>1,
                 'goods'=>$ziti,
             ];
@@ -262,6 +266,27 @@ class Base extends Controller {
             'totalInprice'=>fix_number_precision($totalInprice,2),
             'baoguo'=>$baoguoArr,
         ];     
+        return $data;
+    }
+
+    public function getExpressGoods($cart){
+        $expressID = [];
+        foreach ($cart as $key => $value) {
+            if(!in_array($value['expressID'],$expressID)){
+                array_push($expressID,$value['expressID']);
+            }
+        }
+        $data = [];
+        foreach ($expressID as $key => $value) {
+            $express = db("Express")->field('id,name,weight,price,money,model')->where('id',$value)->find();
+            $temp = ['express'=>$express,'goods'=>[]];
+            foreach ($cart as $k => $val) {
+                if($val['expressID']==$value){
+                    array_push($temp['goods'],$val);
+                }
+            }
+            array_push($data,$temp);
+        }
         return $data;
     }
 

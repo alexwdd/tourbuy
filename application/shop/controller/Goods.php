@@ -70,6 +70,9 @@ class Goods extends Admin
                 }
                 $this->assign('image', $image);
 
+                $model = db("Express")->where('id',$list['expressID'])->value("model");
+                $this->assign('type',config(strtoupper($model).'_BAOGUO_TYPE'));
+
                 //套餐
                 $pack = db("Goods")->where('fid',$id)->select();
                 $this->assign('pack',$pack);
@@ -99,11 +102,7 @@ class Goods extends Admin
             $expressID = db("CityExpress")->where('cityID',$this->admin['cityID'])->column("expressID");
             $express = db("Express")->where('id','in',$expressID)->select();
             $this->assign('express',$express);
-
-            $this->assign('type',config('BAOGUO_TYPE'));
-
             $this->assign('list', $list);
-
             return view();
         }
     }
@@ -112,6 +111,12 @@ class Goods extends Admin
         $cityID = input('post.cityID');
         $expressID = db("CityExpress")->where('cityID',$cityID)->column("expressID");
         $list = db("Express")->where('id','in',$expressID)->select();
+        echo json_encode(['data'=>$list]);
+    }
+
+    public function getGoodsType(){
+        $model = input('post.model');        
+        $list = config(strtoupper($model).'_BAOGUO_TYPE');
         echo json_encode(['data'=>$list]);
     }
 

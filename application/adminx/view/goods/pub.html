@@ -37,7 +37,7 @@
 
                     <label class="layui-form-label">快递</label>
                     <div class="layui-input-inline">
-                        <select name="expressID" id="expressID" default="{$list.expressID}" lay-verify="required" lay-verify="required">
+                        <select name="expressID" id="expressID" default="{$list.expressID}" lay-verify="required" lay-filter="express">
                             <option value="">请选择</option>
                             {volist name="express" id="vo"}
                             <option value="{$vo.id}">{$vo.name}</option>
@@ -47,8 +47,7 @@
 
                     <label class="layui-form-label">包裹类型</label>
                     <div class="layui-input-inline">
-                        <select name="typeID" default="{$list.typeID}">
-                            <option value="">请选择</option>
+                        <select name="typeID" id="typeID" default="{$list.typeID}">
                             {volist name="type" id="vo"}
                             <option value="{$vo.id}">{$vo.name}</option>
                             {/volist}
@@ -193,10 +192,6 @@
                     <label class="layui-form-label">单品数量</label>
                     <div class="layui-input-inline">
                         <input type="text" name="number" id="number" value="{$list.number|default=1}" class="layui-input" lay-verify="required">
-                    </div>
-                    <label class="layui-form-label">邮费单价</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="payment" id="payment" value="{$list.payment}" class="layui-input" lay-verify="required">
                     </div>
                     <label class="layui-form-label">税率</label>
                     <div class="layui-input-inline">
@@ -352,15 +347,28 @@ layui.config({
             var data = {cityID:cityID};
             $.post('{:url('goods/getExpress')}',data,function(res){                
                 for(var i=0; i<res.data.length; i++){
-                    _html += '<option value="'+res.data[i]['id']+'">'+res.data[i]['name']+'</option>';
+                    _html += '<option value="'+res.data[i]['id']+'" data-model="'+res.data[i]['model']+'">'+res.data[i]['name']+'</option>';
                 }
                 $("#expressID").html(_html);
+                $("#typeID").html('');
                 form.render();
             },'json');
         }
-        
-        //
+    });
 
+    form.on('select(express)', function(data){
+        var model = data.elem[data.elem.selectedIndex].getAttribute('data-model');
+        _html = '<option value=""></option>';
+        if(model){
+            var data = {model:model};
+            $.post('{:url('goods/getGoodsType')}',data,function(res){                
+                for(var i=0; i<res.data.length; i++){
+                    _html += '<option value="'+res.data[i]['id']+'">'+res.data[i]['name']+'</option>';
+                }
+                $("#typeID").html(_html);
+                form.render();
+            },'json');
+        }
     });
 
     if(flag == 1){

@@ -261,6 +261,11 @@ return [
     //omi支付
     'omipay' => ['mchID'=>'501039','key'=>'547e766b244a4e7eb24fee84a1e28fd2'],
 
+    'expressModel'=>[
+        ['id'=>1,'name'=>'EWE澳中','value'=>'EWE'],
+        ['id'=>2,'name'=>'4PX红酒','value'=>'PX'],
+    ],
+
     //包裹类型
     /*
     max 一个包裹最多几个
@@ -275,6 +280,10 @@ return [
         array('id'=>5,'name'=>'日用品/杂货','max'=>10,'same'=>99,'can'=>[3,4,6]),
         array('id'=>6,'name'=>'化妆品','max'=>10,'same'=>99,'can'=>[3,4,5]),
         array('id'=>7,'name'=>'1个不混','max'=>1,'same'=>1,'can'=>[]),
+    ),
+
+    'PX_BAOGUO_TYPE' => array(         
+        array('id'=>1,'name'=>'红酒','max'=>6,'same'=>99,'can'=>[]),
     ),
 
     //财务类型

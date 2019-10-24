@@ -27,6 +27,7 @@ class Express extends Admin {
 				}
 			}
 			$this->assign('list', $list);
+			$this->assign('expressModel',config('expressModel'));
 			return view();
 		}
 	}

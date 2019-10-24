@@ -57,9 +57,6 @@ class Goods extends Admin
     public function setCommAttr(){        
         if(input('post.comm')==''){return 0;}else{return 1;}
     }
-    public function setBaoyouAttr(){        
-        if(input('post.baoyou')==''){return 0;}else{return 1;}
-    }
     public function setTehuiAttr(){        
         if(input('post.tehui')==''){return 0;}else{return 1;}
     }

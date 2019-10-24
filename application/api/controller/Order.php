@@ -81,7 +81,7 @@ class Order extends Auth {
             $map['id'] = $id;
             $map['hide'] = 0;
             $map['memberID'] = $this->user['id'];
-            $list = db('Order')->field('id,total,goodsMoney,discount,wallet,money,payment,point,order_no,name,tel,province,city,county,addressDetail,sn,front,back,sender,senderTel,intr,status,createTime')->where( $map )->find();
+            $list = db('Order')->field('id,total,quhuoType,goodsMoney,discount,wallet,money,payment,point,order_no,name,tel,province,city,county,addressDetail,sn,front,back,sender,senderTel,intr,status,createTime')->where( $map )->find();
             if ($list) {                
                 if($list['sn']=='' || $list['front']=='' || $list['back']==''){
                     $list['upload'] = 0;
@@ -102,7 +102,7 @@ class Order extends Auth {
                 $list['createTime'] = date("Y-m-d H:i:s",$list['createTime']);
                 $list['goods'] = $goods;
 
-                $baoguo = db("OrderBaoguo")->field('id,payment,weight,kuaidi,kdNo,eimg,image')->where('orderID',$list['id'])->select();
+                $baoguo = db("OrderBaoguo")->field('id,type,payment,weight,express,kdNo,eimg,image')->where('orderID',$list['id'])->select();
                 foreach ($baoguo as $key => $value) {
                     $goods = db("OrderDetail")->field('name,number')->where('baoguoID',$value['id'])->select();
                     $number = 0;
@@ -249,7 +249,8 @@ class Order extends Auth {
                 $detail['wuliuInprice'] = 0;//物流成本
                 $detail['type'] = $value['type'];
                 $detail['weight'] = $value['totalWuliuWeight'];
-                $detail['kuaidi'] = $value['kuaidi'];
+                $detail['express'] = $value['express'];
+                $detail['expressID'] = $value['expressID'];
                 $detail['kdNo'] = '';
                 $detail['name'] = $data['name'];
                 $detail['tel'] = $data['tel'];

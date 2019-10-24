@@ -1,7 +1,7 @@
 <?php
 namespace pack;
 
-class Ewe {
+class EWE {
 
 	private $cart;				//购物车商品
 	private $daizhuangnaifen = [];	//袋装奶粉数组
@@ -12,13 +12,14 @@ class Ewe {
 	private $maxNumber = 10; 	//单个包裹中最多商品个数
 	private $maxWeight = 4; 	//单个包裹最大重量(kg)
 	private $maxPrice = 200; 	//单个包裹最大金额
-	private $kuaidi = ['name'=>'EWE'];
+	private $express = ['name'=>'EWE'];
 
 	/*
 	$cart中的trueNumber是实际单品数量，比如商品A单品数量是3个，如果购物车中有2个，单品数量总数是6，这里的trueNumber不是数据库中单个商品的trueNumber！！！
 	包裹的status属性如果是1就是该包裹不再跟别的包裹2次混编
 	*/
-	public function __construct($cart,$province) {		
+	public function __construct($cart,$express,$province) {		
+		$this->express = $express;
 		foreach ($cart as $key => $value) {
 			unset($cart[$key]['memberID']);
 
@@ -99,35 +100,38 @@ class Ewe {
 		}
 
  		foreach ($this->baoguoArr as $key => $value) {
+ 			if ($this->baoguoArr[$key]['totalWuliuWeight']<1) {
+				$this->baoguoArr[$key]['totalWuliuWeight']=1;
+			}
+
 			$wuliuWeight = ceil($this->baoguoArr[$key]['totalWuliuWeight']*10);
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($wuliuWeight/10,1);
-	
-	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
-	        	$danjia = getDanjia(1);
-	        	$this->baoguoArr[$key]['kuaidi'] = $this->kuaidi['name'];
-	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
+			
+			$this->baoguoArr[$key]['express'] = $this->express['name'];
+			$this->baoguoArr[$key]['expressID'] = $this->express['id'];
+
+	        if (in_array($value['type'],[1,2])){//奶粉类走澳邮
+	        	$yunfei = $this->getNaifen($value['type'],$value['totalNumber']);        	
+	        	if($this->baoguoArr[$key]['baoyou']==0){
+	        		$this->baoguoArr[$key]['yunfei'] = $yunfei;
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}
-	        	$config = tpCache('kuaidi');
-	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
+	        	//$config = tpCache('express');
+	        	//$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
-	        	$danjia = getDanjia(3);
-	        	$this->baoguoArr[$key]['kuaidi'] = $this->kuaidi['name'];
-	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
+	        	if($this->baoguoArr[$key]['baoyou']==0){
+	        		$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$this->express['price'];
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}	        	
-	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['inprice'];
+	        	//$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['inprice'];
 	        }
 	        
 	        if ($this->inExtendArea()) {
 	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
 	        }
 		}
-		dump($this->baoguoArr);die;
 		return $this->baoguoArr;
 	}
 
@@ -147,7 +151,7 @@ class Ewe {
             'totalPrice'=>0,  		//商品中金额
             'yunfei'=>0,	  		//运费
             'extend'=>0,
-            'kuaidi'=>'',
+            'express'=>'',
             'status'=>1,
             'baoyou'=>0,
             'goods'=>[],
@@ -185,7 +189,7 @@ class Ewe {
 			            'totalPrice'=>0,  		//商品中金额
 			            'yunfei'=>0,	  		//运费
 			            'extend'=>0,
-			            'kuaidi'=>$this->kuaidi['name'],
+			            'express'=>$this->express['name'],
 			            'status'=>1,
 			            'baoyou'=>0,
 			            'goods'=>[],
@@ -208,7 +212,7 @@ class Ewe {
 	            'totalPrice'=>0,  		//商品中金额
 	            'yunfei'=>0,	  		//运费
 	            'extend'=>0,
-	            'kuaidi'=>$this->kuaidi['name'],
+	            'express'=>$this->express['name'],
 	            'status'=>0,
 	            'baoyou'=>0,
 	            'goods'=>[],
@@ -249,7 +253,7 @@ class Ewe {
 	            'totalPrice'=>0,  		//商品中金额
 	            'yunfei'=>0,	  		//运费
 	            'extend'=>0,
-	            'kuaidi'=>'',
+	            'express'=>'',
 	            'status'=>0,
 	            'baoyou'=>0,
 	            'goods'=>[],
@@ -323,7 +327,7 @@ class Ewe {
                         'yunfei'=>0,
                         'inprice'=>0,
                         'extend'=>0,
-                        'kuaidi'=>$this->kuaidi['name'],
+                        'express'=>$this->express['name'],
                         'status'=>1,
                         'baoyou'=>1,
                         'goods'=>array($goods),
@@ -352,7 +356,7 @@ class Ewe {
                         'yunfei'=>0,
                         'inprice'=>0,
                         'extend'=>0,
-                        'kuaidi'=>$this->kuaidi['name'],
+                        'express'=>$this->express['name'],
                         'status'=>1,
                         'baoyou'=>0,
                         'goods'=>array($goods),
@@ -560,11 +564,20 @@ class Ewe {
 	}
 
 	private function getNaifen($goodsType,$number){
-		if ($goodsType==1 || $goodsType==2) {//大罐奶粉	    
-	        return 6;
-	    }elseif($goodsType==3){//小罐奶粉
-	        return 7;
-	    }
+		switch ($number) {
+			case 1:
+				return 7;
+				break;			
+			case 2:
+				return 13;
+				break;
+			case 3:
+				return 18;
+				break;
+			case 6:
+				return 30;
+				break;
+		}
 	}
 }
 ?>

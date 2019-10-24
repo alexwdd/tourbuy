@@ -1,0 +1,4 @@
+商品去掉邮费字段 payment
+修改express表结构
+
+orderBaoguo表 修改kuaidi=>express 增加expressID
