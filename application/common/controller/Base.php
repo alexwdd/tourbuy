@@ -492,4 +492,63 @@ class Base extends Controller {
         $output = curl_exec($ch);       
         return $output;
     }    
+
+    //创建EWE电子面单
+    public function createEweOrder($order){
+        $goods = db("OrderDetail")->where("baoguoID",$order['id'])->select();
+        $items = [];
+        foreach ($goods as $k => $val) {      
+            $temp['ItemName'] = $val['short'];
+            $temp['Quantity'] = $val['number'];
+            array_push($items,$temp);
+        }
+        
+        $sender = [
+            'Name'=>$order['sender'],
+            'Phone'=>$order['senderTel'],
+        ];
+        $receiver = [
+            'Name'=>$order['name'],
+            'Phone'=>$order['tel'],
+            'State'=>$order['province'],
+            'City'=>$order['city'],
+            'Suburb'=>$order['county'],
+            'Street'=>$order['addressDetail'],
+        ];
+        if(in_array($order['type'],[1,2])){
+            $IsEconomic = true;
+        }else{
+            $IsEconomic = false;
+        }
+   
+        $data = [
+            'USERNAME'=>'dl-syd',
+            'APIPASSWORD'=>'DIM875439GYT892130',
+            'BoxNo'=>'',
+            'TotalPackage'=>1,
+            'IsEconomic'=>$IsEconomic,
+            'Items'=>$items,
+            'Sender'=>$sender,
+            'Receiver'=>$receiver
+        ];
+
+        $url = 'https://newomstest.ewe.com.au/eweApi/ewe/api/createOrder';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
+        $result = curl_exec($ch);
+        $result = json_decode($result,true);
+        if ($result['Status']==0) {
+            $update = [
+                'kdNo'=>$result['Payload']['BOXNO']
+            ];
+            db("OrderBaoguo")->where('id',$order['id'])->update($update);
+            return ['code'=>1,'msg'=>$result['Message']];
+        }else{
+            return ['code'=>0,'msg'=>$result['Message']];
+        }
+    }
 }

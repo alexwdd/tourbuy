@@ -10,11 +10,11 @@ class Auto extends Base {
     }
 
     public function test(){
-        $list = db("Cart")->where('memberID',10002)->select();
-        $result = $this->getYunfeiJson($list);
-        dump($result);
+        $order = db("OrderBaoguo")->where('id',20)->find();
+        $this->createEweOrder($order);
     }
 
+    //删除未付款的订单
     public function delete(){
         $config = tpCache('member');
         $map['payStatus'] = 0;
@@ -32,6 +32,21 @@ class Auto extends Base {
                 db("OrderDetail")->where('orderID',$value['id'])->delete();
                 db("OrderCut")->where('orderID',$value['id'])->delete();
             }
+        }
+    }
+
+    //创建运单
+    public function createOrder(){
+        $map['kdNo'] = '';
+        $map['expressID'] = array('gt',0);
+        //$map['type'] = array('not in',[15,16,17]);
+        $list = db("OrderBaoguo")->where($map)->select();
+        dump($list);die;
+        foreach ($list as $key => $value) {
+            if($value['expressID']==4){
+                $this->createEweOrder($value);
+            }
+            
         }
     }
 }
