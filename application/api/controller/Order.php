@@ -276,6 +276,7 @@ class Order extends Auth {
                             'goodsID'=>$val['goodsID'],
                             'specID'=>$val['specID'],
                             'name'=>$val['name'],
+                            'brand'=>$val['brand'],
                             'short'=>$val['short'],
                             'number'=>$val['trueNumber'],    
                             'price'=>$val['price'],    
@@ -628,6 +629,7 @@ class Order extends Auth {
             $res = db("Order")->where('id',$id)->update($data);
 
             if($res){
+                db("OrderBaoguo")->where('orderID',$id)->update($data);
                 $frontUrl = getRealUrl($frontUrl);
                 $backUrl = getRealUrl($backUrl);
                 returnJson(1,'success',['front'=>$frontUrl,'back'=>$backUrl]);

@@ -202,9 +202,11 @@ class Base extends Controller {
                 $cart[$key]['ziti'] = $goods['ziti'];
             }else{
                 $cart[$key]['ziti'] = 1;
-            }            
+            }
+            $brand = db("Brand")->where('id',$goods['brandID'])->value("name");
             $cart[$key]['name'] = $goods['name'];
             $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['brand'] = $brand;
             $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $cart[$key]['weight'] = $goods['weight'];
             $cart[$key]['singleNumber'] = $goods['number'];
@@ -495,6 +497,7 @@ class Base extends Controller {
 
     //创建EWE电子面单
     public function createEweOrder($order){
+        $config = tpCache("kuaidi");
         $goods = db("OrderDetail")->where("baoguoID",$order['id'])->select();
         $items = [];
         foreach ($goods as $k => $val) {      
@@ -522,8 +525,9 @@ class Base extends Controller {
         }
    
         $data = [
-            'USERNAME'=>'VDJ',
-            'APIPASSWORD'=>'DIM875439GYT892130',
+            'USERNAME'=>"dl-syd",   //测试账号
+            //'USERNAME'=>$config['ewe_username'], //正式账号
+            'APIPASSWORD'=>$config['ewe_password'],
             'BoxNo'=>'',
             'TotalPackage'=>1,
             'IsEconomic'=>$IsEconomic,
@@ -532,7 +536,8 @@ class Base extends Controller {
             'Receiver'=>$receiver
         ];
 
-        $url = 'https://newomstest.ewe.com.au/eweApi/ewe/api/createOrder';
+        $url = 'https://newomstest.ewe.com.au/eweApi/ewe/api/createOrder';//测试环境
+        //$url = 'https://jerryapi.ewe.com.au/eweApi/ewe/api/createOrder';  //生产环境
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
@@ -541,7 +546,6 @@ class Base extends Controller {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
         $result = curl_exec($ch);
         $result = json_decode($result,true);
-        dump($result);die;
         if ($result['Status']==0) {
             $update = [
                 'kdNo'=>$result['Payload']['BOXNO']
@@ -576,19 +580,20 @@ class Base extends Controller {
     }
 
     public function createPxOrder($order){
+        $config = tpCache("kuaidi");
         $goods = db("OrderDetail")->where("baoguoID",$order['id'])->select();
         $items = [];
         foreach ($goods as $k => $val) {     
-            $temp['ItemBrand'] = 'A2';
-            $temp['Specifications'] = '900g二段';
-            $temp['ItemUnitPrice'] = '85';
+            $temp['ItemBrand'] = $val['brand'];
+            $temp['Specifications'] = '';
+            $temp['ItemUnitPrice'] = $val['price'];
             $temp['ItemName'] = $val['short'];
             $temp['ItemQuantity'] = $val['number'];
             $temp['ItemDeclareType'] = '02020000001';
             array_push($items,$temp);
-        }        
+        }
         $data = [
-            'Token'=>'CPRM01A-3858-1025-19AM-CC7A1E792BCA',
+            'Token'=>$config['px_token'],
             'Data'=>[
                 'ShipperOrderNo'=>$order['order_no'].'-'.$order['id'],
                 'ServiceTypeCode'=>'RW',
@@ -605,9 +610,9 @@ class Base extends Controller {
                 'OrderWeight'=>'',
                 'ITEMS'=>$items,
             ]
-        ];
-
-        $url = 'http://sandbox.transrush.com.au/agent/createPickupItem';
+        ]; 
+        $url = 'http://sandbox.transrush.com.au/agent/createPickupItem';//测试环境
+        //$url = 'http://www.transrush.com.au/agent/createPickupItem'     //生产环境
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
@@ -616,7 +621,6 @@ class Base extends Controller {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
         $result = curl_exec($ch);
         $result = json_decode($result,true);
-        dump($result);die;
         if ($result['ResponseCode']=='10000') {
             $update = [
                 'kdNo'=>$result['Data']
@@ -625,6 +629,36 @@ class Base extends Controller {
             return ['code'=>1,'msg'=>$result['Message']];
         }else{
             return ['code'=>0,'msg'=>$result['Message']];
+        }
+    }
+
+    public function uploadPxPerson($order){
+        $config = tpCache("kuaidi");
+        $data = [
+            'Token'=>$config['px_token'],
+            'Data'=>[
+                'ReferenceNumber'=>$order['order_no'].'-'.$order['id'],
+                'ReceiverID'=>$order['sn'],
+                'name'=>$order['name'],
+                'ReceiverIDFacePath'=>base64EncodeImage('.'.$order['front']),
+                'ReceiverIDBackPath'=>base64EncodeImage('.'.$order['back']),
+            ]
+        ];        
+
+        $url = 'http://sandbox.transrush.com.au/Agent/uploadIdInfo'; //测试环境
+        //$url = 'http://www.transrush.com.au/Agent/uploadIdInfo'; //生产环境
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
+        $result = curl_exec($ch);
+        $result = json_decode($result,true);
+        /*echo '<meta charset="UTF-8">';
+        dump($result);die;*/
+        if ($result['Status']==0) {
+            db("OrderBaoguo")->where($map)->setField('snStatus',1);
         }
     }
 }
