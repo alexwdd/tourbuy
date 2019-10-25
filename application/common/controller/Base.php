@@ -522,7 +522,7 @@ class Base extends Controller {
         }
    
         $data = [
-            'USERNAME'=>'dl-syd',
+            'USERNAME'=>'VDJ',
             'APIPASSWORD'=>'DIM875439GYT892130',
             'BoxNo'=>'',
             'TotalPackage'=>1,
@@ -541,6 +541,7 @@ class Base extends Controller {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
         $result = curl_exec($ch);
         $result = json_decode($result,true);
+        dump($result);die;
         if ($result['Status']==0) {
             $update = [
                 'kdNo'=>$result['Payload']['BOXNO']
@@ -550,5 +551,31 @@ class Base extends Controller {
         }else{
             return ['code'=>0,'msg'=>$result['Message']];
         }
+    }
+
+    public function uploadEwePerson($order){
+        $data = [
+            'image1'=>base64EncodeImage('.'.$order['front']),
+            'image2'=>base64EncodeImage('.'.$order['back']),
+            'name'=>$order['name'],
+            'mobile'=>$order['tel'],
+            'idCardNo'=>$order['sn'],
+        ];
+        $url = 'https://api.ewe.com.au/oms/api/Contacts/IdUpload';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
+        $result = curl_exec($ch);
+        $result = json_decode($result,true);
+        if ($result['Status']==0) {
+            db("OrderBaoguo")->where($map)->setField('snStatus',1);
+        }
+    }
+
+    public function createPxOrder($order){
+        $token = 'CPRM01A-3858-1025-19AM-CC7A1E792BCA';
     }
 }

@@ -258,6 +258,9 @@ class Order extends Auth {
                 $detail['city'] = $data['city'];
                 $detail['county'] = $data['county'];
                 $detail['addressDetail'] = $data['addressDetail'];
+                $detail['sn'] = $data['sn'];
+                $detail['front'] = $data['front'];
+                $detail['back'] = $data['back'];
                 $detail['sender'] = $data['sender'];
                 $detail['senderTel'] = $data['senderTel'];
                 $detail['createTime'] = time();          

@@ -10,8 +10,9 @@ class Auto extends Base {
     }
 
     public function test(){
-        $order = db("OrderBaoguo")->where('id',20)->find();
-        $this->createEweOrder($order);
+        $order = db("OrderBaoguo")->where('id',31)->find();
+        //$this->createEweOrder($order);
+        $this->uploadEwePerson($order);
     }
 
     //删除未付款的订单
@@ -46,7 +47,24 @@ class Auto extends Base {
             if($value['expressID']==4){
                 $this->createEweOrder($value);
             }
-            
+            if($value['expressID']==5){
+                $this->createPxOrder($value);
+            }
+        }
+    }
+
+    //上传身份证
+    public function uploadPersonPhoto(){
+        $map['kdNo'] = array('neq','');
+        $map['snStatus'] = 0;
+        $list = db("OrderBaoguo")->where($map)->select();
+        foreach ($list as $key => $value) {
+            if($value['expressID']==4){
+                $this->uploadEwePerson($value);
+            }
+            if($value['expressID']==5){
+                $this->uploadPxPerson($value);
+            }
         }
     }
 }

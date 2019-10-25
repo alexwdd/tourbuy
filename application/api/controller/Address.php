@@ -73,6 +73,8 @@ class Address extends Auth {
                 }else{
                     $data['front'] = '';
                 }
+            }else{
+                unset($data['front']);
             }
             if($data['back']!='' && strstr($data['back'], 'base64')){
                 $path = config('UPLOAD_PATH').'sn/'.$this->user['id'].'/';
@@ -83,6 +85,8 @@ class Address extends Auth {
                 }else{
                     $data['back'] = '';
                 }
+            }else{
+                unset($data['back']);
             }
             $res = model('Address')->saveData( $data );
             if ($res['code']==1) {  
