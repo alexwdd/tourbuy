@@ -576,6 +576,55 @@ class Base extends Controller {
     }
 
     public function createPxOrder($order){
-        $token = 'CPRM01A-3858-1025-19AM-CC7A1E792BCA';
+        $goods = db("OrderDetail")->where("baoguoID",$order['id'])->select();
+        $items = [];
+        foreach ($goods as $k => $val) {     
+            $temp['ItemBrand'] = 'A2';
+            $temp['Specifications'] = '900g二段';
+            $temp['ItemUnitPrice'] = '85';
+            $temp['ItemName'] = $val['short'];
+            $temp['ItemQuantity'] = $val['number'];
+            $temp['ItemDeclareType'] = '02020000001';
+            array_push($items,$temp);
+        }        
+        $data = [
+            'Token'=>'CPRM01A-3858-1025-19AM-CC7A1E792BCA',
+            'Data'=>[
+                'ShipperOrderNo'=>$order['order_no'].'-'.$order['id'],
+                'ServiceTypeCode'=>'RW',
+                'ConsignerName'=>$order['sender'],
+                'ConsignerMobile'=>$order['senderTel'],
+                'ItemDeclareCurrency'=>'CNY',
+                'ConsigneeName'=>$order['name'],
+                'Province'=>$order['province'],
+                'City'=>$order['city'],
+                'District'=>$order['county'],
+                'ConsigneeStreetDoorNo'=>$order['addressDetail'],
+                'ConsigneeMobile'=>$order['tel'],
+                'ConsigneeIDNumber'=>$order['sn'],
+                'OrderWeight'=>'',
+                'ITEMS'=>$items,
+            ]
+        ];
+
+        $url = 'http://sandbox.transrush.com.au/agent/createPickupItem';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
+        $result = curl_exec($ch);
+        $result = json_decode($result,true);
+        dump($result);die;
+        if ($result['ResponseCode']=='10000') {
+            $update = [
+                'kdNo'=>$result['Data']
+            ];
+            db("OrderBaoguo")->where('id',$order['id'])->update($update);
+            return ['code'=>1,'msg'=>$result['Message']];
+        }else{
+            return ['code'=>0,'msg'=>$result['Message']];
+        }
     }
 }
