@@ -290,7 +290,7 @@ class Order extends Auth {
 
             //作废优惠券
             if($orderData['coupon']['id']>0){
-                db("CouponLog")->where('id',$orderData['coupon']['id'])->update([
+                db("CouponLog")->where(['id'=>$orderData['coupon']['id'],'forever'=>0])->update([
                     'useTime'=>time(),
                     'status'=>1
                 ]);

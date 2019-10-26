@@ -65,6 +65,8 @@ class Coupon extends Admin {
                     'full'=>$list['full'],
                     'dec'=>$list['dec'],
                     'intr'=>$list['intr'],
+                    'online'=>$list['online'],
+                    'forever'=>$list['forever'],
                     'goodsID'=>$list['goodsID'],
                     'status'=>0,
                     'useTime'=>0,

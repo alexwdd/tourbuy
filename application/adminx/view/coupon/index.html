@@ -17,10 +17,26 @@
             <p field="number" title="数量(每人)" width="120"/>
             <p field="day" title="有效期(天)" width="120"/>
             <p title="使用权限" width="120" templet="#goodsID"/>
+            <p title="使用场景" width="100" templet="#online"/>
+            <p title="永久有效" width="100" templet="#forever"/>
             <p title="自由领取" width="100" templet="#status"/>
             <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="120"/>
         </div>
-
+        
+        <script type="text/html" id="online">                 
+            {{# if(d.online==0){ }}
+            <span style="color:blue">线上</span>
+            {{# }else{ }}
+            线下
+            {{# } }}
+        </script>
+        <script type="text/html" id="forever">                 
+            {{# if(d.forever==1){ }}
+            <span style="color:blue">是</span>
+            {{# }else{ }}
+            否
+            {{# } }}
+        </script>
         <script type="text/html" id="register">                 
             {{# if(d.register==1){ }}
             <span style="color:blue">是</span>

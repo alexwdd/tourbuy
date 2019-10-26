@@ -19,14 +19,6 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">注册就送</label>
-        <div class="layui-input-inline">
-            <input type="radio" name="register" value="1" title="是" {php}if($list['register']==1) echo 'checked';{/php}>
-            <input type="radio" name="register" value="0" title="否" {php}if($list['register']==0) echo 'checked';{/php}>
-        </div>
-    </div>
-
     <div class="layui-form-item">                   
         <label class="layui-form-label">满</label>
         <div class="layui-input-inline">
@@ -70,10 +62,34 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">注册就送</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="register" value="1" title="是" {php}if($list['register']==1) echo 'checked';{/php}>
+            <input type="radio" name="register" value="0" title="否" {php}if($list['register']==0) echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">使用场景</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="online" value="1" title="线下" {php}if($list['online']==1) echo 'checked';{/php}>
+            <input type="radio" name="online" value="0" title="线上" {php}if($list['online']==0) echo 'checked';{/php}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">永久有效</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="forever" value="1" title="是" {php}if($list['forever']==1) echo 'checked';{/php}>
+            <input type="radio" name="forever" value="0" title="否" {php}if($list['forever']==0) echo 'checked';{/php}>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">使用说明</label>
         <div class="layui-input-block">
-            <textarea name="intr" class="layui-textarea" placeholder="选填">{$list.intr}</textarea>
+            <textarea name="intr" id="container" lay-verify="intr">{$list.intr}</textarea>
         </div>
     </div>
 
@@ -82,14 +98,21 @@
     </div>
     <input type="hidden" name="id" value="{$list.id}">
 </div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
 <script>
 layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index','form'], function() {    
-    var $ = layui.$,form=layui.form;
+}).use(['index','form','tinymce'], function() {    
+    var $ = layui.$,form=layui.form,tinyConfig = layui.tinymce;
     $("html").css({"background":"#fff"});
+
+    tinymce.init(tinyConfig);
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    })
 
     form.on('select(shop)', function(data){
         var text = data.elem[data.elem.selectedIndex].text;

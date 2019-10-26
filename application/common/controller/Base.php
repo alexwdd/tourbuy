@@ -384,6 +384,8 @@ class Base extends Controller {
                     'full'=>$value['full'],
                     'dec'=>$value['dec'],
                     'intr'=>$value['intr'],
+                    'online'=>$value['online'],
+                    'forever'=>$value['forever'],
                     'goodsID'=>$value['goodsID'],
                     'createTime'=>time(),
                     'useTime'=>0,

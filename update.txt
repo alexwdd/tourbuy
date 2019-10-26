@@ -12,3 +12,4 @@ array(8) {
   ["CurrencyCodeTax"] => string(3) "CNY"
   ["CurrencyRateTax"] => string(6) "1.0000"
 }
+=================================
