@@ -357,6 +357,7 @@ class Cart extends Auth {
         $map['status'] = 0;
         $map['memberID'] = $this->user['id'];
         $map['shopID'] = $shop['id'];
+        $map['online'] = 0;
         $coupon = db("CouponLog")->field('id,name,desc,full,dec,goodsID,endTime')->where($map)->select();
         $coupons = []; 
         foreach ($coupon as $key => $value) {

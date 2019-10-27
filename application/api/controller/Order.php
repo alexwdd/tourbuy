@@ -102,7 +102,7 @@ class Order extends Auth {
                 $list['createTime'] = date("Y-m-d H:i:s",$list['createTime']);
                 $list['goods'] = $goods;
 
-                $baoguo = db("OrderBaoguo")->field('id,type,payment,weight,express,kdNo,eimg,image')->where('orderID',$list['id'])->select();
+                $baoguo = db("OrderBaoguo")->field('id,type,payment,weight,express,kdNo,eimg,image,status,hexiao')->where('orderID',$list['id'])->select();
                 foreach ($baoguo as $key => $value) {
                     $goods = db("OrderDetail")->field('name,number')->where('baoguoID',$value['id'])->select();
                     $number = 0;
@@ -367,6 +367,7 @@ class Order extends Auth {
         //判断优惠券
         if ($couponID>0 && is_numeric($couponID)) {
             $map['id'] = $couponID;
+            $map['online'] = 0;
             $map['useTime'] = 0;
             $map['memberID'] = $this->user['id'];
             $map['endTime'] = array('gt',time());
@@ -636,6 +637,63 @@ class Order extends Auth {
             }else{
                 returnJson(0,'照片保存失败');
             }
+        }
+    }
+
+    public function baoguo(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $id = input('post.id');
+
+            if ($id=='' || !is_numeric($id)) {
+                returnJson(0,'参数错误');
+            }
+        
+            $map['id'] = $id;
+            $map['type'] = 0;
+            $map['hexiao'] = 0;
+            $map['memberID'] = $this->user['id'];
+            $list = db("OrderBaoguo")->where($map)->find();
+            if (!$list) {
+                returnJson(0,'包裹信息不存在');
+            }
+            $shop = db("Shop")->where('id',$list['shopID'])->find();
+            $list['shopName'] = $shop['name'];
+            $list['logo'] = getRealUrl($shop['picname']);
+
+            $goods = db("OrderDetail")->field('name,number')->where('baoguoID',$list['id'])->select();
+            $list['goods'] = $goods;
+            returnJson(1,'success',['data'=>$list]);
+        }
+    }
+
+    public function hexiao(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $id = input('post.id');
+
+            if ($id=='' || !is_numeric($id)) {
+                returnJson(0,'参数错误');
+            }
+        
+            $map['id'] = $id;
+            $map['type'] = 0;
+            $map['hexiao'] = 0;
+            $map['memberID'] = $this->user['id'];
+            $list = db("OrderBaoguo")->where($map)->find();
+            if (!$list) {
+                returnJson(0,'包裹不存在');
+            }
+
+            db("OrderBaoguo")->where($map)->update(['hexiao'=>1,'updateTime'=>time()]);
+            $count = db("OrderBaoguo")->where(['orderID'=>$list['orderID'],'hexiao'=>1])->count();
+            $count1 = db("OrderBaoguo")->where(['orderID'=>$list['orderID']])->count();
+            if($count==$count1){
+                db("Order")->where('id',$list['orderID'])->setField("status",2);
+            }
+            returnJson(1,'提货成功');
         }
     }
 }

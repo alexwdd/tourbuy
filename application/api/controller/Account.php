@@ -351,10 +351,23 @@ class Account extends Auth {
     public function couponList(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
+            $shopID = input('post.shopID');
+            $online = input('post.online');
+            $forever = input('post.forever');
+
             $data= [];
+            if($shopID!=''){
+                $map['shopID'] = $shopID;
+            }
+            if($online!=''){
+                $map['online'] = $online;
+            }
+            if($forever!=''){
+                $map['forever'] = $forever;
+            }
             $map['status'] = 1;
             $map['register'] = 0;
-            $list = db("Coupon")->where($map)->select();
+            $list = db("Coupon")->where($map)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 unset($map);
                 $map['couponID'] = $value['id'];
@@ -399,6 +412,7 @@ class Account extends Auth {
             $map['status'] = 0;
             $map['endTime'] = array('lt',time());
             $map['memberID'] = $this->user['id'];
+            $map['forever'] = 0;
             $number3 = db("CouponLog")->where($map)->count();
 
             unset($map);
@@ -409,6 +423,7 @@ class Account extends Auth {
                 $map['status'] = 1;
             }elseif($type==3){//已失效
                 $map['status'] = 0;
+                $map['forever'] = 0;
                 $map['endTime'] = array('lt',time());
             }
             $map['memberID'] = $this->user['id'];
@@ -425,6 +440,7 @@ class Account extends Auth {
                 if($value['useTime']>0){
                     $list[$key]['useTime'] = date("Y-m-d H:i:s",$value['useTime']);
                 }
+                $list[$key]['shopName'] = db("Shop")->where('id',$value['shopID'])->value("name");
                 $list[$key]['endTime'] = date("Y-m-d H:i:s",$value['endTime']);
                 $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
                 if($value['goodsID']!=''){
@@ -462,7 +478,11 @@ class Account extends Auth {
                 if($count>=$list['number']){
                     returnJson(0,$list['name'].'每人最多领取'.$list['number'].'张');
                 }
-
+                if($list['forever']==1){
+                    $endTime = time()+3650*86400;
+                }else{
+                    $endTime = time()+$list['day']*86400;
+                }
                 $data = [
                     'shopID'=>$list['shopID'],
                     'memberID'=>$this->user['id'],
@@ -479,7 +499,7 @@ class Account extends Auth {
                     'goodsID'=>$list['goodsID'],
                     'status'=>0,
                     'useTime'=>0,
-                    'endTime'=>time()+86400*$list['day'],
+                    'endTime'=>$endTime,
                     'createTime'=>time(),
                 ];
                 $res = db("CouponLog")->insert($data);
@@ -507,10 +527,15 @@ class Account extends Auth {
                 if($count>=$coupon['number']){
                     returnJson(0,$coupon['name'].'每人最多领取'.$coupon['number'].'张');
                 }
+                if($coupon['forever']==1){
+                    $endTime = time()+3650*86400;
+                }else{
+                    $endTime = time()+$coupon['day']*86400;
+                }
                 $data = [
                     'memberID'=>$this->user['id'],
                     'nickname'=>$this->user['nickname'],
-                    'endTime'=>time()+86400*$coupon['day']
+                    'endTime'=>$endTime
                 ];
                 $res = db("CouponLog")->where($map)->update($data);
                 if ($res) {
@@ -521,6 +546,64 @@ class Account extends Auth {
             }else{
                 returnJson(0,'领取失败');
             }       
+        }
+    }
+
+    //优惠券信息
+    public function couponInfo(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $couponID = input('post.couponID');
+
+            if ($couponID=='' || !is_numeric($couponID)) {
+                returnJson(0,'参数错误');
+            }
+        
+            $map['id'] = $couponID;
+            $map['online'] = 1;
+            $map['memberID'] = $this->user['id'];
+            $list = db("CouponLog")->where($map)->find();
+            if (!$list) {
+                returnJson(0,'优惠券不存在');
+            }
+            if ($list['useTime']>0) {
+                returnJson(0,'优惠券已核销，不能重复使用');
+            }
+            $shop = db("Shop")->where('id',$list['shopID'])->find();
+            $list['shopName'] = $shop['name'];
+            $list['logo'] = getRealUrl($shop['picname']);
+            returnJson(1,'success',['data'=>$list]);
+        }
+    }
+
+    //优惠券信息
+    public function couponUse(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $couponID = input('post.couponID');
+
+            if ($couponID=='' || !is_numeric($couponID)) {
+                returnJson(0,'参数错误');
+            }
+        
+            $map['id'] = $couponID;
+            $map['online'] = 1;
+            $map['memberID'] = $this->user['id'];
+            $list = db("CouponLog")->where($map)->find();
+            if (!$list) {
+                returnJson(0,'优惠券不存在');
+            }
+            if ($list['useTime']>0) {
+                returnJson(0,'优惠券已核销，不能重复使用');
+            }
+
+            db("CouponLog")->where($map)->update([
+                    'useTime'=>time(),
+                    'status'=>1
+                ]);
+            returnJson(1,'优惠券成功使用');
         }
     }
 }

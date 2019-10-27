@@ -216,6 +216,7 @@ class Base extends Controller {
             $cart[$key]['extra'] = ($goods['jiesuan']/$goods['number'])*0.25 + 5;//附加费
         }
         $ziti = [];
+        $baoguoArr = [];
         foreach ($cart as $key => $value) {
             if ($value['ziti']==1) {
                 array_push($ziti, $cart[$key]);
@@ -223,7 +224,8 @@ class Base extends Controller {
             }
         }              
 
-        $express = $this->getExpressGoods($cart);
+        $express = $this->getExpressGoods($cart);   
+
         foreach ($express as $key => $value) {
             $className = "\\pack\\".$value['express']['model'];
             $cart = new $className($value['goods'],$value['express']);
@@ -243,7 +245,7 @@ class Base extends Controller {
                 'expressID'=>0,
                 'status'=>1,
                 'goods'=>$ziti,
-            ];
+            ];            
             $baoguoArr = array_merge($baoguoArr,[$zitiBaoguo]);
         } 
 
@@ -373,6 +375,11 @@ class Base extends Controller {
         $data = [];
         foreach ($coupon as $key => $value) {
             for ($i=0; $i < $value['number']; $i++) { 
+                if($value['forever']==1){
+                    $endTime = time()+3650*86400;
+                }else{
+                    $endTime = time()+$value['day']*86400;
+                }
                 $temp = [
                     'shopID'=>$value['shopID'],
                     'memberID'=>$user['id'],
@@ -390,7 +397,7 @@ class Base extends Controller {
                     'createTime'=>time(),
                     'useTime'=>0,
                     'status'=>0,
-                    'endTime'=>time()+$value['day']*86400
+                    'endTime'=>$endTime
                 ];
                 array_push($data,$temp);
             }            

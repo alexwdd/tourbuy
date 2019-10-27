@@ -1,5 +1,6 @@
 <?php
 namespace app\api\controller;
+use think\Db;
 
 class Goods extends Common {
 
@@ -506,10 +507,13 @@ class Goods extends Common {
 
             //商品相关优惠券
             unset($map);
-            $ids = db("CouponGoods")->where('goodsID',$list['id'])->value('couponID');
-            $map['id'] = array('in',$ids);
-            $map['goodsID'] = array('eq','');
-            $coupon = db("Coupon")->field('id,name,desc,full,dec,number')->whereOr($map)->select();
+            $ids = db("CouponGoods")->where('goodsID',$list['id'])->column('couponID');
+            if($ids){
+                $ids = implode(",",$ids);
+                $coupon = Db::query("select * from pm_coupon where status=1 and shopID=".$list['shopID']." and (goodsID='' or id in (".$ids."))");
+            }else{
+                $coupon = Db::query("select * from pm_coupon where status=1 and shopID=".$list['shopID']." and goodsID=''");
+            }
             foreach ($coupon as $key => $value) {
                 $where['couponID'] = $value['id'];
                 $where['memberID'] = $this->user['id'];
