@@ -475,6 +475,11 @@ class Order extends Auth {
                 $total += $value['total'];
             }
 
+            $payNo = $this->createPayOrder($total,$order_no);
+            if(!$payNo){
+                returnJson(0,'支付申请创建失败');
+            }
+
             $rate = $this->getRate();
             $rmb = round($total*$this->rate,1);
             /*$fina = $this->getUserMoney($this->user['id']);
@@ -490,6 +495,7 @@ class Order extends Auth {
                 'info'=>[
                     //'type'=>$type,
                     'rate'=>$rate,
+                    'payNo'=>$payNo,
                     'rmb'=>$rmb,
                     'total'=>$total,
                 ]                
@@ -497,34 +503,43 @@ class Order extends Auth {
         }
     }
 
+    public function createPayOrder($money,$order_no){
+        $curDateTime = $fix.date("ymdHis");
+        $randNum = rand(1000, 9999);
+        $payNo = $curDateTime . $randNum;
+ 
+        $data = [
+            'payNo'=>$payNo,
+            'order_no'=>implode(",", $order_no),
+            'money'=>$money,
+            'status'=>0,
+            'createTime'=>time()
+        ];
+     
+
+        $res = db("PayOrder")->insert($data);
+        if($res){
+            return $payNo;
+        }
+    }
+
     public function doPay(){
         if (request()->isPost()) {
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
-            $order_no = input('post.order_no');
+            $payNo = input('post.payNo');
             $shopID = input('post.shopID');
             $payType = input('post.type');
 
-            $order_no = explode(',',$order_no);
-
-            $map['order_no'] = array('in',$order_no);
-            $map['memberID'] = $this->user['id'];
+            $map['payNo'] = $payNo;
             $map['status'] = 0;
-            $list = db("Order")->field('id,order_no,total,money')->where($map)->select();
+            $list = db("PayOrder")->where($map)->select();
             if(!$list){
                 returnJson(0,'订单不存在');
             }
 
-            $total = 0;
-            $out_trade_no = '';
-            foreach ($list as $key => $value) {
-                $total += $value['total'];
-                if($out_trade_no==''){
-                    $out_trade_no = $value['id'];
-                }else{
-                    $out_trade_no .= '_'.$value['id'];
-                }
-            }
+            $total = $list['money'];
+            $out_trade_no = $payNo;            
 
             $rate = $this->getRate();
             $rmb = round($total*$this->rate,1);
@@ -552,9 +567,9 @@ class Order extends Auth {
             if(!checkFormDate()){returnJson(0,'ERROR');}
 
             $order_no = input('post.order_no');
-            $order_no = explode('_',$order_no);
-
-            $map['id'] = array('in',$order_no);
+            $order_no = db("PayOrder")->where('payNo',$order_no)->value("order_no");
+            $order_no = explode(',',$order_no);
+            $map['order_no'] = array('in',$order_no);
             $map['memberID'] = $this->user['id'];
             $order = db("Order")->field('id,order_no,total,money,point,payStatus')->where($map)->select();
             if(!$order){

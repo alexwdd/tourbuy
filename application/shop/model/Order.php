@@ -18,6 +18,7 @@ class Order extends Admin
         $status = input('post.status');        
         $keyword = input('post.keyword');
         $payType = input('post.payType');
+        $send = input('post.send');
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
 
@@ -26,6 +27,9 @@ class Order extends Admin
         }        
         if ($payType!='') {
             $map['payType'] = $payType;
+        }
+        if ($send!='') {
+            $map['send'] = $send;
         }
         if ($keyword!='') {
             $map['name|sender'] = $keyword;

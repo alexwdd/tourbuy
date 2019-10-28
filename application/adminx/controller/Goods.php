@@ -41,6 +41,10 @@ class Goods extends Admin
                 $this->error('请选择包裹类型');
             }
 
+            if($data['expressID']==5 && $data['typeID']==1 && $data['specification']==''){
+                $this->error('红酒类商品必须填写货物规格');
+            }
+
             $goods = model('Goods');
             $result = $goods->saveData( $data );
             if ($result['code']==1) {

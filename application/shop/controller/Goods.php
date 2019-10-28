@@ -34,6 +34,15 @@ class Goods extends Admin
     public function pub() {
         if(request()->isPost()){
             $data = input('post.');
+
+            if($data['ziti']==0 && $data['typeID']==''){
+                $this->error('请选择包裹类型');
+            }
+
+            if($data['expressID']==5 && $data['typeID']==1 && $data['specification']==''){
+                $this->error('红酒类商品必须填写货物规格');
+            }
+            
             $data['shopID'] = $this->admin['id'];
             $data['shopName'] = $this->admin['name'];
             $goods = model('Goods');

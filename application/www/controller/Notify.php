@@ -15,15 +15,15 @@ class Notify extends Base {
         $token = input('param.token');
         file_put_contents("note".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."通知ID:" .$notice_id."订单:".$merchant_trade_no."token:".$token. "\r\n", FILE_APPEND);
 
-        $order_no = $merchant_trade_no;
-
-        $order_no = explode("_", $order_no);
+        db('PayOrder')->where('payNo',$merchant_trade_no)->setField("status",1);
+        $order_no = db('PayOrder')->where('payNo',$merchant_trade_no)->value("order_no");
+        $order_no = explode(",", $order_no);
 
         foreach ($order_no as $key => $value) {
-            $map['id'] = $value;
+            $map['order_no'] = $value;
             $list = db('Order')->where($map)->find();
             if ($list) {
-                if ($list['payStatus'] == 0) {          
+                if ($list['payStatus'] == 0) {
                     //更新订单状态
                     $data['status'] = 1;
                     $data['payStatus'] = 1;

@@ -13,3 +13,5 @@ array(8) {
   ["CurrencyRateTax"] => string(6) "1.0000"
 }
 =================================
+
+商品增加specification字段
