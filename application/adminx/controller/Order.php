@@ -45,7 +45,7 @@ class Order extends Admin {
 
 	public function fahuo() {
 		if (request()->isPost()) {
-			$map['status'] = 2;
+			$map['status'] = array('in',[2,3]);
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{

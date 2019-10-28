@@ -161,6 +161,70 @@ class Goods extends Admin
         }
     }
 
+    public function comment(){
+        if (request()->isPost()) {
+            $goodsID = input('param.goodsID');
+            $map['goodsID'] = $goodsID;
+            $result = model('GoodsComment')->getList($map);
+            echo json_encode($result);
+        }else{
+            $goodsID = input('param.id');
+            $this->assign('goodsID',$goodsID);
+            return view();
+        }
+    }
+
+    public function write(){
+        if(request()->isPost()){
+            $data = input('post.');
+            $data['createTime'] = time();
+            $data['status'] = 1;
+            $data['memberID'] = 0;
+            unset($data['image']);
+            unset($data['file']);
+            $image = input('post.image/a');
+            if ($image) {
+                $data['images'] = implode("|", input('post.image/a'));
+            }else{
+                $data['images'] = '';
+            }
+            $res = db("GoodsComment")->insert($data);
+            if($res){
+                return info('操作成功',1);
+            }else{
+                return info('操作失败',0);
+            }            
+        }else{
+            $goodsID = input('param.goodsID');
+            $this->assign('goodsID', $goodsID);
+            return view();
+        }
+    }
+
+    public function checkComment(){
+        $id = explode(",",input('post.id'));
+        if (count($id)==0) {
+            $this->error('请选择要取消的数据');
+        }else{
+            $map['id'] = array('in',$id);
+            db("GoodsComment")->where($map)->setField('status',1);
+            $this->success("操作成功");
+        }
+    }
+
+    public function delComment(){
+        $id = explode(",",input('post.id'));
+        if (count($id)==0) {
+            $this->error('请选择要删除的数据');
+        }else{
+            if(model('GoodsComment')->del($id)){
+                $this->success("操作成功");
+            }else{
+                $this->error('操作失败');
+            }
+        }
+    }
+
     //商品推送
     public function push(){
         if (request()->isPost()) {

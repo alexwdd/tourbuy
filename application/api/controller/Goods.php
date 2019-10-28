@@ -572,7 +572,61 @@ class Goods extends Common {
             $shop['goods'] = $about;
             $shop['fav'] = db("ShopFav")->where('shopID',$shop['id'])->count();
 
+            //相关评论
+            unset($map);
+            $map['goodsID'] = $list['id'];
+            $map['status'] = 1;
+            $comment = db("GoodsComment")->where($map)->limit(3)->order('id desc')->select();
+            foreach ($comment as $key => $value) {
+                $comment[$key]['headimg'] = getUserFace($value['headimg']);
+                if($value['images']!=''){
+                    $images = explode("|", $value['images']);
+                    foreach ($images as $k => $val) {
+                        $images[$k] = getRealUrl($val);
+                    }
+                    $comment[$key]['images'] = $images;
+                }
+            }
+            $list['comment'] = $comment;
             returnJson(1,'success',['goods'=>$list,'flashTime'=>$flashTime,'tomorrow'=>$tomorrow,'shop'=>$shop,'cartNumber'=>$cartNumber,'fav'=>$fav,'coupon'=>$coupon,'pack'=>$pack,'spec'=>$spec,'filter_spec'=>$filter_spec]);
+        }
+    }
+
+    public function comment(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $page = input('post.page/d',1);
+            $goodsID = input('post.goodsID/d',0);
+            $pagesize = input('post.pagesize',10);
+
+            $firstRow = $pagesize*($page-1); 
+            
+            if($goodsID==0){
+                returnJson(0,'参数错误');
+            }
+            $map['goodsID'] = $goodsID;
+            $map['status'] = 1;
+            $obj = db('GoodsComment');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']); 
+                $list[$key]['headimg'] = getUserFace($value['headimg']);
+                if($value['images']!=''){
+                    $images = explode("|", $value['images']);
+                    foreach ($images as $k => $val) {
+                        $images[$k] = getRealUrl($val);
+                    }
+                    $list[$key]['images'] = $images;
+                }        
+            }
+            returnJson(1,'success',['next'=>$next,'data'=>$list]);
         }
     }
 

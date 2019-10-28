@@ -50,7 +50,7 @@ class Order extends Auth {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,shopID,order_no,total,front,back,sn,status,createTime')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,shopID,order_no,total,front,back,sn,status,comment,createTime')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
                 if($value['sn']=='' || $value['front']=='' || $value['back']==''){
@@ -453,7 +453,27 @@ class Order extends Auth {
         }       
     }
 
-    
+    //确认收货
+    public function confirm(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $id = input('post.id');
+            if ($id=='' || !is_numeric($id)) {
+                returnJson(0,'缺少参数');
+            }
+            $map['id'] = $id;
+            $map['memberID'] = $this->user['id'];
+            $map['status'] = 2;
+            $list = db('Order')->where($map)->find();
+            if ($list) {
+                db('Order')->where('id',$id)->setField('status',3);
+                returnJson(1,'success');
+            }else{
+                returnJson(0,'操作失败');
+            }            
+        }       
+    }
+
     public function pay(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
@@ -710,6 +730,99 @@ class Order extends Auth {
                 db("Order")->where('id',$list['orderID'])->setField("status",2);
             }
             returnJson(1,'提货成功');
+        }
+    }
+
+    public function commentCheck(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $id = input('post.id');
+            if ($id=='') {
+                returnJson(0,'参数错误');
+            }
+            $map['id'] = $id;
+            $map['hide'] = 0;
+            $map['memberID'] = $this->user['id'];
+            $list = db('Order')->where( $map )->find();
+            if (!$list) {
+                returnJson(0,'订单不存在');
+            }
+
+            if($list['status']<3){
+                returnJson(0,'订单交易尚未完成');
+            }
+
+            if($list['comment']==1){
+                returnJson(0,'请不要重复评论');
+            }
+
+            $goods = db('OrderCart')->field('picname,name')->where('orderID',$list['id'])->select();
+            returnJson(1,'success',['goods'=>$goods]);
+        }
+    }
+
+    public function doComment(){
+        if (request()->isPost()) {
+            //if(!checkFormDate()){returnJson(0,'ERROR');}
+            $id = input('post.id');
+
+            $map['id'] = $id;
+            $map['hide'] = 0;
+            $map['status'] = 3;
+            $map['comment'] = 0;
+            $map['memberID'] = $this->user['id'];
+            $list = db('Order')->where( $map )->find();
+            if (!$list) {
+                returnJson(0,'订单不存在');
+            }
+
+            $content = input('post.content');
+            $images = input('post.images');
+            if ($id=='' && !is_numeric($id)) {
+                returnJson(0,'参数错误');
+            }
+            if ($content=='') {
+                returnJson(0,'请输入评论内容');
+            }
+
+            if ($images!='') {
+                $imgArr = explode("###",$images);
+                $images = '';
+                $thumb = '';
+                foreach ($imgArr as $key => $value) {
+                    $path = config('UPLOAD_PATH').'comment/';
+                    $fileName = createNonceStr();
+                    $fileUrl = $this->base64ToImg($path,$fileName,$value);       
+                    if ($key==0) {
+                        $images = $fileUrl;     
+                    }else{
+                        $images .= '|'.$fileUrl; 
+                    }
+                }
+            }
+
+            $goods = db('OrderCart')->field('goodsID')->where('orderID',$list['id'])->select();
+            $data = [];
+            foreach ($goods as $key => $value) {
+                $temp['goodsID'] = $value['goodsID'];
+                $temp['content'] = $content;
+                $temp['images'] = $images;
+                $temp['memberID'] = $this->user['id'];
+                $temp['headimg'] = $this->user['headimg'];
+                $temp['nickname'] = $this->user['nickname'];
+                $temp['status'] = 1;
+                $temp['createTime'] = time();
+                array_push($data,$temp);
+            }
+            
+            $res = db("GoodsComment")->insertAll($data);
+            if($res){
+                db('Order')->where( $map )->setField('comment',1);
+                returnJson(1,'您的评论是对我们最大的鼓励');
+            }else{
+                returnJson(0,'操作失败');
+            }
         }
     }
 }

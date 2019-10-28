@@ -1,0 +1,72 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">昵称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="nickname" class="layui-input" placeholder="必填" lay-verify="required">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像</label>
+        <div class="layui-input-inline" style="width:400px">
+            <input type="text" id="headimg" name="headimg" class="layui-input" lay-verify="required"/>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-single">上传</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">评论</label>
+        <div class="layui-input-block">
+            <textarea name="content" class="layui-textarea" placeholder="必填" lay-verify="required"></textarea>
+        </div>
+    </div>
+
+    <div style="padding-left: 110px">
+        <div class="insert-img" id="insert-img">     
+            <a href="javascript:;" class="insert-btn" id="upload-mult">+</a> 
+        </div> 
+    </div>     
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('goods/write')}">
+    </div>
+    <input type="hidden" name="goodsID" value="{$goodsID}">
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','myupload'], function() {    
+    var $ = layui.$,upload = layui.upload,
+        myupload = layui.myupload;
+    $("html").css({"background":"#fff"});
+
+    myupload.single({
+        elem : '#upload-single',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        size:5120,
+        tag : '#headimg'
+    }); 
+
+    myupload.mult({
+        elem : '#upload-mult',
+        url : '{:url('upload/image')}',
+        ext:'jpg|png|gif|jpeg',
+        mime:'image/*',
+        name:'image',
+        size:5120
+    });   
+
+    //删除文件
+    $("body").on("click",".del-img-btn",function(){
+        let data = {path:$(this).attr("data-url")};
+        $.post("{:url('admin/delFile')}",data);
+        $(this).parent().remove();
+    });
+})
+</script>
