@@ -22,17 +22,18 @@ class Order extends Auth {
                 $map['order_no'] = $keyword;
             }
             switch ($type) {
-                case 1:
+                case 1://待付款
                     $map['status'] = 0;
                     break;
-                case 2:
-                    $map['status'] = 1;   
+                case 2://待发货
+                    $map['status'] = 1;
                     break;
-                case 3:
-                    $map['status'] = 2;   
+                case 3://待收货
+                    $map['status'] = 2;
                     break;
-                case 4:
-                    $map['status'] = 3;   
+                case 4://待评价
+                    $map['status'] = 3;
+                    $map['comment'] = 0;
                     break;
                 case 5:
                     $map['status'] = 99;   

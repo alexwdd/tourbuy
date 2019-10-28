@@ -16,6 +16,7 @@ class Account extends Auth {
             $user['mobile'] = $this->user['mobile'];
             $user['wechat'] = $this->user['wechat'];
             $user['sn'] = $this->user['sn'];
+            $user['group'] = $this->user['group'];
             $user['id'] = $this->user['id'];
 
             unset($map);
@@ -24,27 +25,50 @@ class Account extends Auth {
             }
             $map['hide'] = 0;
             $map['memberID'] = $this->user['id'];
-            $map['status'] = 0;
+            $map['status'] = 0;//待支付
             $order1 = db("Order")->where($map)->count();
-            $map['status'] = 1;
+            $map['status'] = 1;//待发货
             $order2 = db("Order")->where($map)->count();
-            $map['status'] = 2;
+            $map['status'] = 2;//待收货
             $order3 = db("Order")->where($map)->count();
-            $map['status'] = 3;
+
+            $map['status'] = 3;//待评论
+            $map['comment'] = 0;
             $order4 = db("Order")->where($map)->count();
-            $map['status'] = 99;
-            $order5 = db("Order")->where($map)->count();
+
+
+            //优惠券数量
+            unset($map);
+            if($shopID!=''){
+                $map['shopID'] = $shopID;
+            }
+            $map['status'] = 0;
+            $map['endTime'] = array('gt',time());
+            $map['memberID'] = $this->user['id'];
+            $coupon = db("CouponLog")->where($map)->count();
+            
+            //收藏商品数量
+            unset($map);
+            $map['memberID'] = $this->user['id'];
+            $fav = db("Fav")->where($map)->count();
+
+            //收藏店铺数量
+            unset($map);
+            $map['memberID'] = $this->user['id'];
+            $favShop = db("ShopFav")->where($map)->count();
 
             $fina = $this->getUserMoney($this->user['id']);
 
             returnJson(1,'success',[
-                'fina'=>$fina,
+                'fina'=>$fina,                
                 'order'=>[
                     'nopay'=>$order1,
                     'peihuo'=>$order2,
                     'fahuo'=>$order3,
                     'pingjia'=>$order4,
-                    'close'=>$order5
+                    'fav'=>$fav,
+                    'favShop'=>$favShop,
+                    'coupon'=>$coupon
                 ],
                 'user'=>$user,
             ]);
