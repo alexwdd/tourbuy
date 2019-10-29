@@ -50,7 +50,7 @@ class Base extends Controller {
         if($point<0){
             $point=0;
         }
-
+        
         $config = tpCache('member');
         $money = floor($point/$config['buy']);
         return array(
@@ -668,6 +668,42 @@ class Base extends Controller {
         dump($result);die;*/
         if ($result['Status']==0) {
             db("OrderBaoguo")->where($map)->setField('snStatus',1);
+        }
+    }
+
+    //返还积分和奖金
+    public function saveJiangjin($order){        
+        $fina = $this->getUserMoney($order['memberID']);
+        if($order['point']>0){
+            $jdata = array(
+                'type' => 1,
+                'money' => $order['point'],
+                'memberID' => $order['memberID'],  
+                'doID' => $order['memberID'],
+                'oldMoney'=>$fina['point'],
+                'newMoney'=>$fina['point']+$order['point'],
+                'admin' => 2,
+                'msg' => '购买商品，获得'.$order['point'].'消费积分',
+                'extend1' => $order['id'],
+                'createTime' => time()
+            ); 
+            db("Finance")->insert( $jdata );
+        }
+        if($order['bonus']>0 && $order['tjID']>0){            
+            $fina = $this->getUserMoney($order['tjID']);
+            $fdata = array(
+                'type' => 2,
+                'money' => $order['bonus'],
+                'memberID' => $order['tjID'],  
+                'doID' => $order['memberID'],
+                'oldMoney'=>$fina['point'],
+                'newMoney'=>$fina['point']+$order['bonus'],
+                'admin' => 2,
+                'msg' => '会员'.$order['memberID'].'购买商品，获得'.$order['bonus'].'奖励积分',
+                'extend1' => $order['id'],
+                'createTime' => time()
+            ); 
+            db("Finance")->insert( $fdata );
         }
     }
 }

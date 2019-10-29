@@ -2,7 +2,7 @@
 namespace app\adminx\model;
 use think\Session;
 
-class GoodsComment extends Admin
+class ShopComment extends Admin
 {
     protected $insert = ['createTime'];  
 

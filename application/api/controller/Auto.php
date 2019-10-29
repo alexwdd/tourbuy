@@ -10,9 +10,9 @@ class Auto extends Base {
     }
 
     public function test(){
-        $order = db("OrderBaoguo")->where('id',31)->find();
-        //$this->createEweOrder($order);
-        $this->uploadPxPerson($order);
+        $order = db("Order")->where('id',36)->find();
+        $this->saveJiangjin($order);
+        //$this->uploadPxPerson($order);
     }
 
     //删除未付款的订单

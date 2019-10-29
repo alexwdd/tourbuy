@@ -119,6 +119,9 @@ function getPayType($v){
     if ($v==2) {
         $name = '微信';
     }
+    if ($v==3) {
+        $name = '积分抵扣';
+    }
     return $name;
 }
 

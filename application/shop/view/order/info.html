@@ -69,6 +69,16 @@
                     </div> 
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">积分抵扣</label>
+                        <div class="layui-form-mid">{$list.wallet}</div>
+                    </div> 
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">实付金额</label>
+                        <div class="layui-form-mid" style="color: #f00; font-weight: bold;">{$list.money}</div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">提交日期</label>
                         <div class="layui-form-mid">{$list.createTime|date="Y-m-d H:i:s",###}</div>
                     </div>

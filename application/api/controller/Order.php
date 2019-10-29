@@ -181,6 +181,7 @@ class Order extends Auth {
             if (!$shopIds) {
                 returnJson(0,'购物车中没有商品');
             }
+
             $shop = db("Shop")->field('id,name,tel')->whereIn('id',$shopIds)->select();
             $orders = [];
             foreach ($shop as $key => $value) {
@@ -201,8 +202,84 @@ class Order extends Auth {
                 $order_no = $this->saveShopOrder($address,$result);
                 array_push($orders,$order_no);
             }
-            returnJson(1,'订单创建成功',['order_no'=>implode(",",$orders)]);
+
+            $orders = $this->dikou($orders);
+            if(count($orders)==0){
+                returnJson(1,'订单支付成功，等待商家发货',['order_no'=>'']);
+            }else{
+                returnJson(1,'订单创建成功',['order_no'=>implode(",",$orders)]);
+            }
         }
+    }
+
+    //积分抵扣
+    public function dikou($orders){   
+        $fina = $this->getUserMoney($this->user['id']);
+        if($fina['point']==0){
+            return $orders;
+        }
+
+        $map['order_no']=array('in',$orders);
+        $order = db("Order")->where($map)->select();
+        $total = 0;
+        foreach ($order as $key => $value) {
+            $total += $value['total'];
+        }
+
+        $config = tpCache("member");
+        $maxPoint = floor($total)*$config['buy'];
+        if($fina['point']>=$config['beishu']){
+            if($maxPoint > $fina['point']){
+                $maxPoint = $fina['point'];
+            }
+            $num = floor($maxPoint/$config['beishu']);
+            $dikou['point'] = $config['beishu']*$num;
+            $dikou['money'] = $dikou['point']/$config['buy'];
+        }else{
+            $dikou['point'] = 0;
+            $dikou['money'] = 0;
+        }
+        $money1 = $dikou['money'];
+        if($dikou['money']>0){
+            foreach ($order as $key => $value) {
+                unset($data);
+                if($dikou['money']>=$value['total']){
+                    $data['wallet'] = $value['total'];
+                    $data['payType'] = 3;
+                    $data['payStatus'] = 1;          
+                    $data['status'] = 1;
+                    $data['money'] = 0;
+                    $data['updateTime'] = time();
+                    db('Order')->where('id',$value['id'])->update($data);
+                    db('OrderBaoguo')->where('orderID',$value['id'])->setField('status',1);
+                    
+                    $dikou['money'] = $dikou['money'] - $value['total'];
+                    //返还积分和奖金
+                    $this->saveJiangjin($value);
+                    unset($orders[$key]);
+                }else{
+                    $data['wallet'] = $dikou['money'];
+                    $data['money'] = $value['total'] - $data['wallet'];
+                    db('Order')->where('id',$value['id'])->update($data);
+                    break;
+                }
+            }
+
+            $jdata = array(
+                'type' => 3,
+                'money' => $dikou['point'],
+                'memberID' => $this->user['id'],  
+                'doID' => $this->user['id'],
+                'oldMoney'=>$fina['point'],
+                'newMoney'=>$fina['point']+$dikou['point'],
+                'admin' => 2,
+                'msg' => '购买商品，使用'.$dikou['point'].'积分抵扣'.$money1.'元',
+                'extend1' => 0,
+                'createTime' => time()
+            ); 
+            db("Finance")->insert( $jdata );
+        }
+        return $orders;      
     }
 
     public function saveShopOrder($address,$orderData){
@@ -214,7 +291,10 @@ class Order extends Auth {
         $data['discount'] = $orderData['coupon']['discount'];
         $data['total'] = $orderData['total'];
         $data['point'] = $orderData['point'];
+        $data['tjID'] = $this->user['tjID'];
         $data['bonus'] = $orderData['bonus'];
+        $data['money'] = $orderData['total'];
+        $data['wallet'] = 0;
         $data['payment'] = $orderData['baoguo']['totalPrice'];
         $data['goodsMoney'] = $orderData['goodsMoney'];
         $data['inprice'] = $orderData['inprice'];
@@ -488,12 +568,12 @@ class Order extends Auth {
             $map['status'] = 0;
             $list = db("Order")->field('id,order_no,total,money')->where($map)->select();
             if(!$list){
-                returnJson(0,'订单不存在');
+                returnJson(0,'订单不存在，或已完成支付');
             }
 
             $total = 0;
             foreach ($list as $key => $value) {
-                $total += $value['total'];
+                $total += $value['money'];
             }
 
             $payNo = $this->createPayOrder($total,$order_no);

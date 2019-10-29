@@ -20,6 +20,7 @@
                     <option value="">支付方式</option>
                     <option value="1">支付宝</option>
                     <option value="2">微信</option>
+                    <option value="3">积分抵扣</option>
                 </select>
             </div>  
 
@@ -58,6 +59,8 @@
             <p title="配送" width="80" templet="#send"/>
             <p field="status" title="订单状态" width="100" templet="#status"/>           
             <p field="total" title="总金额" width="100"/>
+            <p field="wallet" title="积分抵扣" width="100"/>
+            <p field="money" title="实付金额" width="100"/>
             <p field="goodsMoney" title="商品金额" width="100"/>
             <p field="payment" title="运费" width="100" />
             <p field="point" title="奖励积分" width="100"/>
@@ -81,6 +84,8 @@
             支付宝
             {{# }else if(d.payType==2){ }}
             微信
+            {{# }else if(d.payType==3){ }}
+            积分抵扣
             {{# } }}
         </script>
 

@@ -10,7 +10,7 @@ class Order extends Admin
     }
 
     //获取列表
-    public function getList($map){
+    public function getList($map=null){
         $pageNum = input('post.page',1);
         $pageSize = input('post.limit',config('page.size'));
         $field = input('post.field','id');

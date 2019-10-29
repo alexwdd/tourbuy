@@ -42,43 +42,11 @@ class Notify extends Base {
                             $map['id'] = $val['goodsID'];
                             db("Goods")->where($map)->setDec("stock",$val['trueNumber']);
                         }                           
-                    }              
+                    } 
+
+                    $this->saveJiangjin($list);             
                 }
             }
         }
 	}
-    
-    public function saveJiangjin($order){
-    	$fina = $this->getUserMoney($order['memberID']);
-    	if($order['point']>0){
-    		$jdata = array(
-                'type' => 2,
-                'money' => $order['point'],
-                'memberID' => $order['memberID'],  
-                'doID' => $order['memberID'],
-                'oldMoney'=>$fina['point'],
-                'newMoney'=>$fina['point']+$order['point'],
-                'admin' => 2,
-                'msg' => '购买商品，获得'.$order['point'].'积分',
-                'extend1' => $order['id'],
-                'createTime' => time()
-            ); 
-            db("Finance")->insert( $jdata );
-    	}
-    	if($order['fund']>0){
-    		$fdata = array(
-                'type' => 5,
-                'money' => $order['fund'],
-                'memberID' => $order['memberID'],  
-                'doID' => $order['memberID'],
-                'oldMoney'=>$fina['fund'],
-                'newMoney'=>$fina['fund']+$order['fund'],
-                'admin' => 2,
-                'msg' => '购买商品，获得$'.$order['fund'].'返利基金',
-                'extend1' => $order['id'],
-                'createTime' => time()
-            ); 
-            db("Finance")->insert( $fdata );
-    	}
-    }
 }

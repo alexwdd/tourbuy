@@ -51,7 +51,7 @@
             <p title="发布商品" width="100" templet="#submitTpl"/>
             <p title="编辑资料" width="100" templet="#editTpl"/>
             <p field="createTime" title="发布日期" width="180"/>
-            <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="140"/>
+            <p fixed="right" align="left" toolbar="#barDemo" title="操作" width="190"/>
         </div>
         <script type="text/html" id="groupTpl">
             {{# if(d.group == 1){ }}
@@ -89,6 +89,7 @@
 
         <script type="text/html" id="barDemo">        
             <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('shop/pub')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑" data-tableId="lay-common-table">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="view" url="{:url('shop/comment')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="{{d.name}}-评论" data-tableId="lay-common-table">评论</a>
             <a class="layui-btn layui-btn-xs" target="_blank" href="{:url('shop/go')}?id={{d.id}}">商家中心</a>
         </script>
     </div>

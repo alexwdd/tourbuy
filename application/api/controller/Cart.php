@@ -316,6 +316,22 @@ class Cart extends Auth {
             }
 
             $rmb = number_format($this->rate*$total,1);
+
+            $fina = $this->getUserMoney($this->user['id']);
+            $config = tpCache("member");
+            $maxPoint = floor($total)*$config['buy'];
+            if($fina['point']>=$config['beishu']){
+                if($fina['point']>$maxPoint){
+                    $fina['point'] = $maxPoint;
+                }
+                $num = floor($fina['point']/$config['beishu']);
+                $dikou['point'] = $config['beishu']*$num;
+                $dikou['money'] = $dikou['point']/$config['buy'];
+            }else{
+                $dikou['point'] = 0;
+                $dikou['money'] = 0;
+            }
+
             returnJson(1,'success',[
                 'address'=>$address,
                 'sender'=>$sender,
@@ -324,7 +340,8 @@ class Cart extends Auth {
                 'total'=>$total,
                 'payment'=>$payment,
                 'rmb'=>$rmb,
-                'shop'=>$shop
+                'shop'=>$shop,
+                'dikou'=>$dikou,
             ]);
         }
     }

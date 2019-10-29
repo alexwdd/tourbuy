@@ -154,7 +154,11 @@ class Shop extends Auth {
                 unset($map);
                 $map['couponID'] = $value['id'];
                 $map['memberID'] = $this->user['id'];
-                $list[$key]['flag'] = db("CouponLog")->where($map)->count();       
+                $couponID = db("CouponLog")->where($map)->value('id');
+                if(!$couponID){
+                    $couponID = 0;
+                }
+                $list[$key]['couponID'] = $couponID;
             }       
 
             returnJson(1,'success',[

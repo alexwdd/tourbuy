@@ -526,9 +526,9 @@ class Account extends Auth {
                     'endTime'=>$endTime,
                     'createTime'=>time(),
                 ];
-                $res = db("CouponLog")->insert($data);
+                $res = db("CouponLog")->insertGetId($data);
                 if ($res) {
-                    returnJson(1,'success',['endTime'=>date("Y-m-d H:i:s",$data['endTime'])]);
+                    returnJson(1,'success',['id'=>$res,'endTime'=>date("Y-m-d H:i:s",$data['endTime'])]);
                 }else{
                     returnJson(0,'领取失败');
                 }
