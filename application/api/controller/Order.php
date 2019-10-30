@@ -906,4 +906,33 @@ class Order extends Auth {
             }
         }
     }
+
+    public function progress(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $id = input('post.id');
+            if ($id=='') {
+                returnJson(0,'参数错误');
+            }
+            $map['id'] = $id;
+            $map['kdNo'] = array('neq','');
+            $map['memberID'] = $this->user['id'];
+            $list = db('OrderBaoguo')->where( $map )->find();
+            if (!$list) {
+                returnJson(0,'快递单号不存在');
+            }
+
+            if($list['expressID']==4){
+                $url = 'https://www.ewe.com.au/oms/api/tracking/ewe/'.$list['kdNo'];
+                $result = file_get_contents($url);
+                $result = json_decode($result,true);
+            }
+            if($value['expressID']==5){
+                
+            }
+            
+            returnJson(1,'success',['data'=>[]]);
+        }
+    }
 }
