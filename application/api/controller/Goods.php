@@ -579,12 +579,13 @@ class Goods extends Common {
             $comment = db("GoodsComment")->where($map)->limit(3)->order('id desc')->select();
             foreach ($comment as $key => $value) {
                 $comment[$key]['headimg'] = getUserFace($value['headimg']);
+                $comment[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
                 if($value['images']!=''){
                     $images = explode("|", $value['images']);
                     foreach ($images as $k => $val) {
                         $images[$k] = getRealUrl($val);
                     }
-                    $comment[$key]['images'] = $images;
+                    $comment[$key]['images'] = $images;                    
                 }
             }
             $list['comment'] = $comment;

@@ -35,8 +35,9 @@ class Report extends Admin {
 				if($cityID!=''){
 					$map['shopID'] = array('in',$ids);
 				}
-				$list = db("Order")->field('total,wallet,inprice,discount,payment,payType')->where($map)->select();			
+				$list = db("Order")->field('total,money,wallet,inprice,discount,payment,payType')->where($map)->select();			
 				$total = 0;
+				$money = 0;
 				$wallet = 0;
 				$inprice = 0;
 				$payment = 0;
@@ -44,26 +45,33 @@ class Report extends Admin {
 				$lirun = 0;
 				$weixin = 0;
 				$alipay = 0;
+				$dikou = 0;
 				foreach ($list as $key => $value) {
 					$total += $value['total'];
+					$money += $value['money'];
 					$wallet += $value['wallet'];
 					$discount += $value['discount'];
 					$inprice += $value['inprice'];
 					$payment += $value['payment'];
 					if($payType==1){
-						$alipay += $value['total'];
-					}else{
+						$alipay += $value['money'];
+					}elseif($payType==2){
 						$weixin += $value['money'];
+					}else{
+						$dikou += $value['money'];
 					}
-					$lirun += $value['total'] - $value['inprice'] - $value['payment']; 
+					$lirun += $value['total'] - $value['wallet'] - $value['inprice']; 
+					$lirun = sprintf("%.2f",$lirun);
 				}
 				array_push($arr,[
 					'date'=>date("Y-m-d",$i),
 					'number'=>count($list),
 					'total'=>$total,
+					'money'=>$money,
 					'wallet'=>$wallet,
 					'weixin'=>$weixin,
 					'alipay'=>$alipay,
+					'dikou'=>$dikou,
 					'inprice'=>$inprice,
 					'discount'=>$discount,
 					'payment'=>$payment,

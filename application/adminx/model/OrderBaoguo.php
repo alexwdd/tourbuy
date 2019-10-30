@@ -20,12 +20,16 @@ class OrderBaoguo extends Admin
         $payType = input('post.payType');
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
+        $shopID = input('post.shopID');
 
         if ($status!='') {
             $map['status'] = $status;
         }        
         if ($payType!='') {
             $map['payType'] = $payType;
+        }
+        if ($shopID!='') {
+            $map['shopID'] = $shopID;
         }
         if ($keyword!='') {
             $map['name|sender'] = $keyword;

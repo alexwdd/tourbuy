@@ -279,6 +279,7 @@ class Cart extends Auth {
             $point = 0;
             $total = 0;
             $payment = 0;
+            $dicount = 0;
             foreach ($shop as $key => $value) {
                 unset($map);
                 $map['shopID'] = $value['id'];
@@ -311,6 +312,7 @@ class Cart extends Auth {
 
                 $total += $result['total'];
                 $point += $result['point'];
+                $discount += $result['discount'];
                 $goodsMoney += $result['goodsMoney'];
                 $payment += $result['baoguo']['totalPrice'];
             }
@@ -339,6 +341,7 @@ class Cart extends Auth {
                 'goodsMoney'=>$goodsMoney,
                 'total'=>$total,
                 'payment'=>$payment,
+                'discount'=>$discount,
                 'rmb'=>$rmb,
                 'shop'=>$shop,
                 'dikou'=>$dikou,
@@ -375,6 +378,7 @@ class Cart extends Auth {
         $map['memberID'] = $this->user['id'];
         $map['shopID'] = $shop['id'];
         $map['online'] = 0;
+        $map['endTime'] = array('gt',time());
         $coupon = db("CouponLog")->field('id,name,desc,full,dec,goodsID,endTime')->where($map)->select();
         $coupons = []; 
         foreach ($coupon as $key => $value) {
@@ -391,10 +395,13 @@ class Cart extends Auth {
         $total = $goodsMoney + $baoguo['totalPrice'];
         if($thisCoupon){
             $total = $total - $thisCoupon['dec'];
+            $discount = $thisCoupon['dec'];
+        }else{
+            $discount = 0;
         }
         if($total<=0){
             $total = 1;
         }
-        return ['cart'=>$cart,'baoguo'=>$baoguo,'goodsMoney'=>$goodsMoney,'point'=>$point,'total'=>$total,'coupons'=>$coupons];
+        return ['cart'=>$cart,'baoguo'=>$baoguo,'goodsMoney'=>$goodsMoney,'point'=>$point,'total'=>$total,'coupons'=>$coupons,'discount'=>$discount];
     }
 }

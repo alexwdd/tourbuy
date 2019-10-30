@@ -333,6 +333,7 @@ class Order extends Auth {
                 $detail['express'] = $value['express'];
                 $detail['expressID'] = $value['expressID'];
                 $detail['kdNo'] = '';
+                $detail['printURL'] = '';
                 $detail['name'] = $data['name'];
                 $detail['tel'] = $data['tel'];
                 $detail['province'] = $data['province'];            
@@ -807,7 +808,7 @@ class Order extends Auth {
             $count = db("OrderBaoguo")->where(['orderID'=>$list['orderID'],'hexiao'=>1])->count();
             $count1 = db("OrderBaoguo")->where(['orderID'=>$list['orderID']])->count();
             if($count==$count1){
-                db("Order")->where('id',$list['orderID'])->setField("status",2);
+                db("Order")->where('id',$list['orderID'])->setField("status",3);
             }
             returnJson(1,'提货成功');
         }

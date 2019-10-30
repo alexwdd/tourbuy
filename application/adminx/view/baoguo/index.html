@@ -9,50 +9,41 @@
             <div class="layui-input-inline" style="width: 120px">
                 <input type="text" name="order_no" placeholder="订单号/快递单号" class="layui-input">
             </div>
+
             <div class="layui-input-inline" style="width: 120px">
                 <input type="text" name="goodsName" placeholder="商品名称" class="layui-input">
             </div>
+
             <div class="layui-input-inline" style="width: 120px">
                 <input type="text" name="keyword" placeholder="会员账号/收件人/手机" class="layui-input">
+            </div>         
+            <label class="layui-form-mid">日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
             </div>
 
-            <div class="layui-inline">
-                <label class="layui-form-mid">日期</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
-                </div>
-            </div>
-
-            <div class="layui-input-inline" style="width: 100px">
-                <select name="type" id="type">
-                    <option value="">包裹类型</option>
-                    {volist name="type" id="vo"}
+            <label class="layui-form-mid">城市</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="cityID" lay-filter="city">
+                    <option value="">请选择</option>
+                    {volist name="city" id="vo"}
                     <option value="{$vo.id}">{$vo.name}</option>
                     {/volist}
                 </select>
-            </div>  
+            </div>
 
-            <!-- <div class="layui-input-inline" style="width: 100px">
-                <select name="flag" id="flag">
-                    <option value="">状态</option>
-                    <option value="1">已导出</option>
-                    <option value="0">未导出</option>
+            <label class="layui-form-mid">商家</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="shopID" id="shopID">
+                    <option value="">请选择</option>
                 </select>
             </div>
-            
-            <div class="layui-input-inline" style="width: 100px">
-                <select name="print" id="print">
-                    <option value="">是否打印</option>
-                    <option value="1">已打印</option>
-                    <option value="0">未打印</option>
-                </select>
-            </div> -->
 
-            <div class="layui-inline">
+            <div class="layui-input-inline" style="width:80px">
                 <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                 </button>
-            </div> 
+            </div>
         </div>
     </form>
 
@@ -77,7 +68,7 @@
             <p checkbox="true"/>        
             <p field="memberID" title="会员ID" width="100"/>
             <p field="order_no" title="订单号" width="150"/>  
-            <p field="kuaidi" title="快递" width="100" />         
+            <p field="express" title="快递" width="100" />         
             <p field="kdNo" title="快递单号" width="150"/>
             <p field="eimg" title="面单" width="60" templet="#jietu"/>
             <p field="payment" title="运费" width="100"/>
@@ -168,6 +159,21 @@ layui.config({
     laydate.render({
         elem: '#createDate',
         range: true
+    });
+
+    form.on('select(city)', function(data){
+        var cityID = data.value;
+        _html = '<option value=""></option>';
+        if(cityID){
+            var data = {cityID:cityID};
+            $.post('{:url('baoguo/getShop')}',data,function(res){                
+                for(var i=0; i<res.data.length; i++){
+                    _html += '<option value="'+res.data[i]['id']+'">'+res.data[i]['name']+'</option>';
+                }
+                $("#shopID").html(_html);
+                form.render();
+            },'json');
+        }
     });
 
     $("#toExp").click(function(){

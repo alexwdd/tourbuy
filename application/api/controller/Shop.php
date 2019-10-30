@@ -37,6 +37,47 @@ class Shop extends Auth {
         }
     }
 
+    public function tehui(){
+        if (request()->isPost()) {
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            if($this->user['group'] === 0){
+                returnJson(1,'success',['next'=>0,'data'=>[]]);
+            }
+
+            $cityID = input('post.cityID');
+            $page = input('post.page/d',1);
+            $pagesize = input('post.pagesize',10);
+            $firstRow = $pagesize*($page-1); 
+
+            //店铺
+            if($cityID>0){
+                $map['cityID'] = $cityID;
+            }
+            $map['group'] = 1;
+            $map['status'] = 1;
+            $obj = db('Shop');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->field('id,name,picname,intr,banner,cityID')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                $value['picname'] = getThumb($value['picname'],200,200);
+                $list[$key]['picname'] = getRealUrl($value['picname']);
+
+                $value['banner'] = getThumb($value["banner"],760,300);
+                $list[$key]['banner'] = getRealUrl($value['banner']);
+
+                $list[$key]['cityName'] = db("City")->where('id',$value['cityID'])->value("name");
+            }
+            returnJson(1,'success',['next'=>$next,'data'=>$list]);
+        }
+    }
+
     public function shopWall(){
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}

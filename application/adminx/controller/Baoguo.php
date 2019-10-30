@@ -12,10 +12,17 @@ class Baoguo extends Admin {
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
     	}else{
-            $this->assign('type',config('EWE_BAOGUO_TYPE'));
+            $city = db("City")->select();
+            $this->assign('city', $city);
 	    	return view();
     	}
 	}
+
+    public function getShop(){
+        $cityID = input('post.cityID');
+        $list = db("Shop")->where('cityID',$cityID)->select();
+        echo json_encode(['data'=>$list]);
+    }
 
     #编辑
     public function image() {

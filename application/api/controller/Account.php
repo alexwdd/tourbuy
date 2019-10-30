@@ -137,10 +137,12 @@ class Account extends Auth {
             foreach ($list as $key => $value) {
                 unset($map);
                 $map['id'] = $value['goodsID'];
-                $goods = db('Goods')->field('id,name,picname,price,say,marketPrice,comm,empty,tehui,flash,baoyou')->where($map)->find();
+                $goods = db('Goods')->field('id,fid,name,picname,say,price,comm,tehui,flash,baoyou,ziti')->where($map)->find();
                 if($goods){
                     $goods['picname'] = getRealUrl($goods['picname']);
-                    $goods['rmb'] = round($value['price']*$this->rate,1);
+                    $result = $this->getGoodsPrice($goods,0,$this->flash);
+                    $goods['price'] = $result['price'];
+                    $goods['rmb'] = round($goods['price']*$this->rate,1);
                 }else{
                     $goods = [];
                 }                
@@ -163,6 +165,63 @@ class Account extends Auth {
             $map['id'] = array('in',$ids);
             $map['memberID'] = $this->user['id'];
             db("Fav")->where($map)->delete();
+            returnJson(1,'success');
+        }       
+    }
+
+    //我的收藏店铺
+    public function favShop(){
+        if(request()->isPost()){
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+             $page = input('post.page/d',1);
+            $pagesize = input('post.pagesize',10);
+
+            $firstRow = $pagesize*($page-1); 
+ 
+            $map['memberID'] = $this->user['id'];
+            $obj = db('ShopFav');
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }
+            $list = $obj->field('id,shopID')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                unset($map);
+                $map['id'] = $value['shopID'];
+                $shop = db('Shop')->field('id,name,intr,cityID,banner,picname')->where($map)->find();
+                if($shop){
+                    $shop['picname'] = getThumb($shop["picname"],200,200);
+                    $shop['picname'] = getRealUrl($shop['picname']);
+
+                    $shop['banner'] = getThumb($shop["banner"],760,300);
+                    $shop['banner'] = getRealUrl($shop['banner']);
+
+                    $shop['cityName'] = db("City")->where('id',$shop['cityID'])->value("name");
+                }else{
+                    $shop = [];
+                }                
+                $list[$key]['shop'] = $shop;
+                $list[$key]['checked'] = false;
+            }
+            returnJson(1,'success',['next'=>$next,'data'=>$list]);
+        }
+    }
+
+    //删除收藏
+    public function delFavShop(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $ids = input('post.ids');
+            if ($ids=='') {
+                returnJson(0,'缺少参数');
+            }
+            $ids = explode(",",$ids);
+            $map['id'] = array('in',$ids);
+            $map['memberID'] = $this->user['id'];
+            db("ShopFav")->where($map)->delete();
             returnJson(1,'success');
         }       
     }

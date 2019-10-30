@@ -50,7 +50,7 @@ class Base extends Controller {
         if($point<0){
             $point=0;
         }
-        
+        $point = 10000;
         $config = tpCache('member');
         $money = floor($point/$config['buy']);
         return array(
@@ -557,7 +557,8 @@ class Base extends Controller {
         $result = json_decode($result,true);
         if ($result['Status']==0) {
             $update = [
-                'kdNo'=>$result['Payload']['BOXNO']
+                'kdNo'=>$result['Payload']['BOXNO'],
+                'printURL'=>$result['PrintURL'],
             ];
             db("OrderBaoguo")->where('id',$order['id'])->update($update);
             return ['code'=>1,'msg'=>$result['Message']];
