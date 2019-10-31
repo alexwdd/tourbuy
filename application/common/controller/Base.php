@@ -213,7 +213,7 @@ class Base extends Controller {
             $cart[$key]['baoyou'] = $goods['baoyou'];
             $cart[$key]['price'] = $goods['price'];
             $cart[$key]['expressID'] = $goods['expressID'];
-            $cart[$key]['extra'] = ($goods['jiesuan']/$goods['number'])*0.25 + 5;//附加费
+            $cart[$key]['extra'] = ($goods['jiesuan']/$goods['number'])*0.215 + 5;//附加费
         }
         $ziti = [];
         $baoguoArr = [];

@@ -36,4 +36,11 @@ return [
         6=>array("id"=>7,"name"=>"友情链接","show"=>1),
         7=>array("id"=>8,"name"=>"留言","show"=>1),
     ), 
+
+    //开启多语言
+    'lang_switch_on' => true,
+    // 默认全局过滤方法 用逗号分隔多个
+    'default_filter'         => '',
+    'default_lang' => 'zh-cn',
+    'lang_list' => ['zh-cn','en-us',],
 ];

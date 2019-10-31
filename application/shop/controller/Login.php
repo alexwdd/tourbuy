@@ -10,8 +10,21 @@ class Login extends Base {
     public function index(){
 		if( Session::has('shopinfo', 'shop') ) {
 			$this->redirect( url('index/index') );
-		}        
-		return view();
+		}
+
+        switch ($_GET['lang']) {
+            case 'cn':
+                cookie('think_var', 'zh-cn');
+            break;
+            case 'en':
+                cookie('think_var', 'en-us');
+            break;
+            //其它语言
+        }
+        \think\Lang::load('F:\wwwroot\2019\tourbuy/application/shop\lang\en-us.php');
+        \think\Lang::detect();
+        return $this->fetch();
+		//return view();
 	}
 
 	//验证码显示
