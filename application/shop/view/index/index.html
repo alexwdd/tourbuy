@@ -33,6 +33,16 @@
                 </li>
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;">
+                    <cite>{:lang('selectLang')}</cite>
+                    </a>
+                    <dl class="layui-nav-child" style="text-align: center;">
+                        <dd><a lay-href="{:url('user/password')}">简体中文</a></dd>
+                        <hr>
+                        <dd layadmin-event="logout" style="text-align: center;"><a>ENGLISH</a></dd>
+                    </dl>
+                </li>
                 <!-- <li class="layui-nav-item" lay-unselect>
                     <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
                     <i class="layui-icon layui-icon-notice"></i>                
@@ -55,6 +65,7 @@
                     <i class="layui-icon layui-icon-screen-full"></i>
                     </a>
                 </li>
+                
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
                     <cite>{$admin.name}</cite>
@@ -78,7 +89,7 @@
         <div class="layui-side layui-side-menu">
             <div class="layui-side-scroll">
                 <div class="layui-logo">
-                    <span>商铺管理中心</span>
+                    <span>{:lang('userCenter')}</span>
                 </div>
 
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">

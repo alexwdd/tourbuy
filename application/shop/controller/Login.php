@@ -4,28 +4,39 @@ namespace app\shop\controller;
 use app\common\controller\Base;
 use think\Session;
 use think\Loader;
+use think\Lang;
 
 class Login extends Base {
+
+    public function _initialize(){
+        parent::_initialize();
+
+        lang::load(APP_PATH.'/shop/lang/'.cookie('think_var').'.php');  
+    }
 
     public function index(){
 		if( Session::has('shopinfo', 'shop') ) {
 			$this->redirect( url('index/index') );
 		}
+           
+		return view();
+	}
 
-        switch ($_GET['lang']) {
-            case 'cn':
+    public function lang(){
+        $lang = input('?get.lang') ? input('get.lang') : 'zh';
+        switch ($lang) {
+            case 'zh':
                 cookie('think_var', 'zh-cn');
-            break;
+                break;
             case 'en':
                 cookie('think_var', 'en-us');
-            break;
+                break;
             //其它语言
+            default:
+                cookie('think_var','zh-cn');
         }
-        \think\Lang::load('F:\wwwroot\2019\tourbuy/application/shop\lang\en-us.php');
-        \think\Lang::detect();
-        return $this->fetch();
-		//return view();
-	}
+        echo json_encode(['code'=>1]);
+    }
 
 	//验证码显示
     public function verify() {
@@ -47,18 +58,18 @@ class Login extends Base {
         $safecode = input('post.safecode');
 
         if ($username=='' || empty($username)) {
-            $this->error('请输入用户名');
+            $this->error(lang('emptyUsername'));
         }
         elseif ($password=='' || empty($password)) {
-            $this->error('请输入密码');
+            $this->error(lang('emptyPasswrod'));
         }
         elseif ($checkcode=='' || empty($checkcode)) {
-            $this->error('请输入验证码');
+            $this->error(lang('emptyVerify'));
         }
 
         $check = $this->validate(['验证码'=>$checkcode],['验证码'=>'require|captcha']);    
         if ($check!=1) {
-            $this->error($check);
+            $this->error(lang('verifyError'));
         }
 
         $loginData = array(
@@ -74,12 +85,12 @@ class Login extends Base {
         $res['data']['administrator'] = 1;
 
         Session::set('shopinfo', $res['data'], 'shop');
-        return $this->success('登录成功', url('index/index'));
+        return $this->success(lang('loginSuccess'), url('index/index'));
 	}
 
     function signout(){
         Session::delete('shopinfo','shop');
         cache('access', NULL);
-        $this->success('成功退出',url('login/index'));        
+        $this->success(lang('loginOut'),url('login/index'));        
     }
 }

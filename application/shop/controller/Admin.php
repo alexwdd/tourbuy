@@ -5,6 +5,7 @@ use app\common\controller\Base;
 use think\Loader;
 use think\Session;
 use think\Request;
+use think\lang;
 
 class Admin extends Base {
 
@@ -12,6 +13,8 @@ class Admin extends Base {
 
     public function _initialize(){
         parent::_initialize();
+
+        lang::load(APP_PATH.'/shop/lang/'.cookie('think_var').'.php');  
 
         //判断是否已经登录      
         if( !Session::has('shopinfo', 'shop') ) {

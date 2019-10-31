@@ -51,7 +51,7 @@ class Shop extends Admin
         ];
         $userRow = $this->where($map)->find();
         if( empty($userRow) ) {
-            return info('账户或密码错误',0);
+            return info(lang('loginError'),0);
         }
         return info('success', 1, '', $userRow);
     }
