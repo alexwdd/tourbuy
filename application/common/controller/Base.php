@@ -491,7 +491,7 @@ class Base extends Controller {
         $ch = curl_init();
         $header = "Accept-Charset: utf-8";
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_SSLVERSION, 1);
@@ -534,8 +534,8 @@ class Base extends Controller {
         }
    
         $data = [
-            'USERNAME'=>"dl-syd",   //测试账号
-            //'USERNAME'=>$config['ewe_username'], //正式账号
+            //'USERNAME'=>"dl-syd",   //测试账号
+            'USERNAME'=>$config['ewe_username'], //正式账号
             'APIPASSWORD'=>$config['ewe_password'],
             'BoxNo'=>'',
             'TotalPackage'=>1,
@@ -545,8 +545,8 @@ class Base extends Controller {
             'Receiver'=>$receiver
         ];
 
-        $url = 'https://newomstest.ewe.com.au/eweApi/ewe/api/createOrder';//测试环境
-        //$url = 'https://jerryapi.ewe.com.au/eweApi/ewe/api/createOrder';  //生产环境
+        //$url = 'https://newomstest.ewe.com.au/eweApi/ewe/api/createOrder';//测试环境
+        $url = 'https://jerryapi.ewe.com.au/eweApi/ewe/api/createOrder';  //生产环境
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
@@ -621,8 +621,8 @@ class Base extends Controller {
                 'ITEMS'=>$items,
             ]
         ]; 
-        $url = 'http://sandbox.transrush.com.au/agent/createPickupItem';//测试环境
-        //$url = 'http://www.transrush.com.au/agent/createPickupItem'     //生产环境
+        //$url = 'http://sandbox.transrush.com.au/agent/createPickupItem';//测试环境
+        $url = 'http://www.transrush.com.au/agent/createPickupItem';     //生产环境
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
@@ -655,8 +655,8 @@ class Base extends Controller {
             ]
         ];        
 
-        $url = 'http://sandbox.transrush.com.au/Agent/uploadIdInfo'; //测试环境
-        //$url = 'http://www.transrush.com.au/Agent/uploadIdInfo'; //生产环境
+        //$url = 'http://sandbox.transrush.com.au/Agent/uploadIdInfo'; //测试环境
+        $url = 'http://www.transrush.com.au/Agent/uploadIdInfo'; //生产环境
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查

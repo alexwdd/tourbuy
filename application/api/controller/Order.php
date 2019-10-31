@@ -635,7 +635,7 @@ class Order extends Auth {
 
             $map['payNo'] = $payNo;
             $map['status'] = 0;
-            $list = db("PayOrder")->where($map)->select();
+            $list = db("PayOrder")->where($map)->find();
             if(!$list){
                 returnJson(0,'订单不存在');
             }
@@ -923,16 +923,55 @@ class Order extends Auth {
                 returnJson(0,'快递单号不存在');
             }
 
+            $data = [];
             if($list['expressID']==4){
                 $url = 'https://www.ewe.com.au/oms/api/tracking/ewe/'.$list['kdNo'];
-                $result = file_get_contents($url);
-                $result = json_decode($result,true);
+                $ch = curl_init();
+                $header = "Accept-Charset: utf-8";
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+                curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($ch); 
+                $result = json_decode($result,true);  
+                if ($result['Status']==0) {
+                    foreach ($result['Payload'][0]['Details'] as $key => $value) {
+                        array_push($data, ['StatusTime'=>$value['DateString'],'local'=>$value['Place'],'StatusDetail'=>$value['Message']]);
+                    }
+                }
             }
             if($value['expressID']==5){
-                
+                $config = tpCache("kuaidi");
+                $data = [
+                    'Token'=>$config['px_token'],
+                    'Data'=>[
+                        'ShipperOrderNo'=>$list['kdNo']
+                    ]
+                ];        
+
+                $url = 'http://www.transrush.com.au/Agent/getTrack';//正式地址
+                //$url = 'http://sandbox.transrush.com.au/Agent/getTrack';//测试地址
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+                curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/javascript'));
+                $result = curl_exec($ch);
+                $result = json_decode($result,true);       
+                if ($result['ResponseCode']=='10000') {
+                    foreach ($result['Data']['TrackingList'] as $key => $value) {
+                        array_push($data, ['StatusTime'=>$value['TrackTime'],'local'=>$value['TrackLocation'],'StatusDetail'=>$value['TrackContent']]);
+                    }
+                }
             }
             
-            returnJson(1,'success',['data'=>[]]);
+            returnJson(1,'success',['data'=>$data]);
         }
     }
 }

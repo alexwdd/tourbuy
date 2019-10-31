@@ -10,9 +10,21 @@ class Auto extends Base {
     }
 
     public function test(){
-        $order = db("Order")->where('id',36)->find();
-        $this->saveJiangjin($order);
-        //$this->uploadPxPerson($order);
+        $url = 'https://www.ewe.com.au/oms/api/tracking/ewe/PVDJ00000000030';
+        $ch = curl_init();
+        $header = "Accept-Charset: utf-8";
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch); 
+        $result = json_decode($result,true);      
+        dump($result);
     }
 
     //删除未付款的订单
