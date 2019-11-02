@@ -21,11 +21,11 @@
                     <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                <!-- <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a href="{:config('site.domain')}" target="_blank" title="前台">
                     <i class="layui-icon layui-icon-website"></i>
                 </a>
-                </li>
+                </li> -->
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;" layadmin-event="refresh" title="刷新">
                     <i class="layui-icon layui-icon-refresh-3"></i>
@@ -38,9 +38,9 @@
                     <cite>{:lang('selectLang')}</cite>
                     </a>
                     <dl class="layui-nav-child" style="text-align: center;">
-                        <dd><a lay-href="{:url('user/password')}">简体中文</a></dd>
+                        <dd layadmin-event="selectLang" data="cn"><a>简体中文</a></dd>
                         <hr>
-                        <dd layadmin-event="logout" style="text-align: center;"><a>ENGLISH</a></dd>
+                        <dd layadmin-event="selectLang" data="en"><a>ENGLISH</a></dd>
                     </dl>
                 </li>
                 <!-- <li class="layui-nav-item" lay-unselect>
@@ -94,45 +94,45 @@
 
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
                     <li data-name="home" class="layui-nav-item layui-nav-itemed">
-                        <a href="javascript:;" lay-tips="主页" lay-direction="2">
+                        <a href="javascript:;" lay-tips="{:lang('nav-home')}" lay-direction="2">
                             <i class="layui-icon layui-icon-home"></i>
-                            <cite>主页</cite>
+                            <cite>{:lang('nav-home')}</cite>
                         </a>
                         <dl class="layui-nav-child">
                             <dd data-name="console">
-                                <a lay-href="{:url('setting/index')}">店铺资料</a>
+                                <a lay-href="{:url('setting/index')}">{:lang('nav-info')}</a>
                             </dd>
                         </dl>
                     </li>
 
-                    <li data-name="home" class="layui-nav-item layui-nav-itemed">
+                    <li data-name="goods" class="layui-nav-item layui-nav-itemed">
                         <a lay-href="{:url('goods/index')}">
                             <i class="layui-icon layui-icon-cart"></i>
-                            <cite>我的商品</cite>
+                            <cite>{:lang('nav-goods')}</cite>
                         </a>
                     </li>
 
                     <li class="layui-nav-item ">
-                        <a href="javascript:;" lay-tips="财务管理" lay-direction="2">
+                        <a href="javascript:;" lay-tips="{:lang('nav-finance')}" lay-direction="2">
                         <i class="layui-icon layui-icon-dollar"></i>
-                        <cite>财务管理</cite>
+                        <cite>{:lang('nav-finance')}</cite>
                         </a>                 
                         <dl class="layui-nav-child">                            
                             <dd>
-                                <a href="javascript:;">订单管理</a>
+                                <a href="javascript:;">{:lang('nav-order')}</a>
                                 <dl class="layui-nav-child">
-                                    <dd><a lay-href="{:url('order/index')}">全部</a></dd>
-                                    <dd><a lay-href="{:url('order/nopay')}">待支付</a></dd>
-                                    <dd><a lay-href="{:url('order/peing')}">待发货</a></dd>
-                                    <dd><a lay-href="{:url('order/fahuo')}">已发货</a></dd>
-                                    <dd><a lay-href="{:url('order/close')}">交易关闭</a></dd>
+                                    <dd><a lay-href="{:url('order/index')}">{:lang('nav-order-all')}</a></dd>
+                                    <dd><a lay-href="{:url('order/nopay')}">{:lang('nav-order-nopay')}</a></dd>
+                                    <dd><a lay-href="{:url('order/peing')}">{:lang('nav-order-wait')}</a></dd>
+                                    <dd><a lay-href="{:url('order/fahuo')}">{:lang('nav-order-send')}</a></dd>
+                                    <dd><a lay-href="{:url('order/close')}">{:lang('nav-order-close')}</a></dd>
                                 </dl>
                             </dd>
                             <dd>
-                                <a lay-href="{:url('baoguo/index')}">直邮包裹</a>
+                                <a lay-href="{:url('baoguo/index')}">{:lang('nav-order-zhiyou')}</a>
                             </dd>
                             <dd>
-                                <a lay-href="{:url('ziti/index')}">自提包裹</a>
+                                <a lay-href="{:url('ziti/index')}">{:lang('nav-order-ziti')}</a>
                             </dd>                                                        
                         </dl>
                     </li>                        
@@ -149,9 +149,9 @@
                     <li class="layui-nav-item" lay-unselect>
                         <a href="javascript:;"></a>
                         <dl class="layui-nav-child layui-anim-fadein">
-                            <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
-                            <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
-                            <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:;">{:lang('nav-tab-local')}</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:;">{:lang('nav-tab-other')}</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:;">{:lang('nav-tab-all')}</a></dd>
                         </dl>
                     </li>
                 </ul>

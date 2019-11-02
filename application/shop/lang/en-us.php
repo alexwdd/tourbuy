@@ -6,6 +6,5 @@ return [
     'username'=>'user name',
     'password'=>'password',
     'checkcode'=>'Verification Code',
-
 ];
 ?>

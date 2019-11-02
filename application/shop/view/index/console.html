@@ -5,25 +5,25 @@
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-header">统计</div>
+            <div class="layui-card-header">{:lang('main-total')}</div>
             <div class="layui-card-body">          
                 <div carousel-item>
                     <ul class="layui-row layui-col-space10">
                         <li class="layui-col-xs4">
                             <div class="layadmin-backlog-body item">
-                              <h3>商品总数</h3>
+                              <h3>{:lang('main-goods-number')}</h3>
                               <p><cite>{$goods}</cite></p>
                             </div>
                         </li>
                         <li class="layui-col-xs4">
                             <div class="layadmin-backlog-body item">
-                              <h3>订单总数</h3>
+                              <h3>{:lang('main-order-number')}</h3>
                               <p><cite>{$order}</cite></p>
                             </div>
                         </li>
                         <li class="layui-col-xs4">
                             <div class="layadmin-backlog-body item">
-                              <h3>今日交易</h3>
+                              <h3>{:lang('main-day-number')}</h3>
                               <p><cite>{$today}</cite></p>
                             </div>
                         </li>
@@ -34,11 +34,11 @@
 
         <div class="layui-card">
             <div class="layui-card-header">
-                概览
+                {:lang('main-overview')}
                 <div class="layui-btn-group" style="float: right;">
-                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="day">当日</button>
-                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="week">本周</button>
-                    <button type="button" class="layui-btn layui-btn-sm" data-type="month">本月</button>
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="day">{:lang('main-day')}</button>
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" data-type="week">{:lang('main-week')}</button>
+                    <button type="button" class="layui-btn layui-btn-sm" data-type="month">{:lang('main-month')}</button>
                 </div>
             </div>
             <div class="layui-card-body">          

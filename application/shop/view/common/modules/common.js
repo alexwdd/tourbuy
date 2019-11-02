@@ -513,6 +513,19 @@ layui.define(['form','table','laydate'],function(exports) {
         });
     };
 
+    //退出
+    admin.events.selectLang = function() {
+        var lang = this.getAttribute("data");
+        admin.req({
+            url: '/shop/login/lang?lang='+lang,
+            type: 'get',
+            data: {},
+            done: function(res) {
+                window.location.reload();             
+            }
+        });
+    };
+
 
     //对外暴露的接口
     exports('common', {});
