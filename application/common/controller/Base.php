@@ -9,9 +9,9 @@ class Base extends Controller {
     public $rate;
 
     public function _initialize(){
-    	$request= Request::instance();
+        $request= Request::instance();
 
-    	$module = $request->module();
+        $module = $request->module();
         $THEME_PATH = '/application/'.$module.'/view/';
         define('RES', $THEME_PATH . 'common');
 
@@ -212,6 +212,8 @@ class Base extends Controller {
             $cart[$key]['singleNumber'] = $goods['number'];
             $cart[$key]['baoyou'] = $goods['baoyou'];
             $cart[$key]['price'] = $goods['price'];
+            $cart[$key]['specification'] = $goods['specification'];
+            $cart[$key]['jiesuan'] = $goods['jiesuan'];
             $cart[$key]['expressID'] = $goods['expressID'];
             $cart[$key]['extra'] = ($goods['jiesuan']/$goods['number'])*0.215 + 5;//附加费
         }
@@ -595,8 +597,8 @@ class Base extends Controller {
         $items = [];
         foreach ($goods as $k => $val) {     
             $temp['ItemBrand'] = $val['brand'];
-            $temp['Specifications'] = '';
-            $temp['ItemUnitPrice'] = $val['price'];
+            $temp['Specifications'] = $val['specification'];
+            $temp['ItemUnitPrice'] = $val['jiesuan'];
             $temp['ItemName'] = $val['short'];
             $temp['ItemQuantity'] = $val['number'];
             $temp['ItemDeclareType'] = '02020000001';
@@ -621,6 +623,7 @@ class Base extends Controller {
                 'ITEMS'=>$items,
             ]
         ]; 
+        dump($data);
         //$url = 'http://sandbox.transrush.com.au/agent/createPickupItem';//测试环境
         $url = 'http://www.transrush.com.au/agent/createPickupItem';     //生产环境
         $ch = curl_init($url);

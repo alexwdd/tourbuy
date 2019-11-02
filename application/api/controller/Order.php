@@ -360,6 +360,8 @@ class Order extends Auth {
                             'name'=>$val['name'],
                             'brand'=>$val['brand'],
                             'short'=>$val['short'],
+                            'specification'=>$val['specification'],
+                            'jiesuan'=>$val['jiesuan'],
                             'number'=>$val['trueNumber'],    
                             'price'=>$val['price'],    
                             'createTime'=>time()
