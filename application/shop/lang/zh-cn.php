@@ -65,5 +65,12 @@ return [
     'goods-weight'=>'重量',
     'goods-stock'=>'库存',
     'goods-tag'=>'标签',
+    'tab-base'=>'通用信息',
+    'tab-album'=>'商品相册',
+    'tab-taocan'=>'套餐',
+    'tab-spec'=>'参数规格',
+    'enter-goods-name'=>'请输入商品名称',
+    'enter-goods-en'=>'请输入英文名称',
+
 ];
 ?>
