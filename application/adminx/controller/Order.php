@@ -10,7 +10,6 @@ class Order extends Admin {
 			$result = model('Order')->getList();			
 			echo json_encode($result);
     	}else{
-
     		$shop = db('Shop')->field('id,name')->order("py asc")->select();
             $this->assign('shop', $shop);
 	    	return view();
@@ -20,6 +19,7 @@ class Order extends Admin {
 	public function nopay() {
 		if (request()->isPost()) {
 			$map['status'] = 0;
+			$map['cancel'] = 0;
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
@@ -33,6 +33,7 @@ class Order extends Admin {
 	public function peing() {
 		if (request()->isPost()) {
 			$map['status'] = 1;
+			$map['cancel'] = 0;
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
@@ -46,6 +47,7 @@ class Order extends Admin {
 	public function fahuo() {
 		if (request()->isPost()) {
 			$map['status'] = array('in',[2,3]);
+			$map['cancel'] = 0;
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
@@ -59,12 +61,27 @@ class Order extends Admin {
 	public function close() {
 		if (request()->isPost()) {
 			$map['status'] = 99;
+			$map['cancel'] = 1;
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
     		$shop = db('Shop')->field('id,name')->order("py asc")->select();
             $this->assign('shop', $shop);
     		$this->assign('url',url('order/close'));
+	    	return view('normal');
+    	}
+	}
+
+	public function check() {
+		if (request()->isPost()) {
+			$map['status'] = array('neq',99);
+			$map['cancel'] = 1;
+			$result = model('Order')->getList($map);			
+			echo json_encode($result);
+    	}else{
+    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+            $this->assign('shop', $shop);
+    		$this->assign('url',url('order/check'));
 	    	return view('normal');
     	}
 	}

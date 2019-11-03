@@ -35,9 +35,9 @@
 
             <div class="layui-input-inline" style="width: 100px">
                 <select name="send">
-                    <option value="">配送状态</option>
-                    <option value="1">已配送</option>
-                    <option value="0">待配送</option>
+                    <option value="">出库状态</option>
+                    <option value="1">已出库</option>
+                    <option value="0">待出库</option>
                 </select>
             </div>
 
@@ -53,10 +53,14 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
-            
+
+            {eq name="Request.action" value="check"}
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定要取消吗？">通过审核</button>
+            {else/}
             {neq name="Request.action" value="close"}
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定要取消吗？">取消订单</button>
             {/neq}
+            {/eq}
 
             {eq name="Request.action" value="peing"}
             <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/change','status=2')}" alert="1" alertMsg="选中订单的货物已经发走，确定吗？">批量发货</button>
@@ -71,8 +75,12 @@
             <p field="memberID" title="会员ID" width="80"/> 
             <p field="shopName" title="商铺" width="150"/> 
             <p field="order_no" title="订单号" width="150"/> 
-            <p title="配送" width="80" templet="#send"/>
-            <p title="订单状态" width="100" templet="#status"/>
+            <p title="出库" width="80" templet="#send"/>
+            {eq name="Request.action" value="check"}
+            <p field="status" title="订单状态" width="120" templet="#cancelTpl"/>  
+            {else/}
+            <p field="status" title="订单状态" width="100" templet="#status"/>  
+            {/eq}  
             <p field="total" title="总金额" width="100"/>
             <p field="wallet" title="积分抵扣" width="100"/>
             <p field="money" title="实付金额" width="100"/>
@@ -90,9 +98,9 @@
         
         <script type="text/html" id="send">
             {{# if(d.send==0){ }}
-            未配送
+            未出库
             {{# }else{ }}
-            <span style="color: blue">已配送</span>
+            <span style="color: blue">已出库</span>
             {{# } }}
         </script>
 
@@ -111,6 +119,10 @@
         </script>
         <script type="text/html" id="fajianren">
             {{d.sender}}/{{d.senderTel}}                 
+        </script>
+
+        <script type="text/html" id="cancelTpl">
+            <span style="color:red">已取消 审核中</span>
         </script>
 
         <script type="text/html" id="status">

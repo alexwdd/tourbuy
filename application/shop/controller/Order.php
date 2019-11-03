@@ -8,6 +8,7 @@ class Order extends Admin {
 	public function index() {
 		if (request()->isPost()) {
 			$map['shopID'] = $this->admin['id'];
+            $map['cancel'] = 0;
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
@@ -18,6 +19,7 @@ class Order extends Admin {
 	public function nopay() {
 		if (request()->isPost()) {
 			$map['status'] = 0;
+            $map['cancel'] = 0;
 			$map['shopID'] = $this->admin['id'];
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
@@ -30,6 +32,7 @@ class Order extends Admin {
 	public function peing() {
 		if (request()->isPost()) {
 			$map['status'] = 1;
+            $map['cancel'] = 0;
 			$map['shopID'] = $this->admin['id'];
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
@@ -42,6 +45,7 @@ class Order extends Admin {
 
 	public function fahuo() {
 		if (request()->isPost()) {
+            $map['cancel'] = 0;
 			$map['status'] = array('in',[2,3]);
 			$map['shopID'] = $this->admin['id'];
 			$result = model('Order')->getList($map);			
@@ -58,11 +62,25 @@ class Order extends Admin {
 			$map['shopID'] = $this->admin['id'];
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
-    	}else{
+    	}else{            
     		$this->assign('url',url('order/close'));
 	    	return view('normal');
     	}
 	}
+
+    public function cancel() {
+        if (request()->isPost()) {
+            $map['status'] = array('neq',99);
+            $map['cancel'] = 1;
+            $map['shopID'] = $this->admin['id'];
+            $result = model('Order')->getList($map);            
+            echo json_encode($result);
+        }else{
+            $this->assign('cancel',1);
+            $this->assign('url',url('order/cancel'));
+            return view('normal');
+        }
+    }
 
     //订单详情
 	public function info(){
@@ -128,7 +146,35 @@ class Order extends Admin {
 		}
 	}
 
-	public function cancel(){
+	public function doCancel(){
+        if (request()->isPost()) {
+            $id = input("post.id");
+            $remark = input("post.remark");
+            if($remark==''){
+                $this->error('请输入取消理由');
+            }
+            $map['id'] = $id;
+            $map['status'] = 1;
+            $map['cancel'] = 0;
+            $data['shopID'] = $this->admin['id'];
+            db("Order")->where('id',$id)->update(['cancel'=>1,'remark'=>$remark]);
+            db('OrderDetail')->where('orderID',$id)->setField('cancel',1);
+            db('OrderBaoguo')->where('orderID',$id)->setField('cancel',1);
+            $this->success("操作成功");
+        }else{
+            $id = input("param.id");
+            $map['id'] = $id;
+            $map['status'] = 1;
+            $map['cancel'] = 0;
+            $data['shopID'] = $this->admin['id'];
+            $list = db("Order")->where($map)->find();
+            if (!$list) {
+                $this->error('信息不存在');
+            }
+            $this->assign('list',$list);
+            return view();
+        }
+        die;
 		$id = explode(",",input('post.id'));
 		if (count($id)==0) {
 			$this->error('请选择要取消的数据');
@@ -147,62 +193,7 @@ class Order extends Admin {
             }
 			$this->success("操作成功");
 		}
-	}
-
-	public function wuliu(){
-		if (request()->isPost()) {
-			$id = input("param.id");
-			$data['kdNo'] = input("param.kdNo");
-			$data['eimg'] = input("param.eimg");
-			$data['image'] = input("param.image");
-			$orderID = input("param.orderID");
-
-			if ($id=='') {
-	            $this->error('参数错误');
-	        }
-	        if ($data['kdNo']=='') {
-	            $this->error('请输入运单号');
-	        }else{
-	        	$data['kdNo'] = str_replace("，",",",$data['kdNo']);
-	        }
-	        $map['id'] = $id;
-	        if ($data['image']) {
-	        	$data['flag'] = 1;
-	        }else{
-	        	$data['flag'] = 0;
-	        }
-	        $res = db('OrderBaoguo')->where($map)->update($data);
-	        if ($res) {
-	        	if ($data['flag']==1) {
-	        		$where['orderID'] = $orderID;
-		        	$where['flag'] = 0;
-		        	$count = db("OrderBaoguo")->where($where)->count();
-		        	if ($count==0) {
-		        		unset($map);
-		        		$map['id'] = $orderID;
-		        		$map['status'] = array('in',[1,2]);
-		        		db("Order")->where($map)->setField("status",3);
-		        	}
-	        	}
-	        }
-	        $this->success("操作成功");
-		}else{
-			$id = input("param.id");
-			$map['id'] = $id;
-			$list = db("OrderBaoguo")->where($map)->find();
-			if (!$list) {
-				$this->error("信息不存在");
-			}
-			if ($list['eimg']) {
-            	$list['eimg'] = explode(",", $list['eimg']);
-            }
-			if ($list['image']) {
-            	$list['image'] = explode(",", $list['image']);
-            }
-			$this->assign('list',$list);
-			return view();
-		}
-	}
+	}	
 
 	public function image(){
         //获取要下载的文件名
@@ -214,137 +205,69 @@ class Order extends Admin {
         readfile($filename);
     }
 
+	public function export(){
+        $createDate = input('get.date');
+        $send = input('get.send');
+        $ids = input('get.ids');
+
+        $map['shopID'] = $this->admin['id'];
+   		if ($send!='') {
+            $map['send'] = $send;
+        } 
+        if ($ids!='') {
+            $map['id'] = array('in',$ids);
+        }        
+        if ($createDate!='') {
+            $date = explode(" - ", $createDate);
+            $startDate = $date[0];
+            $endDate = $date[1];
+            $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
+        }
+        $map['quhuoType'] = 0;
+        $list = db('Order')->where($map)->order('id desc')->select();
+        foreach ($list as $key => $value) {
+            $goods = db("OrderCart")->where("orderID",$value['id'])->select();
+            $content = '';
+            foreach ($goods as $k => $val) {            
+                $goodsName = $val['name'];             
+                if ($k==0) {
+                    $content .= $goodsName.'*'.$val['number'];
+                }else{
+                    $content .= ";".$goodsName.'*'.$val['number'];
+                }               
+            }
+            $list[$key]['goods'] = $content;
+        }
+
+        $objPHPExcel = new \PHPExcel();    
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', '编号')
+            ->setCellValue('B1', '订单号')
+            ->setCellValue('C1', '商品')
+            ->setCellValue('D1', '姓名')
+            ->setCellValue('E1', '电话')
+            ->setCellValue('F1', '地址');
+        foreach($list as $k => $v){
+            $num=$k+2;
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$num, $v['id'])                
+                ->setCellValue('B'.$num, ' '.$v['order_no'])                
+                ->setCellValue('C'.$num, $v['goods'])
+                ->setCellValue('D'.$num, $v['name'])                 
+                ->setCellValue('E'.$num, $v['tel'])
+                ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['county'].'/'.$v['addressDetail']);
+        }
+
+        $objPHPExcel->getActiveSheet()->setTitle('订单');
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="订单'.date("Y-m-d",time()).'.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output'); 
+    }
+
 	
-	#删除
-	public function del() {
-		$id = explode(",",input('post.id'));
-		if (count($id)==0) {
-			$this->error('请选择要删除的数据');
-		}else{
-			if(model('Order')->del($id)){
-				$map['orderID'] = array('in',$id);
-				db("OrderBaoguo")->where($map)->delete();
-				db("OrderCart")->where($map)->delete();
-				db("OrderDetail")->where($map)->delete();
-				$this->success("操作成功");
-			}else{
-				$this->error('操作失败');
-			}
-		}
-	}
-
-	//创建运单
-	public function create(){
-		if (request()->isPost()) {
-			$id = input("post.id");
-			if ($id=="" || !is_numeric($id)) {
-				$this->error("参数错误");
-			}
-			$map['id']=$id;
-			$list = db("OrderBaoguo")->where($map)->find();
-			if (!$list) {
-				$this->error("信息不存在");
-			}
-			$res = $this->createSingleOrder($list);
-			if ($res['code']==1) {
-				db("OrderBaoguo")->where($map)->setField('kdNo',$res['msg']);
-				$this->success("操作成功，运单号：".$res['msg']);
-			}else{
-				$this->error($res['msg']);
-			}
-		}
-	}
-
-	public function uploadPhoto(){
-		if (request()->isPost()){
-			$id = input("post.id");
-			if ($id=="" || !is_numeric($id)) {
-				$this->error("参数错误");
-			}
-
-			$map['id']=$id;
-			$list = db("OrderBaoguo")->where($map)->find();
-			if (!$list) {
-				$this->error("信息不存在");
-			}
-			if ($list['kdNo']=='') {
-				$this->error("请先生成运单");
-			}
-			$order = db('Order')->where('id',$list['orderID'])->find();
-
-			if ($order['front']=='' || $order['back']=='') {
-				$this->error("请先完善身份证信息");
-			}
-
-			$config = config("aue");
-			$token = $this->getAueToken();
-			$data = [
-				'OrderIds'=>[$list['kdNo']],
-				'ReceiverName'=>$order['name'],
-				'ReceiverPhone'=>$order['mobile'],
-				'PhotoID'=>$order['sn'],
-				'PhotoFront'=>base64EncodeImage('.'.$order['front']),
-				'PhotoRear'=>base64EncodeImage('.'.$order['back'])
-			];
-
-			$url = 'http://aueapi.auexpress.com/api/PhotoIdUpload';
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization: Bearer '.$token));
-			$result = curl_exec($ch);
-			$result = json_decode($result,true);
-			if ($result['Code']==0 && $result['ReturnResult']=='Success') {
-				db("OrderBaoguo")->where($map)->setField('snStatus',1);
-				$this->success("上传成功");
-			}else{
-				$this->error("操作失败");
-			}
-		}
-	}
-
-	public function mprint(){
-		$ids = input('get.ids');
-		$ids = explode(",",$ids);
-
-		$map['eimg'] = array('neq','');
-		$map['id'] = array('in',$ids);
-		db("OrderBaoguo")->where($map)->setField('print',1);
-
-		$list = db("OrderBaoguo")->where($map)->select();
-		$this->assign('list',$list);
-
-		unset($map);
-		$map['id'] = array('in',$ids);
-		$map['eimg'] = array('neq','');
-		$map['type'] = array('in',[1,2,3]);
-		$map['sign'] = array('eq','');
-		db("OrderBaoguo")->where($map)->update(['flag'=>1,'updateTime'=>time()]);
-
-
-		foreach ($list as $key => $value) {
-			unset($where);
-			$where['orderID'] = $value['orderID'];
-        	$where['print'] = 0;
-        	$printNumber = db("OrderBaoguo")->where($where)->count();//未打印总数
-
-        	unset($where);
-			$where['orderID'] = $value['orderID'];
-        	$where['flag'] = 0;
-        	$flagNumber = db("OrderBaoguo")->where($where)->count();//未发货总数
-
-
-        	unset($map);
-    		$map['id'] = $value['orderID'];
-    		$map['payStatus'] = array('in',[2,3]);
-        	if ($flagNumber==0 && $printNumber==0) {
-        		db("Order")->where($map)->setField("payStatus",4);
-        	}elseif($printNumber==0){
-	        	db("Order")->where($map)->setField("payStatus",3);
-        	}
-		}
-		return view();
-	}
 }
 ?>

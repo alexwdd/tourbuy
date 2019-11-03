@@ -1,17 +1,5 @@
-orderDetail 增加brand
+city表 增加en
 
-转运四方商品信息不能乱填
+节点增加待审核
 
-array(8) {
-  ["Data"] => string(17) "19102522034124-31"
-  ["3PLOrderNumber"] => string(20) "OPP19102522034124-31"
-  ["UnionOrderNumber"] => string(12) "801034354781"
-  ["Message"] => string(18) "提交预报成功"
-  ["ResponseCode"] => string(5) "10000"
-  ["TaxAmount"] => float(9.1)
-  ["CurrencyCodeTax"] => string(3) "CNY"
-  ["CurrencyRateTax"] => string(6) "1.0000"
-}
-=================================
-
-商品增加specification字段
+shop表增加goodsNumber 商品数量

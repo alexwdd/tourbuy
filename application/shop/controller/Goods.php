@@ -57,6 +57,13 @@ class Goods extends Admin
             }
             return $result;
         }else{
+            $id = input('get.id');
+            if($id==''){
+                $goodsNumber = db("Goods")->where('shopID',$this->admin['id'])->count();
+                if($goodsNumber >= $this->admin['goodsNumber']){
+                    $this->error("超过允许发布商品数量，最多允许发布".$this->admin['goodsNumber']."件商品");
+                }
+            }
             $cate = model("GoodsCate")->getCate();
             foreach ($cate as $key => $value) {
                 $count               = count(explode('-', $value['path'])) - 3;
@@ -65,7 +72,7 @@ class Goods extends Admin
             $this->assign('cate', $cate);
 
             $linkGoods = [];
-            $id = input('get.id');
+            
             if ($id!='' || is_numeric($id)) {
                 $list = model('Goods')->find($id);
                 if (!$list) {

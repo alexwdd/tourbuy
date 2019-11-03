@@ -25,10 +25,10 @@
             </div>
 
             <div class="layui-input-inline">
-                <select name="send">
-                    <option value="">配送状态</option>
-                    <option value="1">已配送</option>
-                    <option value="0">待配送</option>
+                <select name="send" id="send">
+                    <option value="">出库状态</option>
+                    <option value="1">已出库</option>
+                    <option value="0">待出库</option>
                 </select>
             </div>
 
@@ -45,9 +45,12 @@
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
             {eq name="peing" value="1"}
-            <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/send')}" alert="1" alertMsg="选中订单的货物已经配送，确定吗？">批量配送</button>
+            <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/send')}" alert="1" alertMsg="选中订单的货物已经出库，确定吗？">批量出库</button>
+
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="toExp" data-tableId="lay-common-table">导出</button>
             {/eq}
-            <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/cancel')}" alert="1" alertMsg="确定吗？">取消订单</button>
+
+            <!-- 
             <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('order/del')}" alert="1" alertMsg="删除后不能恢复确定吗，确定吗？">删除</button> -->
         </div>
 
@@ -55,12 +58,16 @@
         <div class="fsDatagridCols">
             {eq name="peing" value="1"}
             <p checkbox="true"/>
-            {/eq}
+            {/eq}            
             <p field="id" title="ID" width="80"/>  
             <p field="memberID" title="会员ID" width="80"/> 
             <p field="order_no" title="订单号" width="150"/> 
-            <p title="配送" width="80" templet="#send"/>
-            <p field="status" title="订单状态" width="100" templet="#status"/>           
+            <p title="出库" width="80" templet="#sendTpl"/>
+            {eq name="cancel" value="1"}
+            <p field="status" title="订单状态" width="120" templet="#cancelTpl"/>  
+            {else/}
+            <p field="status" title="订单状态" width="100" templet="#status"/>  
+            {/eq}                     
             <p field="total" title="总金额" width="100"/>
             <p field="wallet" title="积分抵扣" width="100"/>
             <p field="money" title="实付金额" width="100"/>
@@ -73,13 +80,17 @@
             <p title="收件人" width="160" templet="#shoujianren"/>
             <p title="发件人" width="160" templet="#fajianren"/>            
             <p field="createTime" title="创建日期" width="180" sort="true"/>
+            {eq name="peing" value="1"}
+            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="140"/>
+            {else/}
             <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
+            {/eq}
         </div>
-        <script type="text/html" id="send">
+        <script type="text/html" id="sendTpl">
             {{# if(d.send==0){ }}
-            未配送
+            未出库
             {{# }else{ }}
-            <span style="color: blue">已配送</span>
+            <span style="color: blue">已出库</span>
             {{# } }}
         </script>
         <script type="text/html" id="pay">
@@ -97,6 +108,10 @@
         </script>
         <script type="text/html" id="fajianren">
             {{d.sender}}/{{d.senderTel}}                 
+        </script>
+
+        <script type="text/html" id="cancelTpl">
+            <span style="color:red">已取消 审核中</span>
         </script>
 
         <script type="text/html" id="status">
@@ -119,6 +134,9 @@
 
         <script type="text/html" id="barDemo">        
             <a class="layui-btn layui-btn-xs" lay-event="view" url="{:url('order/info')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="订单详情" data-tableId="lay-common-table">详情</a>
+            {eq name="peing" value="1"}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit" url="{:url('order/doCancel')}?id={{d.id}}" topWidth="600px" topHeight="240px" topTitle="取消订单" data-tableId="lay-common-table">取消订单</a>
+            {/eq}
         </script>
     </div>
 </div>
@@ -127,14 +145,28 @@ layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index','laydate'],function(){
+}).use(['index','laydate','table'],function(){
     var form = layui.form,
         laydate = layui.laydate,
+        table = layui.table,
         $ = layui.$;
 
     laydate.render({
         elem: '#createDate',
         range: true
     });
+
+    $("#toExp").click(function(){
+        var tableId = $(this).attr('data-tableId');
+        var checkStatus = table.checkStatus(tableId),
+            checkData = checkStatus.data; //得到选中的数据
+        var ids = [];
+        for (var i = 0; i < checkData.length; i++) {
+            ids.push(checkData[i].id);
+        };
+        createDate = $("#createDate").val();
+        send = $("#send").val();
+        window.location.href = '{:url('order/export')}?ids='+ids.join(",")+'&date='+createDate+'&send='+send;
+    })
 });
 </script>

@@ -1,0 +1,23 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list">
+    <textarea name="remark" class="layui-textarea" lay-verify="required" placeholder="请输入取消理由"></textarea>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('order/doCancel')}">
+    </div>
+    <input type="hidden" name="id" id="id" value="{$list.id}">
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','laydate'],function(){
+    var form = layui.form,
+        laydate = layui.laydate,
+        $ = layui.$;
+
+    laydate.render({
+        elem: '#createDate',
+        range: true
+    });
+});
+</script>

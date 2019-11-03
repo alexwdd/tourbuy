@@ -7,7 +7,7 @@ class Baoguo extends Admin {
 	#列表
 	public function index() {
 		if (request()->isPost()) {
-			//$map['status'] = 1;
+			$map['status'] = 1;
             $map['type'] = array('gt',0);
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
@@ -41,19 +41,21 @@ class Baoguo extends Admin {
     }
 
     public function export(){
-    	$type = input('get.type');
-    	$flag = input('get.flag');
+    	$cityID = input('get.cityID');
+    	$shopID = input('get.shopID');
         $createDate = input('get.date');
     	$ids = input('get.ids');
-    	if ($flag!='') {
-            $map['flag'] = $flag;
-        }
-        if ($type!='') {
-            $map['type'] = $type;
+    	if ($shopID!='') {
+            $map['shopID'] = $shopID;
+        }else{
+            if ($cityID!='') {
+                $shopIds = db("Shop")->where('id',$cityID)->column('id');
+                $map['shopID'] = array('in',$shopIds);
+            }
         }
         if ($ids!='') {
-            $map['id'] = array('in',$ids);
-        }
+            $map['id'] = array('in',$ids);;
+        }        
         if ($createDate!='') {
             $date = explode(" - ", $createDate);
             $startDate = $date[0];
@@ -66,18 +68,14 @@ class Baoguo extends Admin {
         	db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
         	$goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
 			$content = '';
-			foreach ($goods as $k => $val) {
-				if ($val['extends']!='') {
-					$goodsName = $val['short'].'['.$val['extends'].']';
-				}else{
-					$goodsName = $val['short'];
-				}	
+			foreach ($goods as $k => $val) {			
+				$goodsName = $val['short'];				
 				if ($k==0) {
-					$content .= $goodsName.'*'.$val['trueNumber'];
+					$content .= $goodsName.'*'.$val['number'];
 				}else{
-					$content .= ";".$goodsName.'*'.$val['trueNumber'];
+					$content .= ";".$goodsName.'*'.$val['number'];
 				}				
-			}		
+			}
 			$list[$key]['goods'] = $content;
         }
 
@@ -96,14 +94,14 @@ class Baoguo extends Admin {
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$num, $v['id'])                
-                ->setCellValue('B'.$num, $v['order_no'])                
+                ->setCellValue('B'.$num, ' '.$v['order_no'])                
                 ->setCellValue('C'.$num, $v['kdNo'])
                 ->setCellValue('D'.$num, $v['name'])                 
-                ->setCellValue('E'.$num, $v['mobile'])
-                ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['area'].'/'.$v['address'])
-                ->setCellValue('G'.$num, $v['kuaidi'])
+                ->setCellValue('E'.$num, $v['tel'])
+                ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['county'].'/'.$v['addressDetail'])
+                ->setCellValue('G'.$num, $v['express'])
                 ->setCellValue('H'.$num, $v['goods'])
-                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderMobile']);
+                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderTel']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('包裹');
@@ -121,7 +119,7 @@ class Baoguo extends Admin {
             set_time_limit(0);
             ini_set("memory_limit", "512M"); 
             
-            $file = input('post.file');
+            $file = input('post.excel');
             $objReader = \PHPExcel_IOFactory::createReader ( 'Excel5' );
             $objReader->setReadDataOnly(true);
             $objPHPExcel = $objReader->load('.'.$file);
@@ -138,6 +136,7 @@ class Baoguo extends Admin {
                 $kdNo = trim($sheet->getCellByColumnAndRow(2, $i)->getValue());
                 $data['kdNo'] = str_replace("，",",",$kdNo);
                 $obj->where('id',$orderID)->update($data);
+                $total++;
             }
             
             $msg = '共'.($highestRow-1).'条数据，成功导入'.$total.'条，错误信息'.$error;

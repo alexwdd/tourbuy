@@ -8,6 +8,7 @@ class Baoguo extends Admin {
 	public function index() {
 		if (request()->isPost()) {
 			$map['type'] = array('gt',0);
+            $map['status'] = 1;
             $map['shopID'] = $this->admin['id'];
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
@@ -34,19 +35,14 @@ class Baoguo extends Admin {
     }
 
     public function export(){
-    	$type = input('get.type');
-    	$flag = input('get.flag');
         $createDate = input('get.date');
-    	$ids = input('get.ids');
-    	if ($flag!='') {
-            $map['flag'] = $flag;
-        }
-        if ($type!='') {
-            $map['type'] = $type;
-        }
+        $ids = input('get.ids');
+
+        $map['shopID'] = $this->admin['id'];
+   
         if ($ids!='') {
             $map['id'] = array('in',$ids);
-        }
+        }        
         if ($createDate!='') {
             $date = explode(" - ", $createDate);
             $startDate = $date[0];
@@ -56,22 +52,18 @@ class Baoguo extends Admin {
         $map['status'] = 1;
         $list = db('OrderBaoguo')->where($map)->order('id desc')->select();
         foreach ($list as $key => $value) {
-        	db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
-        	$goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
-			$content = '';
-			foreach ($goods as $k => $val) {
-				if ($val['extends']!='') {
-					$goodsName = $val['short'].'['.$val['extends'].']';
-				}else{
-					$goodsName = $val['short'];
-				}	
-				if ($k==0) {
-					$content .= $goodsName.'*'.$val['trueNumber'];
-				}else{
-					$content .= ";".$goodsName.'*'.$val['trueNumber'];
-				}				
-			}		
-			$list[$key]['goods'] = $content;
+            db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
+            $goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
+            $content = '';
+            foreach ($goods as $k => $val) {            
+                $goodsName = $val['short'];             
+                if ($k==0) {
+                    $content .= $goodsName.'*'.$val['number'];
+                }else{
+                    $content .= ";".$goodsName.'*'.$val['number'];
+                }               
+            }
+            $list[$key]['goods'] = $content;
         }
 
         $objPHPExcel = new \PHPExcel();    
@@ -89,14 +81,14 @@ class Baoguo extends Admin {
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$num, $v['id'])                
-                ->setCellValue('B'.$num, $v['order_no'])                
+                ->setCellValue('B'.$num, ' '.$v['order_no'])                
                 ->setCellValue('C'.$num, $v['kdNo'])
                 ->setCellValue('D'.$num, $v['name'])                 
-                ->setCellValue('E'.$num, $v['mobile'])
-                ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['area'].'/'.$v['address'])
-                ->setCellValue('G'.$num, $v['kuaidi'])
+                ->setCellValue('E'.$num, $v['tel'])
+                ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['county'].'/'.$v['addressDetail'])
+                ->setCellValue('G'.$num, $v['express'])
                 ->setCellValue('H'.$num, $v['goods'])
-                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderMobile']);
+                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderTel']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('包裹');
@@ -107,7 +99,7 @@ class Baoguo extends Admin {
         header('Cache-Control: max-age=0');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output'); 
-    }	
+    }
 
     public function import(){
         if (request()->isPost()) {

@@ -32,11 +32,11 @@
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
 
-            <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="400px" topTitle="批量导入">批量导入</button>
-            
             <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="toExp" data-tableId="lay-common-table">导出
             </button>
-            
+
+            <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="400px" topTitle="批量导入">批量导入</button>
+
             <button class="layui-btn layui-btn-sm layui-btn-warm tools-btn" data-type="selectOpen" window="1" data-tableId="lay-common-table" url="{:url('baoguo/mprint')}">批量打印</button>
             
             <button type="button" class="layui-btn layui-btn-sm" id="imageBtn">
@@ -150,10 +150,8 @@ layui.config({
         for (var i = 0; i < checkData.length; i++) {
             ids.push(checkData[i].id);
         };
-        type = $("#type").val();
-        flag = $("#flag").val();
         createDate = $("#createDate").val();
-        window.location.href = '{:url('baoguo/export')}?ids='+ids.join(",")+'&date='+createDate+'&flag='+flag+'&type='+type;
+        window.location.href = '{:url('baoguo/export')}?ids='+ids.join(",")+'&date='+createDate;
     })
 
     //执行实例

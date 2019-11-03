@@ -24,7 +24,7 @@
 
             <label class="layui-form-mid">城市</label>
             <div class="layui-input-inline" style="width: 120px">
-                <select name="cityID" lay-filter="city">
+                <select name="cityID" id="cityID" lay-filter="city">
                     <option value="">请选择</option>
                     {volist name="city" id="vo"}
                     <option value="{$vo.id}">{$vo.name}</option>
@@ -51,11 +51,12 @@
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
 
-            <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="400px" topTitle="批量导入">批量导入</button>
-            
             <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="toExp" data-tableId="lay-common-table">导出
             </button>
-            
+
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="300px" topTitle="单号导入">单号导入</button>
+
+            <!-- 
             <button class="layui-btn layui-btn-sm layui-btn-warm tools-btn" data-type="selectOpen" window="1" data-tableId="lay-common-table" url="{:url('baoguo/mprint')}">批量打印</button>
             
             <button type="button" class="layui-btn layui-btn-sm" id="imageBtn">
@@ -66,6 +67,7 @@
         <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('baoguo/index')}" lay-filter="lay-common-table"></table>
         <div class="fsDatagridCols">
             <p checkbox="true"/>        
+            <p field="id" title="包裹ID" width="80"/>
             <p field="memberID" title="会员ID" width="100"/>
             <p field="order_no" title="订单号" width="150"/>  
             <p field="express" title="快递" width="100" />         
@@ -173,6 +175,9 @@ layui.config({
                 $("#shopID").html(_html);
                 form.render();
             },'json');
+        }else{
+            $("#shopID").html('');
+            form.render();
         }
     });
 
@@ -184,10 +189,10 @@ layui.config({
         for (var i = 0; i < checkData.length; i++) {
             ids.push(checkData[i].id);
         };
-        type = $("#type").val();
-        flag = $("#flag").val();
+        cityID = $("#cityID").val();
+        shopID = $("#shopID").val();
         createDate = $("#createDate").val();
-        window.location.href = '{:url('baoguo/export')}?ids='+ids.join(",")+'&date='+createDate+'&flag='+flag+'&type='+type;
+        window.location.href = '{:url('baoguo/export')}?ids='+ids.join(",")+'&date='+createDate+'&cityID='+cityID+'&shopID='+shopID;
     })
 
     //执行实例
