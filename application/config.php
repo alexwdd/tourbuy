@@ -264,6 +264,7 @@ return [
     'expressModel'=>[
         ['id'=>1,'name'=>'EWE澳中','value'=>'EWE'],
         ['id'=>2,'name'=>'4PX红酒','value'=>'PX'],
+        ['id'=>3,'name'=>'樱桃专线','value'=>'Cherry'],
     ],
 
     //包裹类型
