@@ -21,6 +21,7 @@ class OrderBaoguo extends Admin
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
         $shopID = input('post.shopID');
+        $expressID= input('post.expressID');
 
         if ($status!='') {
             $map['status'] = $status;
@@ -30,6 +31,9 @@ class OrderBaoguo extends Admin
         }
         if ($shopID!='') {
             $map['shopID'] = $shopID;
+        }
+        if ($expressID!='') {
+            $map['expressID'] = $expressID;
         }
         if ($keyword!='') {
             $map['name|sender'] = $keyword;

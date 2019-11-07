@@ -14,6 +14,9 @@ class Baoguo extends Admin {
     	}else{
             $city = db("City")->select();
             $this->assign('city', $city);
+
+            $express = db("Express")->select();
+            $this->assign('express', $express);
 	    	return view();
     	}
 	}

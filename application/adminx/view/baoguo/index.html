@@ -39,6 +39,16 @@
                 </select>
             </div>
 
+            <label class="layui-form-mid">快递</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="expressID">
+                    <option value="">请选择</option>
+                    {volist name="express" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+
             <div class="layui-input-inline" style="width:80px">
                 <button class="layui-btn" lay-submit lay-filter="tools-btn-search" style="display: block;">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>

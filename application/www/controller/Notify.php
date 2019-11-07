@@ -43,6 +43,7 @@ class Notify extends Base {
                             db("Goods")->where($map)->setDec("stock",$val['trueNumber']);
                         }                           
                     } 
+                    //发送短信
 
                     $this->saveJiangjin($list);             
                 }

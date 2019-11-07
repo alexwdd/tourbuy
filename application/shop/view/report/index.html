@@ -1,0 +1,120 @@
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">订单统计</div>
+
+            <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+                <div class="layui-form-item">  
+                    <label class="layui-form-mid">日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="date" id="date" value="{$date} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
+                    </div>            
+                    <div class="layui-inline">
+                        <button class="layui-btn" type="button" id="myBtn" style="display: block;">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-card-body">
+                <table id="test" class="lay-common-table"></table>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">销量排行</div>
+            <form class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">  
+                    <label class="layui-form-mid">时间范围</label>
+                    <div class="layui-input-inline">
+                        <select name="days" id="days">
+                            <option value="7">7天</option>
+                            <option value="30">30天</option>
+                            <option value="60">60天</option>
+                            <option value="90">90天</option>
+                            <option value="180">180天</option>
+                        </select>
+                    </div>            
+                    <div class="layui-inline">
+                        <button class="layui-btn" type="button" id="daysBtn" style="display: block;">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-card-body">
+                <table id="test1" class="lay-common-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','table','laydate'],function(){
+    var form = layui.form,
+        table = layui.table,
+        laydate = layui.laydate,
+        $ = layui.$;
+
+    laydate.render({
+        elem: '#date',
+        range: true
+    });
+
+    var tableIns = table.render({
+        elem: '#test'
+        ,url:'{:url('report/index')}'
+        ,method:'post'
+        ,title: '每日结算'
+        ,totalRow: true
+        ,cols: [[
+            {field:'date', title:'日期', width:110, unresize: true, totalRowText: '合计'}
+            ,{field:'number', title:'订单数量', width:90,totalRow: true}
+            ,{field:'total', title:'销售额', width:90, totalRow: true}
+            ,{field:'money', title:'实付金额', width:90,totalRow: true}
+            ,{field:'weixin', title:'微信支付', width:90,totalRow: true}
+            ,{field:'alipay', title:'支付宝', width:90, totalRow: true}
+            ,{field:'dikou', title:'积分支付', width:90, totalRow: true}
+            ,{field:'wallet', title:'抵扣',width:90, totalRow: true}
+        ]]
+    });
+
+    $("#myBtn").click(function(){
+        tableIns.reload({
+            where:{
+                date:$("#date").val(),
+                shopID:$("#shopID").val(),
+                cityID:$("#cityID").val(),
+            }
+        });
+    });
+    
+    var dayTable = table.render({
+        elem: '#test1'
+        ,url:'{:url('report/ajax')}'
+        ,where:{days:$("#days").val()}
+        ,method:'post'
+        ,totalRow: true
+        ,cols: [[
+            {field:'top', title:'排名', width:110,}
+            ,{field:'name', title:'商品',}
+            ,{field:'num', title:'销量', width:90,}
+        ]]
+    });
+
+    $("#daysBtn").click(function(){
+        dayTable.reload({
+            where:{
+                days:$("#days").val()
+            }
+        });
+    });
+});
+</script>

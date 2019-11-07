@@ -286,6 +286,9 @@ return [
     'PX_BAOGUO_TYPE' => array(         
         array('id'=>1,'name'=>'红酒','max'=>6,'same'=>99,'can'=>[]),
     ),
+    'Cherry_BAOGUO_TYPE' => array(         
+        array('id'=>1,'name'=>'樱桃','max'=>999,'same'=>99,'can'=>[]),
+    ),
 
     //财务类型
     'moneyType' => array( 

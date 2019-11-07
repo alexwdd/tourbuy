@@ -386,6 +386,7 @@ class Order extends Auth {
             foreach ($orderData['cart'] as $key => $value) {
                 array_push($history,[
                     'orderID'=>$orderID,
+                    'shopID'=>$orderData['shopID'],
                     'memberID'=>$this->user['id'],
                     'goodsID'=>$value['goodsID'],
                     'fid'=>$value['fid'],
@@ -395,7 +396,8 @@ class Order extends Auth {
                     'price'=>$value['price'],
                     'spec'=>$value['spec'],
                     'number'=>$value['number'],
-                    'trueNumber'=>$value['trueNumber']
+                    'trueNumber'=>$value['trueNumber'],
+                    'createTime'=>time()
                 ]);
                 array_push($ids,$value['id']);
             }
