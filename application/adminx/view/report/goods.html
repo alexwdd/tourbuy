@@ -1,6 +1,6 @@
-<div class="layui-row layui-col-space15">   
+<div class="layui-row layui-col-space15">
     <div class="layui-card">
-        <div class="layui-card-header">订单统计</div>
+        <div class="layui-card-header">商品统计(只统计前20名)</div>
 
         <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
             <div class="layui-form-item">  
@@ -37,7 +37,6 @@
         </div>
     </div>
 </div>
-
 <script>
 layui.config({
     base: '{:RES}/' //静态资源所在路径
@@ -74,23 +73,12 @@ layui.config({
 
     var tableIns = table.render({
         elem: '#test'
-        ,url:'{:url('report/index')}'
+        ,url:'{:url('report/goods')}'
         ,method:'post'
-        ,title: '每日结算'
-        ,totalRow: true
         ,cols: [[
-            {field:'date', title:'日期', width:110, unresize: true, totalRowText: '合计'}
-            ,{field:'number', title:'订单数量', width:90,totalRow: true}
-            ,{field:'total', title:'销售额', width:90, totalRow: true}
-            ,{field:'money', title:'实付金额', width:90,totalRow: true}
-            ,{field:'weixin', title:'微信支付', width:90,totalRow: true}
-            ,{field:'alipay', title:'支付宝', width:90, totalRow: true}
-            ,{field:'dikou', title:'积分支付', width:90, totalRow: true}
-            ,{field:'inprice', title:'成本', width:90, totalRow: true}
-            ,{field:'payment', title:'运费',width:90, totalRow: true}
-            ,{field:'wallet', title:'抵扣',width:90, totalRow: true}
-            ,{field:'discount', title:'优惠',width:90, totalRow: true}
-            ,{field:'lirun', title:'利润', width:90, totalRow: true}
+            {field:'top', title:'排名', width:110,}
+            ,{field:'name', title:'商品',}
+            ,{field:'num', title:'销量', width:90,}
         ]]
     });
 

@@ -301,9 +301,10 @@ class Shop extends Auth {
                     $comment[$key]['images'] = $images;
                 }
             }
-
+            $user = ['id'=>$this->user['id'],'team'=>$this->user['team']];
             returnJson(1,'success',[
                 'shop'=>$shop,
+                'user'=>$user,
                 'comment'=>$comment,
             ]);
         }

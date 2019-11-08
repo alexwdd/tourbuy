@@ -1,0 +1,113 @@
+<style type="text/css">
+.charts{width: 100%; height:400px;}
+</style>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md8">
+        <div class="layui-card">
+            <div class="layui-card-header">团队统计</div>
+
+            <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+                <div class="layui-form-item">  
+                    <label class="layui-form-mid">日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="date" id="date" value="{$start} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn" type="button" id="myBtn" style="display: block;">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-card-body">
+                <table id="test" class="lay-common-table"></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-md4">
+        <div class="layui-card">
+            <div class="layui-card-header">销售比例</div>
+            <div class="layui-card-body">
+                <div class="charts" id="myChart"></div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','table','laydate','echarts'],function(){
+    var form = layui.form,
+        table = layui.table,
+        laydate = layui.laydate,
+        $ = layui.$;
+
+    laydate.render({
+        elem: '#date',
+        range: true
+    });
+
+    var tableIns = table.render({
+        elem: '#test'
+        ,url:'{:url('report/team')}'
+        ,method:'post'
+        ,cols: [[
+            {field:'top', title:'头像', width:110,templet:"#face"}
+            ,{field:'id', title:'会员ID',}
+            ,{field:'nickname', title:'昵称',}
+            ,{field:'pushNumber', title:'推广人数',sort:true}
+            ,{field:'total', title:'累计销售额', width:150,sort:true}
+            ,{field:'bonus', title:'累计积分', width:150,sort:true}
+        ]]
+    });
+
+    $("#myBtn").click(function(){
+        tableIns.reload({
+            where:{
+                date:$("#date").val(),
+                shopID:$("#shopID").val(),
+                cityID:$("#cityID").val(),
+            }
+        });
+    });
+
+    var options = {      
+            title : {
+                text: '',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },       
+            calculable : true,
+            series : [
+                {
+                    name:'订单来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[]
+                }
+            ]
+        };
+
+    $.get('{:url('report/ajax')}',function(res){
+        options.series[0].data = res;
+        let myChart = echarts.init(document.getElementById('myChart'), layui.echartsTheme);
+        myChart.setOption(options);
+    },'json');
+});
+</script>
+<script type="text/html" id="face">
+    {{# if(d.headimg == ''){ }}
+    -
+    {{# }else{ }}
+    <img src="{{d.headimg}}" style="height:40px"/>
+    {{# } }}                
+</script>

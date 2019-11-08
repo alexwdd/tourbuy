@@ -182,7 +182,7 @@ class Order extends Auth {
                 returnJson(0,'购物车中没有商品');
             }
 
-            $shop = db("Shop")->field('id,name,tel')->whereIn('id',$shopIds)->select();
+            $shop = db("Shop")->field('id,cityID,name,tel')->whereIn('id',$shopIds)->select();
             $orders = [];
             foreach ($shop as $key => $value) {
                 unset($map);
@@ -196,6 +196,7 @@ class Order extends Auth {
                 $result['quhuoType'] = $quhuoType[$key];
                 $result['intr'] = $intr[$key];
                 $result['shopID'] = $value['id'];
+                $result['cityID'] = $value['cityID'];
                 $result['shopName'] = $value['name'];
                 $result['shopTel'] = $value['tel'];
                 //保存订单        
@@ -285,6 +286,7 @@ class Order extends Auth {
     public function saveShopOrder($address,$orderData){
         unset($data);
         $order_no = $this->getOrderNo();
+        $data['cityID'] = $orderData['cityID'];
         $data['shopID'] = $orderData['shopID'];
         $data['memberID'] = $this->user['id'];
         $data['couponID'] = $orderData['coupon']['id'];
@@ -386,6 +388,7 @@ class Order extends Auth {
             foreach ($orderData['cart'] as $key => $value) {
                 array_push($history,[
                     'orderID'=>$orderID,
+                    'cityID'=>$orderData['cityID'],
                     'shopID'=>$orderData['shopID'],
                     'memberID'=>$this->user['id'],
                     'goodsID'=>$value['goodsID'],

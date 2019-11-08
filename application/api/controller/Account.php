@@ -86,6 +86,7 @@ class Account extends Auth {
             $user['wechat'] = $this->user['wechat'];
             $user['sn'] = $this->user['sn'];
             $user['id'] = $this->user['id'];
+            $user['team'] = $this->user['team'];
             returnJson(1,'success',['user'=>$user]);
         }
     }

@@ -1,0 +1,71 @@
+<div class="layui-row layui-col-space15">
+    <div class="layui-card">
+        <div class="layui-card-header">店铺统计</div>
+
+        <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
+            <div class="layui-form-item">  
+                <label class="layui-form-mid">日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="date" id="date" value="{$start} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
+                </div> 
+                <label class="layui-form-mid">城市</label>
+                <div class="layui-input-inline">
+                    <select name="cityID" id="cityID">
+                        <option value="">请选择</option>
+                        {volist name="city" id="vo"}
+                        <option value="{$vo.id}">{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn" type="button" id="myBtn" style="display: block;">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="layui-card-body">
+            <table id="test" class="lay-common-table"></table>
+        </div>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','table','laydate'],function(){
+    var form = layui.form,
+        table = layui.table,
+        laydate = layui.laydate,
+        $ = layui.$;
+
+    laydate.render({
+        elem: '#date',
+        range: true
+    });
+
+    var tableIns = table.render({
+        elem: '#test'
+        ,url:'{:url('report/shop')}'
+        ,method:'post'
+        ,cols: [[
+            {field:'top', title:'排名', width:110,}
+            ,{field:'name', title:'店铺',}
+            ,{field:'num', title:'累计销售额', width:150,}
+        ]]
+    });
+
+    $("#myBtn").click(function(){
+        tableIns.reload({
+            where:{
+                date:$("#date").val(),
+                shopID:$("#shopID").val(),
+                cityID:$("#cityID").val(),
+            }
+        });
+    });
+});
+</script>
