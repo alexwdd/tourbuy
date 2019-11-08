@@ -74,7 +74,7 @@
             <p field="id" title="ID" width="80"/>  
             <p field="memberID" title="会员ID" width="80"/> 
             <p field="shopName" title="商铺" width="150"/> 
-            <p field="order_no" title="订单号" width="150"/> 
+            <p title="订单号" width="150" templet="#tplFlag"/> 
             <p title="出库" width="80" templet="#send"/>
             {eq name="Request.action" value="check"}
             <p field="status" title="订单状态" width="120" templet="#cancelTpl"/>  
@@ -101,6 +101,14 @@
             未出库
             {{# }else{ }}
             <span style="color: blue">已出库</span>
+            {{# } }}
+        </script>
+
+        <script type="text/html" id="tplFlag">
+            {{# if(d.flag==1){ }}
+            <span style="color:#ff0000">{{d.order_no}}</span>
+            {{# }else{ }}
+            {{d.order_no}}
             {{# } }}
         </script>
 

@@ -68,7 +68,7 @@ class Wechat extends Common {
                     }else{
                         if($shareUser!='' && is_numeric($shareUser)){
                             $father = db("Member")->where('id',$shareUser)->find();
-                            if($father){
+                            if($father['team']==1){
                                 $data['tjID'] = $father['id'];
                                 $data['tjName'] = $father['nickname'];
                             }

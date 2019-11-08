@@ -59,6 +59,9 @@ class Order extends Admin
                 if ($value['couponID']>0) {                    
                     $list[$key]['coupon'] = db("CouponLog")->where("id=".$value['couponID'])->value("name");   
                 }
+                if($value['send']==0 && $value['createDate']<(time()-172800)){
+                    $list[$key]['flag'] = 1;
+                }
                 $list[$key]['shopName'] = db("Shop")->where('id',$value['shopID'])->value("name");
             }
         }

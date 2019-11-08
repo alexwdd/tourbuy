@@ -904,6 +904,24 @@ class Order extends Auth {
             $res = db("GoodsComment")->insertAll($data);
             if($res){
                 db('Order')->where( $map )->setField('comment',1);
+                $config = tpCache('member');
+                if($config['comment']>0){
+                    $fina = $this->getUserMoney($this->user['id']);
+                    $jdata = array(
+                        'type' => 2,
+                        'money' => $config['comment'],
+                        'memberID' => $this->user['id'],  
+                        'doID' => $this->user['id'],
+                        'oldMoney'=>$fina['point'],
+                        'newMoney'=>$fina['point']+$config['comment'],
+                        'admin' => 2,
+                        'msg' => '完成订单评论，获得'.$config['comment'].'奖励积分',
+                        'extend1' => $id,
+                        'createTime' => time()
+                    ); 
+                }
+                db("Finance")->insert( $jdata );
+
                 returnJson(1,'您的评论是对我们最大的鼓励');
             }else{
                 returnJson(0,'操作失败');
