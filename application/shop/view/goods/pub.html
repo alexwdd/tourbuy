@@ -25,17 +25,17 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">快递</label>
+                    <label class="layui-form-label">{:lang('goods-express')}</label>
                     <div class="layui-input-inline">
                         <select name="expressID" id="expressID" default="{$list.expressID}" lay-verify="required" lay-filter="express">
-                            <option value="">请选择</option>
+                            <option value="">{:lang('select')}</option>
                             {volist name="express" id="vo"}
                             <option value="{$vo.id}" data-model="{$vo.model}">{$vo.name}</option>
                             {/volist}
                         </select>
                     </div>
 
-                    <label class="layui-form-label">包裹类型</label>
+                    <label class="layui-form-label">{:lang('goods-package')}</label>
                     <div class="layui-input-inline">
                         <select name="typeID" id="typeID" default="{$list.typeID}">
                             {volist name="type" id="vo"}
@@ -46,53 +46,53 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">短名称</label>
+                    <label class="layui-form-label">{:lang('goods-short-name')}</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="short" value="{$list.short}" lay-verify="required" placeholder="20个字内" maxlength="20" class="layui-input">
+                        <input type="text" name="short" value="{$list.short}" lay-verify="required" placeholder="20{:lang('goods-size')}" maxlength="20" class="layui-input">
                     </div>
 
-                    <label class="layui-form-label">特色描述</label>
+                    <label class="layui-form-label">{:lang('goods-tese')}</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="say" value="{$list.say}" placeholder="15个字内" maxlength="15" class="layui-input">
+                        <input type="text" name="say" value="{$list.say}" placeholder="15{:lang('goods-size')}" maxlength="15" class="layui-input">
                     </div>
 
-                    <label class="layui-form-label">货物规格</label>
+                    <label class="layui-form-label">{:lang('goods-specification')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="specification" value="{$list.specification}" placeholder="按物流要求填写" maxlength="15" class="layui-input">
                     </div>
-                    <div class="layui-form-mid layui-word-aux">红酒类必填</div>
+                    <div class="layui-form-mid layui-word-aux">{:lang('goods-hongjiu')}</div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">关键词</label>
+                    <label class="layui-form-label">{:lang('goods-keyword')}</label>
                     <div class="layui-input-block">
                         <input type="text" name="keyword" value="{$list.keyword}" class="layui-input">
                     </div>
                 </div>  
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">描述</label>
+                    <label class="layui-form-label">{:lang('goods-intr')}</label>
                     <div class="layui-input-block">
                         <input type="text" name="intr" value="{$list.intr}" placeholder="一句话描述商品" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">封面</label>
+                    <label class="layui-form-label">{:lang('goods-cover')}</label>
                     <div class="layui-input-inline" style="width:400px">
                         <input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
                     </div>
                     <div class="layui-inline">
-                        <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+                        <button type="button" class="layui-btn" id="upload-single">{:lang('upload')}</button>
                         <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">分类一</label>
+                    <label class="layui-form-label">{:lang('goods-cate1')}</label>
                     <div class="layui-input-inline">
                         <select name="cid" id="cid" {gt name="list.cid" value="0"}default="{$list['cid']},{$list['path']}"{/gt} lay-verify="required">
-                        <option value="">请选择</option>
+                        <option value="">{:lang('select')}</option>
                         {volist name="cate" id="vo"}
                         <option value="{$vo['id']},{$vo['path']}">{php}
                             for($i=0; $i<$vo['count']*2; $i++){
@@ -102,10 +102,10 @@
                         {/volist}
                         </select>
                     </div>
-                    <label class="layui-form-label">分类二</label>
+                    <label class="layui-form-label">{:lang('goods-cate2')}</label>
                     <div class="layui-input-inline">
                         <select name="cid1" id="cid1" {gt name="list.cid1" value="0"}default="{$list['cid1']},{$list['path1']}"{/gt}>
-                        <option value="">请选择</option>
+                        <option value="">{:lang('select')}</option>
                         {volist name="cate" id="vo"}
                         <option value="{$vo['id']},{$vo['path']}">{php}
                             for($i=0; $i<$vo['count']*2; $i++){
@@ -116,17 +116,17 @@
                         </select>
                     </div>
 
-                    <label class="layui-form-label">排序</label>
+                    <label class="layui-form-label">{:lang('sort')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="sort" id="sort" value="{$list.sort|default=50}" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">品牌</label>
+                    <label class="layui-form-label">{:lang('goods-brand')}</label>
                     <div class="layui-input-inline">
                         <select name="brandID" default="{$list.brandID}" lay-verify="required">
-                            <option value="">请选择</option>
+                            <option value="">{:lang('select')}</option>
                             {volist name="brand" id="vo"}
                             <option value="{$vo.id}">{$vo.name}</option>
                             {/volist}
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">标签</label>
+                    <label class="layui-form-label">{:lang('goods-tag')}</label>
                     <div class="layui-input-block">  
                         <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>  
                         <input type="checkbox" name="jingpin" value="1" lay-skin="primary" title="精品" {php}if($list['jingpin']=='1')echo 'checked';{/php}>            
@@ -144,15 +144,15 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">包邮</label>
+                    <label class="layui-form-label">{:lang('goods-baoyou')}</label>
                     <div class="layui-input-inline">         
-                        <input type="radio" name="baoyou" value="1" title="是" {php}if($list['baoyou']==1) echo 'checked';{/php}>
-                        <input type="radio" name="baoyou" value="0" title="否" {php}if($list['baoyou']==0) echo 'checked';{/php}>
+                        <input type="radio" name="baoyou" value="1" title="{:lang('yes')}" {php}if($list['baoyou']==1) echo 'checked';{/php}>
+                        <input type="radio" name="baoyou" value="0" title="{:lang('no')}" {php}if($list['baoyou']==0) echo 'checked';{/php}>
                     </div>
-                    <label class="layui-form-label">强制自提</label>
+                    <label class="layui-form-label">{:lang('goods-must-ziti')}</label>
                     <div class="layui-input-inline">
-                        <input type="radio" name="ziti" value="1" title="是" {php}if($list['ziti']==1) echo 'checked';{/php}>
-                        <input type="radio" name="ziti" value="0" title="否" {php}if($list['ziti']==0) echo 'checked';{/php}>
+                        <input type="radio" name="ziti" value="1" title="{:lang('yes')}" {php}if($list['ziti']==1) echo 'checked';{/php}>
+                        <input type="radio" name="ziti" value="0" title="{:lang('no')}" {php}if($list['ziti']==0) echo 'checked';{/php}>
                     </div>  
                 </div>      
 
@@ -163,7 +163,7 @@
                     </div> --> 
                     
                     
-                    <label class="layui-form-label">门店价</label>
+                    <label class="layui-form-label">{:lang('goods-shop-price')}</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="jiesuan" id="jiesuan" value="{$list.jiesuan}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
@@ -181,7 +181,7 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">单品数量</label>
+                    <label class="layui-form-label">{:lang('goods-single')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="number" id="number" value="{$list.number|default=1}" class="layui-input" lay-verify="required">
                     </div>
@@ -205,36 +205,36 @@
                 </div> -->
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">商品重量</label>
+                    <label class="layui-form-label">{:lang('goods-weight')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
 
-                    <label class="layui-form-label">物流重量</label>
+                    <label class="layui-form-label">{:lang('goods-express-weight')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">保质期</label>
+                    <label class="layui-form-label">{:lang('goods-end-date')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="endDate" id="endDate" value="{$list.endDate}" class="layui-input">
                     </div>
 
-                    <label class="layui-form-label">初始销量</label>
+                    <label class="layui-form-label">{:lang('goods-sell-number')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="sellNumber" value="{$list.sellNumber|default=0}" class="layui-input">
                     </div>
 
-                    <label class="layui-form-label">库存</label>
+                    <label class="layui-form-label">{:lang('goods-stock')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="stock" id="stock" value="{$list.stock|default=999}" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">正文</label>
+                    <label class="layui-form-label">{:lang('content')}</label>
                     <div class="layui-input-block">
                         <textarea name="content" id="container" lay-verify="content">{$list.content}</textarea>
                     </div>
@@ -256,17 +256,17 @@
                 <table class="layui-table">        
                     <tbody id="packBox">
                         <tr>
-                            <td><b>名称</b></td>
-                            <td style="width: 80px"><b>价格</b></td>
-                            <td style="width: 80px"><b>单品数量</b></td>
-                            <td style="width: 60px"><a href="javascript:void(0)" class="layui-btn layui-btn-normal layui-btn-xs" id="addBtn">添加</a></td>
+                            <td><b>{:lang('goods-name')}</b></td>
+                            <td style="width: 80px"><b>{:lang('goods-price')}</b></td>
+                            <td style="width: 80px"><b>{:lang('goods-single')}</b></td>
+                            <td style="width: 60px"><a href="javascript:void(0)" class="layui-btn layui-btn-normal layui-btn-xs" id="addBtn">{:lang('add')}</a></td>
                         </tr>
                         {volist name="pack" id="vo"}
                         <tr>                        
                         <td><input type="hidden" name="pack_id[]" value="{$vo.id}"><input type="text" name="pack_name[]" value="{$vo.name}" lay-verify="required" class="layui-input"></td> 
                         <td><input type="text" name="pack_price[]" value="{$vo.price}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>  
                         <td><input type="text" name="pack_number[]" value="{$vo.number}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td> 
-                        <td><a href="javascript:void(0)" data-id="{$vo.id}" class="layui-btn layui-btn-primary layui-btn-xs del-pack-btn"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
+                        <td><a href="javascript:void(0)" data-id="{$vo.id}" class="layui-btn layui-btn-primary layui-btn-xs del-pack-btn"><i class="layui-icon layui-icon-delete"></i> {:lang('delete')}</a></td>
                         </tr>
                         {/volist}
                     </tbody>
@@ -276,10 +276,10 @@
             <!--参数规格-->
             <div class="layui-tab-item">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">商品模型</label>
+                    <label class="layui-form-label">{:lang('goods-model')}</label>
                     <div class="layui-input-inline">
                         <select name="modelID" id="modelID" default="{$list.modelID}" lay-filter="goodsModel">
-                            <option value="">无</option>
+                            <option value="">{:lang('nothing')}</option>
                             {volist name="model" id="vo"}
                             <option value="{$vo.id}">{$vo.name}</option>
                             {/volist}

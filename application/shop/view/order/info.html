@@ -6,7 +6,7 @@
 <div class="layui-row layui-col-space5">
     <div class="layui-col-md5">
         <fieldset class="layui-elem-field">
-            <legend>商品详情</legend>
+            <legend>{:lang('order-goods')}</legend>
             <div class="layui-field-box">
                 <table class="layui-table">
                     <colgroup>
@@ -16,9 +16,9 @@
                     </colgroup>
                     <thead>
                     <tr>
-                      <th>名称</th>
-                      <th>数量</th>
-                      <th>金额</th>
+                      <th>{:lang('goods-name')}</th>
+                      <th>{:lang('number')}</th>
+                      <th>{:lang('price')}</th>
                     </tr> 
                     </thead>
                     <tbody>
@@ -40,75 +40,70 @@
         </fieldset>
 
         <fieldset class="layui-elem-field">
-            <legend>订单详情</legend>
+            <legend>{:lang('order-detail')}</legend>
             <div class="layui-field-box">                   
                 <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">订单号</label>
+                        <label class="layui-form-label">{:lang('order-no')}</label>
                         <div class="layui-form-mid">{$list.order_no}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">商品金额</label>
+                        <label class="layui-form-label">{:lang('order-goods-money')}</label>
                         <div class="layui-form-mid">{$list.goodsMoney}</div>
                     </div>                    
          
                     <div class="layui-form-item">
-                        <label class="layui-form-label">运费</label>
+                        <label class="layui-form-label">{:lang('order-payment')}</label>
                         <div class="layui-form-mid">{$list.payment}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">优惠</label>
+                        <label class="layui-form-label">{:lang('order-discount')}</label>
                         <div class="layui-form-mid">{$list.discount}</div>
                     </div> 
                       
                     <div class="layui-form-item">
-                        <label class="layui-form-label">订单金额</label>
+                        <label class="layui-form-label">{:lang('order-total')}</label>
                         <div class="layui-form-mid">{$list.total}</div>
                     </div> 
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">积分抵扣</label>
+                        <label class="layui-form-label">{:lang('pay-point')}</label>
                         <div class="layui-form-mid">{$list.wallet}</div>
                     </div> 
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">实付金额</label>
+                        <label class="layui-form-label">{:lang('order-pay')}</label>
                         <div class="layui-form-mid" style="color: #f00; font-weight: bold;">{$list.money}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">提交日期</label>
+                        <label class="layui-form-label">{:lang('date')}</label>
                         <div class="layui-form-mid">{$list.createTime|date="Y-m-d H:i:s",###}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">支付方式</label>
+                        <label class="layui-form-label">{:lang('pay-type')}</label>
                         <div class="layui-form-mid">{$list.payType|getPayType}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">留言</label>
+                        <label class="layui-form-label">{:lang('order-intr')}</label>
                         <div class="layui-input-inline">
                             <div class="layui-form-mid">{$list.intr}</div>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">订单状态</label>
+                        <label class="layui-form-label">{:lang('order-status')}</label>
                         <div class="layui-input-inline">
                             <div class="layui-form-mid">{$list|getOrderStatus}</div>
                         </div>
-                    </div>
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">订单总金额</label>  
-                        <div class="layui-form-mid">{$list.total}</div>               
-                    </div>
+                    </div>        
 
                     <div class="layui-form-item layui-form-text">
-                        <label class="layui-form-label">订单备注</label>
+                        <label class="layui-form-label">{:lang('order-remark')}</label>
                         <div class="layui-form-mid">{$list.remark}</div>                 
                     </div>
 
@@ -123,38 +118,38 @@
 
     <div class="layui-col-md7">
         <fieldset class="layui-elem-field">
-            <legend>收件人</legend>
+            <legend>{:lang('order-receive')}</legend>
             <div class="layui-field-box">
                 <div class="layui-form">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">姓名</label>
+                        <label class="layui-form-label">{:lang('name')}</label>
                         <div class="layui-form-mid">{$list.name}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">电话</label>
+                        <label class="layui-form-label">{:lang('tel')}</label>
                         <div class="layui-form-mid">{$list.tel}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">地址</label>
+                        <label class="layui-form-label">{:lang('address')}</label>
                         <div class="layui-form-mid">{$list.province}{$list.city}{$list.county}{$list.addressDetail}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">身份证号</label>
+                        <label class="layui-form-label">{:lang('id-number')}</label>
                         <div class="layui-form-mid">{$list.sn|default='无'}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">身份证</label>
+                        <label class="layui-form-label">{:lang('id-photo')}</label>
                         <div class="layui-input-block">
                             <div class="face">
                                 {empty name="list.front"}
                                 <img src="{:RES}/image/sn1.png">
                                 {else/}
                                 <img src="{$list.front}">
-                                <a href="{:url('order/image')}?img={$list.front}" class="layui-btn layui-btn-sm">下载</a>
+                                <a href="{:url('order/image')}?img={$list.front}" class="layui-btn layui-btn-sm">{:lang('download')}</a>
                                 {/empty}
                             </div>
                             <div class="face">
@@ -162,7 +157,7 @@
                                 <img src="{:RES}/image/sn2.png">
                                 {else/}
                                 <img src="{$list.back}" />
-                                <a href="{:url('order/image')}?img={$list.back}" class="layui-btn layui-btn-sm">下载</a>
+                                <a href="{:url('order/image')}?img={$list.back}" class="layui-btn layui-btn-sm">{:lang('download')}</a>
                                 {/empty}
                             </div>
                         </div>
@@ -172,16 +167,16 @@
         </fieldset>
 
         <fieldset class="layui-elem-field">
-            <legend>发件人</legend>
+            <legend>{:lang('order-sender')}</legend>
             <div class="layui-field-box">
                 <div class="layui-form">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">姓名</label>
+                        <label class="layui-form-label">{:lang('name')}</label>
                         <div class="layui-form-mid">{$list.sender}</div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">电话</label>
+                        <label class="layui-form-label">{:lang('tel')}</label>
                         <div class="layui-form-mid">{$list.senderTel}</div>
                     </div>
                 </div>
@@ -189,14 +184,14 @@
         </fieldset>
 
         <fieldset class="layui-elem-field">
-            <legend>包裹</legend>
+            <legend>{:lang('package')}</legend>
             <div class="layui-field-box">
                 {volist name="baoguo" id="f"}
                 <div class="orderList">
                     {eq name="f.type" value="0"}
-                    <div class="hd">包裹ID【{$f.id}】 【自提】 【{eq name="f.hexiao" value="0"}<span style="color: #f00">未核销</span>{else/}已核销{/eq}】</div>
+                    <div class="hd">{:lang('package')} ID【{$f.id}】 【{:lang('goods-ziti')}】 【{eq name="f.hexiao" value="0"}<span style="color: #f00">{:lang('check-no')}</span>{else/}{:lang('check-yes')}{/eq}】</div>
                     {else/}
-                    <div class="hd">包裹ID【{$f.id}】 身份证【{eq name="f.snStatus" value="0"}<span style="color: #f00">未上传</span>{else/}已上传{/eq}】 {$f.kuaidi} 运单号【{$f.kdNo|default="-"}】 【{eq name="f.flag" value="0"}<span style="color: #f00">未发货</span>{else/}已发货{/eq}】</div>
+                    <div class="hd">{:lang('package')} ID【{$f.id}】 {:lang('id-photo')}【{eq name="f.snStatus" value="0"}<span style="color: #f00">{:lang('upload-no')}</span>{else/}{:lang('upload-yes')}{/eq}】 {$f.kuaidi} {:lang('express-number')}【{$f.kdNo|default="-"}】 【{eq name="f.flag" value="0"}<span style="color: #f00">{:lang('nav-order-wait')}</span>{else/}{:lang('nav-order-send')}{/eq}】</div>
                     {/eq}
                     <table class="layui-table" style="margin: 0">
                         <colgroup>
@@ -206,9 +201,9 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>名称</th>                 
-                            <th>单价</th>
-                            <th>数量</th>     
+                            <th>{:lang('goods-name')}</th>
+                            <th>{:lang('number')}</th>
+                            <th>{:lang('price')}</th>   
                         </tr> 
                         </thead>
                         <tbody>
