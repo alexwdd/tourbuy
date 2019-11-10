@@ -12,6 +12,18 @@
         </div>
         {/empty}
     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">城市</label>
+        <div class="layui-input-inline">
+            <select name="cityID" default="{$list.cityID}" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="city" id="vo"}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
     
     {empty name="list.id"}
     <div class="layui-form-item">

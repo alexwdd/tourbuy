@@ -19,7 +19,7 @@ class Shop extends Auth {
             }
             $map['group'] = array('elt',$this->user['group']);
             $map['status'] = 1;
-            $shop = db("Shop")->where($map)->field('id,name,picname,intr,cityID')->select();
+            $shop = db("Shop")->where($map)->field('id,name,picname,intr,cityID')->order('sort asc,id desc')->select();
             foreach ($shop as $key => $value) {
                 $value['picname'] = getThumb($value['picname'],200,200);
                 $shop[$key]['picname'] = getRealUrl($value['picname']);
@@ -64,7 +64,7 @@ class Shop extends Auth {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,intr,banner,cityID')->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+            $list = $obj->field('id,name,picname,intr,banner,cityID')->where($map)->limit($firstRow.','.$pagesize)->order('sort asc,id desc')->select();
             foreach ($list as $key => $value) {
                 $value['picname'] = getThumb($value['picname'],200,200);
                 $list[$key]['picname'] = getRealUrl($value['picname']);
@@ -96,7 +96,7 @@ class Shop extends Auth {
                 $map['cityID'] = $cityID;
             }
             $map['group'] = array('elt',$this->user['group']);
-            $list = db('Shop')->field('id,name,intr,cityID,banner,picname')->where($map)->order('id desc,py asc')->limit(6)->select();
+            $list = db('Shop')->field('id,name,intr,cityID,banner,picname')->where($map)->order('sort asc,id desc')->limit(6)->select();
             foreach ($list as $k => $val) {
                 $val['picname'] = getThumb($val["picname"],200,200);
                 $list[$k]['picname'] = getRealUrl($val['picname']);

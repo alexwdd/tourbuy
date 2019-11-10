@@ -149,6 +149,17 @@ class Order extends Admin {
 		}
 	}
 
+	public function refund(){
+		$id = explode(",",input('post.id'));
+		if (count($id)==0) {
+			$this->error('请选择要取消的数据');
+		}else{
+            $map['id'] = array('in',$id);
+			db("Order")->where($map)->setField('refund',1);
+			$this->success("操作成功");
+		}
+	}
+
 	public function cancel(){
 		$id = explode(",",input('post.id'));
 		if (count($id)==0) {

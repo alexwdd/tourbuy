@@ -6,11 +6,15 @@ class User extends Admin{
     public function index(){ 
         if (request()->isPost()) {
             $cateArr = db('Role')->where($map)->column('id,name');
+            $cityArr = db('City')->where($map)->column('id,name');
             $result = model('User')->getList();
             foreach ($result['data'] as $key => $value) {
                 if (isset($cateArr[$value['group']])) {
                     $result['data'][$key]['groupName'] = $cateArr[$value['group']];
-                }                
+                }
+                if (isset($cityArr[$value['cityID']])) {                    
+                    $result['data'][$key]['cityName'] = $cityArr[$value['cityID']];
+                }
             }
             echo json_encode($result);
         }else{
@@ -37,6 +41,9 @@ class User extends Admin{
                 $list['status'] = 1;
             }
             $this->assign('list', $list);
+
+            $city = db("City")->select();
+            $this->assign('city', $city);
             return view();
         }
     }

@@ -259,7 +259,14 @@
             <input type="radio" name="status" value="1" title="启用" {php}if($list['status']==1) echo 'checked';{/php}>
             <input type="radio" name="status" value="0" title="禁用" {php}if($list['status']==0) echo 'checked';{/php}>
         </div>
-    </div>    
+    </div>  
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline">
+            <input type="text" name="sort" value="{$list.sort|default=50}" class="layui-input" value="50" placeholder="必填" lay-verify="number">
+        </div>
+    </div>  
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('shop/pub')}">
