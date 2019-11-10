@@ -8,6 +8,8 @@ return [
     'username'=>'用户名',
     'password'=>'密码',
     'checkcode'=>'图形验证码',
+    'change-password'=>'修改密码',
+    'login-out'=>'退出',
 
     'loginError'=>'账户或密码错误',
     'verifyError'=>'验证码错误',
@@ -39,6 +41,10 @@ return [
     'number'=>'数量',
     'price'=>'价格',
     'package'=>'包裹',
+    'weight'=>'重量',
+    'confirm'=>'确定吗？',
+    'goods'=>'商品',
+    'day'=>'天',
 
     'nav-home'=>'主页',
     'nav-info'=>'店铺资料',
@@ -53,7 +59,7 @@ return [
     'nav-order-close'=>'交易关闭',
     'nav-order-cancel'=>'取消订单',
     'nav-order-zhiyou'=>'直邮包裹',
-    'nav-order-ziti'=>'直邮包裹',
+    'nav-order-ziti'=>'自提包裹',
     'nav-order-report'=>'销售报表',
     'nav-tab-local'=>'关闭当前标签页',
     'nav-tab-other'=>'关闭其它标签页',
@@ -130,8 +136,6 @@ return [
     'order-remark'=>'订单备注',
 
     'order-goods'=>'商品详情',
-    'order-goods'=>'商品详情',
-    'order-goods'=>'商品详情',
 
     'member-id'=>'会员ID',
     'name'=>'姓名',
@@ -145,11 +149,28 @@ return [
     'pay-wechat'=>'微信',
     'pay-point'=>'积分抵扣',
 
+    'check'=>'核销',
     'check-yes'=>'已核销',
     'check-no'=>'未核销',
     'upload-yes'=>'已上传',
     'upload-no'=>'未上传',
-    'express-number'=>'运单号',
+    'pay-yes'=>'已支付',
+    'pay-no'=>'未支付',
+    'export-yes'=>'已导出',
+    'export-no'=>'未导出',
+    'express-number'=>'快递单号',
+    'express-image'=>'面单',
 
+    'order-report'=>'订单统计',
+    'sell-report'=>'销量排行',
+    'report-number'=>'订单数量',
+    'report-total'=>'销售额',
+    'report-pay-money'=>'实付金额',
+    'report-wechat'=>'微信支付',
+    'report-alipay'=>'支付宝',
+    'report-point'=>'积分支付',
+    'report-dikou'=>'抵扣',
+    'report-ranking'=>'排名',
+    'report-sell-number'=>'销量',
 ];
 ?>

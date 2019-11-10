@@ -1,11 +1,11 @@
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="layui-card-header">订单统计</div>
+            <div class="layui-card-header">{:lang('order-report')}</div>
 
             <form class="layui-form layui-card-header layuiadmin-card-header-auto" tableId="lay-common-table">
                 <div class="layui-form-item">  
-                    <label class="layui-form-mid">日期</label>
+                    <label class="layui-form-mid">{:lang('date')}</label>
                     <div class="layui-input-inline">
                         <input type="text" name="date" id="date" value="{$date} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
                     </div>            
@@ -24,17 +24,17 @@
     </div>
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="layui-card-header">销量排行</div>
+            <div class="layui-card-header">{:lang('sell-report')}</div>
             <form class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">  
-                    <label class="layui-form-mid">时间范围</label>
+                    <label class="layui-form-mid">{:lang('date')}</label>
                     <div class="layui-input-inline">
                         <select name="days" id="days">
-                            <option value="7">7天</option>
-                            <option value="30">30天</option>
-                            <option value="60">60天</option>
-                            <option value="90">90天</option>
-                            <option value="180">180天</option>
+                            <option value="7">7{:lang('day')}</option>
+                            <option value="30">30{:lang('day')}</option>
+                            <option value="60">60{:lang('day')}</option>
+                            <option value="90">90{:lang('day')}</option>
+                            <option value="180">180{:lang('day')}</option>
                         </select>
                     </div>            
                     <div class="layui-inline">
@@ -75,14 +75,14 @@ layui.config({
         ,title: '每日结算'
         ,totalRow: true
         ,cols: [[
-            {field:'date', title:'日期', width:110, unresize: true, totalRowText: '合计'}
-            ,{field:'number', title:'订单数量', width:90,totalRow: true}
-            ,{field:'total', title:'销售额', width:90, totalRow: true}
-            ,{field:'money', title:'实付金额', width:90,totalRow: true}
-            ,{field:'weixin', title:'微信支付', width:90,totalRow: true}
-            ,{field:'alipay', title:'支付宝', width:90, totalRow: true}
-            ,{field:'dikou', title:'积分支付', width:90, totalRow: true}
-            ,{field:'wallet', title:'抵扣',width:90, totalRow: true}
+            {field:'date', title:'{:lang('date')}', width:110, unresize: true, totalRowText: '合计'}
+            ,{field:'number', title:'{:lang('report-number')}', width:90,totalRow: true}
+            ,{field:'total', title:'{:lang('report-total')}', width:90, totalRow: true}
+            ,{field:'money', title:'{:lang('report-pay-money')}', width:90,totalRow: true}
+            ,{field:'weixin', title:'{:lang('report-wechat')}', width:90,totalRow: true}
+            ,{field:'alipay', title:'{:lang('report-alipay')}', width:90, totalRow: true}
+            ,{field:'dikou', title:'{:lang('report-point')}', width:90, totalRow: true}
+            ,{field:'wallet', title:'{:lang('report-dikou')}',width:90, totalRow: true}
         ]]
     });
 
@@ -102,9 +102,9 @@ layui.config({
         ,where:{days:$("#days").val()}
         ,method:'post'
         ,cols: [[
-            {field:'top', title:'排名', width:110,}
-            ,{field:'name', title:'商品',}
-            ,{field:'num', title:'销量', width:90,}
+            {field:'top', title:'{:lang('report-ranking')}', width:110,}
+            ,{field:'name', title:'{:lang('goods')}',}
+            ,{field:'num', title:'{:lang('report-sell-number')}', width:90,}
         ]]
     });
 
