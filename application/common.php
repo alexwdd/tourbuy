@@ -499,4 +499,39 @@ function base64EncodeImage($image_file) {
         return '';
     }    
 }
+
+use Dm\Request\V20151123 as Dm;
+function sendEmail(){
+    include_once './vendor/aliyun-php-sdk-core/Config.php';
+    
+    //需要设置对应的region名称，如华东1（杭州）设为cn-hangzhou，新加坡Region设为ap-southeast-1，澳洲Region设为ap-southeast-2。
+    $iClientProfile = DefaultProfile::getProfile("ap-southeast-1", "LTAI4FfYgvAFHavsPuHTN4kR", "JGeuRLU3MisRdcfeebRW41ca2GueUI");        
+    //新加坡或澳洲region需要设置服务器地址，华东1（杭州）不需要设置。
+    $iClientProfile::addEndpoint("ap-southeast-1","ap-southeast-1","Dm","dm.ap-southeast-1.aliyuncs.com");
+    //$iClientProfile::addEndpoint("ap-southeast-2","ap-southeast-2","Dm","dm.ap-southeast-2.aliyuncs.com");
+    $client = new DefaultAcsClient($iClientProfile);  
+            $request = new Dm\SingleSendMailRequest();   
+            //新加坡或澳洲region需要设置SDK的版本，华东1（杭州）不需要设置。
+            $request->setVersion("2017-06-22");
+            $request->setAccountName("admin@service.tourbuy.net");
+            $request->setFromAlias("Tourbuy");
+            $request->setAddressType(1);
+            //$request->setTagName("控制台创建的标签");
+            $request->setReplyToAddress("true");
+            $request->setToAddress("alex_wdd@126.com");        
+            $request->setSubject("您的账号已激活");
+            $request->setHtmlBody("这是一封测试邮件，您的账号已经激活");       
+    try {
+        $response = $client->getAcsResponse($request);
+        print_r($response);
+    }
+    catch (ClientException  $e) {
+        print_r($e->getErrorCode());   
+        print_r($e->getErrorMessage());   
+    }
+    catch (ServerException  $e) {        
+        print_r($e->getErrorCode());   
+        print_r($e->getErrorMessage());
+    }
+}
 ?>
