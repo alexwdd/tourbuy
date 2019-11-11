@@ -62,7 +62,7 @@ class Goods extends Admin
     }
 
     //获取列表
-    public function getList(){
+    public function getList($user){
         $pageNum = input('post.page',1);
         $pageSize = input('post.limit',config('page.size'));
         $field = input('post.field','id');
@@ -85,6 +85,10 @@ class Goods extends Admin
             $map['shopID'] = $shopID;
         }
         $map['fid'] = 0;
+
+        if($user['administrator']==0){
+            $map['cityID'] = $user['cityID'];
+        }
         
         $total = $this->where($map)->count();
         $pages = ceil($total/$pageSize);

@@ -7,7 +7,7 @@ class Goods extends Admin
     public function index()
     {
         if (request()->isPost()) {
-            $result       = model('Goods')->getList();
+            $result       = model('Goods')->getList($this->admin);
             $cateArr      = db('GoodsCate')->column('id,name');
             $brandArr      = db('Brand')->column('id,name');
             foreach ($result['data'] as $key => $value) {
@@ -19,7 +19,7 @@ class Goods extends Admin
                 }
             }
             echo json_encode($result);
-        } else {
+        } else {   
             $cate = model("GoodsCate")->getCate($this->modelID);
             foreach ($cate as $key => $value) {
                 $count               = count(explode('-', $value['path'])) - 3;
@@ -27,7 +27,11 @@ class Goods extends Admin
             }
             $this->assign('cate', $cate);
 
-            $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }            
             $this->assign('shop', $shop);
             return view();
         }
@@ -112,7 +116,11 @@ class Goods extends Admin
             $model = db("GoodsModel")->field('id,name')->select();
             $this->assign('model', $model);
 
-            $shop = db("Shop")->field('id,name,cityID')->select();
+            if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name,cityID')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name,cityID')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            } 
             $this->assign('shop', $shop);
             $this->assign('list', $list);
             return view();

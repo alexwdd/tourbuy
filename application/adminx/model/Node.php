@@ -85,7 +85,7 @@ class Node extends Admin
             $nodeid = db('Access')->where($map)->column('node_id'); 
             unset($map);
             $map['id'] = array('in',$nodeid);
-            $node = db('Node')->where($map)->column("value");             
+            $node = db('Node')->where($map)->column("value");
             $result = array_merge(config('rbac.NOT_AUTH_ACTION'),$node);
             if (config('rbac.USER_AUTH_TYPE')==1) {
                 cache('access',$result);

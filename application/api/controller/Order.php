@@ -326,6 +326,7 @@ class Order extends Auth {
             foreach ($orderData['baoguo']['baoguo'] as $key => $value) {
                 //保存详单
                 $detail['orderID'] = $orderID;
+                $detail['cityID'] = $data['cityID'];
                 $detail['shopID'] = $data['shopID'];
                 $detail['order_no'] = $data['order_no'];
                 $detail['memberID'] = $this->user['id'];  

@@ -9,10 +9,12 @@ class Ziti extends Admin {
 		if (request()->isPost()) {
 			//$map['status'] = 1;
             $map['type'] = 0;
+            if($this->admin['administrator']==0){
+                $map['cityID'] = $this->admin['cityID'];
+            }
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
     	}else{
-            $this->assign('type',config('EWE_BAOGUO_TYPE'));
 	    	return view();
     	}
 	}

@@ -16,12 +16,16 @@ return [
         'USER_AUTH_TYPE' => 1,        // 默认认证类型 1 登录认证 2 实时认证
         'USER_AUTH_KEY'  =>'authId', // 用户认证SESSION标记
         'ADMIN_AUTH_KEY' =>'administrator',
-        'NOT_AUTH_ACTION' => [ // 默认无需认证操作
+        'NOT_AUTH_ACTION' => [ // 默认无需认证操作,必须全部小写
             'index/index',
             'index/console',
+            'index/ajax',
             'index/menu',
             'upload/index',
-            'user/password'            
+            'user/password',
+            'goods/getexpress',
+            'goods/getgoodstype',
+            'baoguo/getshop',
         ]
     ],
     

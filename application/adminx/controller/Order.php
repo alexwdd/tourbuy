@@ -7,10 +7,17 @@ class Order extends Admin {
 	#列表
 	public function index() {
 		if (request()->isPost()) {
-			$result = model('Order')->getList();			
+			if($this->admin['administrator']==0){
+				$map['cityID'] = $this->admin['cityID'];
+			}
+			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }
             $this->assign('shop', $shop);
 	    	return view();
     	}
@@ -20,10 +27,17 @@ class Order extends Admin {
 		if (request()->isPost()) {
 			$map['status'] = 0;
 			$map['cancel'] = 0;
+			if($this->admin['administrator']==0){
+				$map['cityID'] = $this->admin['cityID'];
+			}
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }
             $this->assign('shop', $shop);
     		$this->assign('url',url('order/nopay'));
 	    	return view('normal');
@@ -34,10 +48,17 @@ class Order extends Admin {
 		if (request()->isPost()) {
 			$map['status'] = 1;
 			$map['cancel'] = 0;
+			if($this->admin['administrator']==0){
+				$map['cityID'] = $this->admin['cityID'];
+			}
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }
             $this->assign('shop', $shop);
     		$this->assign('url',url('order/peing'));
 	    	return view('normal');
@@ -48,10 +69,17 @@ class Order extends Admin {
 		if (request()->isPost()) {
 			$map['status'] = array('in',[2,3]);
 			$map['cancel'] = 0;
+			if($this->admin['administrator']==0){
+				$map['cityID'] = $this->admin['cityID'];
+			}
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }
             $this->assign('shop', $shop);
     		$this->assign('url',url('order/fahuo'));
 	    	return view('normal');
@@ -62,10 +90,17 @@ class Order extends Admin {
 		if (request()->isPost()) {
 			$map['status'] = 99;
 			$map['cancel'] = 1;
+			if($this->admin['administrator']==0){
+				$map['cityID'] = $this->admin['cityID'];
+			}
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }
             $this->assign('shop', $shop);
     		$this->assign('url',url('order/close'));
 	    	return view('normal');
@@ -76,10 +111,17 @@ class Order extends Admin {
 		if (request()->isPost()) {
 			$map['status'] = array('neq',99);
 			$map['cancel'] = 1;
+			if($this->admin['administrator']==0){
+				$map['cityID'] = $this->admin['cityID'];
+			}
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		$shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==1){
+                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            }else{
+                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
+            }
             $this->assign('shop', $shop);
     		$this->assign('url',url('order/check'));
 	    	return view('normal');

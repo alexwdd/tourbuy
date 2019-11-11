@@ -9,10 +9,17 @@ class Baoguo extends Admin {
 		if (request()->isPost()) {
 			$map['status'] = 1;
             $map['type'] = array('gt',0);
+            if($this->admin['administrator']==0){
+                $map['cityID'] = $this->admin['cityID'];
+            }
 			$result = model('OrderBaoguo')->getList($map);			
 			echo json_encode($result);
     	}else{
-            $city = db("City")->select();
+            if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
+            }else{
+                $city = db("City")->select();
+            }            
             $this->assign('city', $city);
 
             $express = db("Express")->select();
@@ -50,12 +57,16 @@ class Baoguo extends Admin {
     	$ids = input('get.ids');
     	if ($shopID!='') {
             $map['shopID'] = $shopID;
+        }
+
+        if($this->admin['administrator']==0){
+            $map['cityID'] = $this->admin['cityID'];
         }else{
             if ($cityID!='') {
-                $shopIds = db("Shop")->where('id',$cityID)->column('id');
-                $map['shopID'] = array('in',$shopIds);
+                $map['cityID'] = $cityID;
             }
         }
+
         if ($ids!='') {
             $map['id'] = array('in',$ids);;
         }        
@@ -169,6 +180,9 @@ class Baoguo extends Admin {
             $image->thumb(600, 1000)->save('.'.$fname);
             
             $map['kdNo'] = strtoupper(trim($fileName));
+            if($this->admin['administrator']==0){
+                $map['cityID'] = $this->admin['cityID'];
+            }
             $list = db("OrderBaoguo")->where($map)->find();
             if ($list) {
                 if ($list['image']=='') {
