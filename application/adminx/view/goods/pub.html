@@ -181,16 +181,29 @@
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="jiesuan" id="jiesuan" value="{$list.jiesuan}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
+                </div>
 
-                    <label class="layui-form-label">服务费</label>
+                <div class="layui-form-item"> 
+                    <label class="layui-form-label">直邮服务费</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="servePrice" id="servePrice" value="{$list.servePrice}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
                     <div class="layui-form-mid layui-word-aux">%</div>
 
-                    <label class="layui-form-label">进价</label>
+                    <label class="layui-form-label">直邮进价</label>
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="inprice" id="inprice" value="{$list.inprice}" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly" />
+                    </div>
+
+                    <label class="layui-form-label">自提服务费</label>
+                    <div class="layui-input-inline" style="width: 100px">
+                        <input type="text" name="ztServePrice" id="ztServePrice" value="{$list.ztServePrice}" lay-verify="required" autocomplete="off" class="layui-input" />
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">%</div>
+
+                    <label class="layui-form-label">自提进价</label>
+                    <div class="layui-input-inline" style="width: 100px">
+                        <input type="text" name="ztInprice" id="ztInprice" value="{$list.ztInprice}" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly" />
                     </div>
                 </div>
 
@@ -334,15 +347,23 @@ layui.config({
     $("#servePrice").on("input propertychange",function(){
         setInprice();
     });
+    $("#ztServePrice").on("input propertychange",function(){
+        setInprice();
+    });
     $("#jiesuan").on("input propertychange",function(){
         setInprice();
     });
     function setInprice(){
         var jiesuan = $("#jiesuan").val();
         var servePrice = $("#servePrice").val();
+        var ztServePrice = $("#ztServePrice").val();
         if(jiesuan!='' && servePrice!=''){
             inprice = (jiesuan *(100-servePrice) / 100);
             $("#inprice").val(inprice.toFixed(2));
+        }  
+        if(jiesuan!='' && ztServePrice!=''){
+            ztInprice = (jiesuan *(100-ztServePrice) / 100);
+            $("#ztInprice").val(ztInprice.toFixed(2));
         }
     };
 

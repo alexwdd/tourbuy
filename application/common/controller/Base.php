@@ -201,7 +201,7 @@ class Base extends Controller {
             if($quhuoType==0){
                 $cart[$key]['ziti'] = $goods['ziti'];
             }else{
-                $cart[$key]['ziti'] = 1;
+                $cart[$key]['ziti'] = 1;                
             }
             $brand = db("Brand")->where('id',$goods['brandID'])->value("name");
             $cart[$key]['name'] = $goods['name'];
@@ -212,6 +212,8 @@ class Base extends Controller {
             $cart[$key]['singleNumber'] = $goods['number'];
             $cart[$key]['baoyou'] = $goods['baoyou'];
             $cart[$key]['price'] = $goods['price'];
+            $cart[$key]['inprice'] = $goods['inprice'];
+            $cart[$key]['ztInprice'] = $goods['ztInprice'];
             $cart[$key]['specification'] = $goods['specification'];
             $cart[$key]['jiesuan'] = $goods['jiesuan'];
             $cart[$key]['expressID'] = $goods['expressID'];

@@ -7,7 +7,7 @@
                 <div class="layui-form-item">  
                     <label class="layui-form-mid">{:lang('date')}</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="date" id="date" value="{$date} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
+                        <input type="text" name="date" id="date" value="{$start} - {$date}" autocomplete="off" class="layui-input" placeholder=" - "/>
                     </div>            
                     <div class="layui-inline">
                         <button class="layui-btn" type="button" id="myBtn" style="display: block;">
@@ -79,8 +79,6 @@ layui.config({
             ,{field:'number', title:'{:lang('report-number')}', width:90,totalRow: true}
             ,{field:'total', title:'{:lang('report-total')}', width:90, totalRow: true}
             ,{field:'money', title:'{:lang('report-pay-money')}', width:90,totalRow: true}
-            ,{field:'weixin', title:'{:lang('report-wechat')}', width:90,totalRow: true}
-            ,{field:'alipay', title:'{:lang('report-alipay')}', width:90, totalRow: true}
             ,{field:'dikou', title:'{:lang('report-point')}', width:90, totalRow: true}
             ,{field:'wallet', title:'{:lang('report-dikou')}',width:90, totalRow: true}
         ]]

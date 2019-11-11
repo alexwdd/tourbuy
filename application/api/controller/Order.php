@@ -300,6 +300,8 @@ class Order extends Auth {
         $data['payment'] = $orderData['baoguo']['totalPrice'];
         $data['goodsMoney'] = $orderData['goodsMoney'];
         $data['inprice'] = $orderData['inprice'];
+        $data['ztInprice'] = $orderData['ztInprice'];
+        $data['jiesuan'] = $orderData['jiesuan'];
         $data['order_no'] = $order_no;
         $data['addressID'] = $address['id'];
         $data['name'] = $address['name'];
@@ -419,6 +421,8 @@ class Order extends Auth {
     public function getShopOrder($cart,$shop,$address,$couponID=null,$quhuoType=0){
         $goodsMoney = 0;
         $inprice = 0;
+        $ztInprice = 0;
+        $jiesuan = 0;
         $point = 0;
         $bonus = 0;
         foreach ($cart as $key => $value) {
@@ -447,6 +451,8 @@ class Order extends Auth {
 
             $goodsMoney += $cart[$key]['total'];
             $inprice += $goods['inprice'] * $value['trueNumber'];
+            $ztInprice += $goods['ztInprice'] * $value['trueNumber'];
+            $jiesuan += $goods['jiesuan'] * $value['trueNumber'];
             $point += $goods['point'] * $value['trueNumber'];
             $bonus += $goods['tjPoint'] * $value['trueNumber'];
         }
@@ -482,7 +488,7 @@ class Order extends Auth {
         if($total<=0){
             $total = 1;
         }
-        return ['cart'=>$cart,'baoguo'=>$baoguo,'goodsMoney'=>$goodsMoney,'inprice'=>$inprice,'point'=>$point,'bonus'=>$bonus,'total'=>$total,'coupon'=>['id'=>$couponID,'discount'=>$discount]];
+        return ['cart'=>$cart,'baoguo'=>$baoguo,'goodsMoney'=>$goodsMoney,'inprice'=>$inprice,'ztInprice'=>$ztInprice,'jiesuan'=>$jiesuan,'point'=>$point,'bonus'=>$bonus,'total'=>$total,'coupon'=>['id'=>$couponID,'discount'=>$discount]];
     }
 
     //删除

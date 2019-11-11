@@ -9,8 +9,9 @@ class Report extends Admin {
 			$date = input('post.date');
 			if ($date=='') {
 				$date = date('Y-m-d');
-				$starDate = strtotime($date);
 				$endDate = strtotime($date);
+				$start = date("Y-m-d",strtotime("-7 day"));
+				$starDate = strtotime($start);
 			}else{
 				$date = explode(" - ", $date);
 	            $starDate = strtotime($date[0]);
@@ -23,7 +24,7 @@ class Report extends Admin {
 				$map['status'] = array('in',[1,2,3]);
 				$map['shopID'] = $this->admin['id'];
 
-				$list = db("Order")->field('total,money,wallet,inprice,discount,payment,payType')->where($map)->select();			
+				$list = db("Order")->field('total,money,wallet,inprice,jiesuan,discount,payment,payType')->where($map)->select();			
 				$total = 0;
 				$money = 0;
 				$wallet = 0;
@@ -35,7 +36,7 @@ class Report extends Admin {
 				$alipay = 0;
 				$dikou = 0;
 				foreach ($list as $key => $value) {
-					$total += $value['total'];
+					$total += $value['jiesuan'];
 					$money += $value['money'];
 					$wallet += $value['wallet'];
 					$discount += $value['discount'];
@@ -74,6 +75,8 @@ class Report extends Admin {
 	        );
 	        echo json_encode($result); 
 		}else{
+            $start = date("Y-m-d",strtotime("-7 day"));
+            $this->assign('start',$start);
             $this->assign('date', date("Y-m-d"));
 			return view();
 		}

@@ -36,7 +36,7 @@ class Report extends Admin {
 				if($cityID!=''){
 					$map['shopID'] = array('in',$ids);
 				}
-				$list = db("Order")->field('total,money,wallet,inprice,discount,payment,payType')->where($map)->select();			
+				$list = db("Order")->field('total,money,wallet,inprice,ztInprice,discount,payment,payType')->where($map)->select();			
 				$total = 0;
 				$money = 0;
 				$wallet = 0;
@@ -52,7 +52,11 @@ class Report extends Admin {
 					$money += $value['money'];
 					$wallet += $value['wallet'];
 					$discount += $value['discount'];
-					$inprice += $value['inprice'];
+					if($value['quhuoType']==0){
+						$inprice += $value['inprice'];
+					}else{
+						$inprice += $value['ztInprice'];
+					}					
 					$payment += $value['payment'];
 					if($payType==1){
 						$alipay += $value['money'];
