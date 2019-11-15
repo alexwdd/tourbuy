@@ -50,7 +50,12 @@ class PX {
 			}
 		}
 
-		$aveMoney = (ceil($goodsNumber/12)*15)/$num; //每个包裹的平均运费
+		if($goodsNumber<=12){
+			$aveMoney = 15/$num;
+		}else{
+			$aveMoney = 0;
+		}
+		//$aveMoney = (ceil($goodsNumber/12)*15)/$num; //每个包裹的平均运费
  		foreach ($this->baoguoArr as $key => $value) {
  			if ($this->baoguoArr[$key]['totalWuliuWeight']<1) {
 				$this->baoguoArr[$key]['totalWuliuWeight']=1;

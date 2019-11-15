@@ -501,7 +501,7 @@ function base64EncodeImage($image_file) {
 }
 
 use Dm\Request\V20151123 as Dm;
-function sendEmail(){
+function sendEmail($email,$title,$content){
     include_once './vendor/aliyun-php-sdk-core/Config.php';
     
     //需要设置对应的region名称，如华东1（杭州）设为cn-hangzhou，新加坡Region设为ap-southeast-1，澳洲Region设为ap-southeast-2。
@@ -518,9 +518,9 @@ function sendEmail(){
             $request->setAddressType(1);
             //$request->setTagName("控制台创建的标签");
             $request->setReplyToAddress("true");
-            $request->setToAddress("alex_wdd@126.com");        
-            $request->setSubject("您的账号已激活");
-            $request->setHtmlBody("这是一封测试邮件，您的账号已经激活");       
+            $request->setToAddress($email);        
+            $request->setSubject($title);
+            $request->setHtmlBody($content);       
     try {
         $response = $client->getAcsResponse($request);
         print_r($response);
