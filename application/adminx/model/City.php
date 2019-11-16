@@ -82,6 +82,12 @@ class City extends Admin
             return info('请选择快递',0);
         }
 
+        foreach ($data['expressID'] as $key => $value) {
+            if($data['address'][$key]==''){
+                return info('仓库地址不能为空',0);
+            }
+        }    
+
         if( isset( $data['id']) && !empty($data['id'])) {
             $result = $this->edit( $data );
         } else {
@@ -101,7 +107,7 @@ class City extends Admin
         $data['updateTime'] = time();
         $this->allowField(true)->save($data);
         if($this->id > 0){
-            $this->saveExpress($data['expressID'],$this->id);
+            $this->saveExpress($data['expressID'],$data['address'],$this->id);
             return info('操作成功',1);
         }else{
             return info('操作失败',0);
@@ -118,20 +124,21 @@ class City extends Admin
         $data['updateTime'] = time();
         $this->allowField(true)->save($data,['id'=>$data['id']]);
         if($this->id > 0){
-            $this->saveExpress($data['expressID'],$this->id);
+            $this->saveExpress($data['expressID'],$data['address'],$this->id);
             return info('操作成功',1);
         }else{
             return info('操作失败',0);
         }
     }
 
-    public function saveExpress($express,$cityID){
+    public function saveExpress($express,$address,$cityID){
         db("CityExpress")->where('cityID',$cityID)->delete();
         $arr = [];
         foreach ($express as $key => $value) {
             array_push($arr,[
                 'expressID'=>$value,
                 'cityID'=>$cityID,
+                'address'=>$address[$key],
             ]);
         }
         db("CityExpress")->insertAll($arr);

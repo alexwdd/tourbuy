@@ -31,6 +31,18 @@ class City extends Admin {
 			$this->assign('list', $list);
 
 			$express = db("Express")->select();
+			if ($list) {	
+				foreach ($express as $key => $value) {
+					unset($map);
+					$map['cityID'] = $list['id'];
+					$map['expressID'] = $value['id'];	
+					$express[$key]['address'] = db("CityExpress")->where($map)->value('address');
+				}				
+			}else{
+				foreach ($express as $key => $value) {
+					$express[$key]['address'] = '';
+				}
+			}
 			$this->assign('express',$express);
 			return view();
 		}

@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <title>邮件</title>
 <style>
+.title{font-size: 16px; font-weight: bold; padding: 10px 0}
+.intr{font-size: 12px;}
 table{border-collapse: collapse;border: none;width:100%;}
 td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 </style>
 </head>
 <body>
-	
+<div class="title">Order information</div>
 <table>
 	<tr>
 		<td style="width: 150px">Merchant Name</td>
@@ -27,8 +29,21 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td>Oder Type</td>
 		<td>Pick-up Order</td>
 	</tr>
+	<tr>
+		<td>Receiver</td>
+		<td>张三</td>
+	</tr>
+	<tr>
+		<td>Contact Number</td>
+		<td>13500000000</td>
+	</tr>
+	<tr>
+		<td>Warehouse Address</td>
+		<td>4PX Wine Delivery Centre</td>
+	</tr>
 </table>
 
+<div class="title">Commodity details</div>
 <table>
 	<tr>
 		<td>QTY</td>
@@ -51,8 +66,9 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td>$150</td>
 	</tr>
 </table>
-<p>This is not a Tax invoice Please do not give it to the customer.</p>
-<p>Adjustment Report</p>
+<div class="intr">This is not a Tax invoice Please do not give it to the customer.</div>
+
+<div class="title">Adjustment Report</div>
 <table>
 	<tr>
 		<td>Order ID</td>
