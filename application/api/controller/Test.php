@@ -18,6 +18,7 @@ class Test extends Base {
 	    	$coupon = db("CouponLog")->where('id',$order['couponID'])->find();
 	    	$this->assign('coupon',$coupon);
     	}
+    	
 
     	$baoguo = db('OrderBaoguo')->where('orderID',$orderID)->select();
     	foreach ($baoguo as $key => $value) {
