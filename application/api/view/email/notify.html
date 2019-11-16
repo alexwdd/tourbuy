@@ -15,74 +15,92 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 <table>
 	<tr>
 		<td style="width: 150px">Merchant Name</td>
-		<td>ABC 保健品专卖</td>
+		<td>{$order.sender}</td>
 	</tr>
 	<tr>
 		<td>Order Date</td>
-		<td>5/11/2019</td>
+		<td>{$order.createTime|date="d/m/Y",###}</td>
 	</tr>
 	<tr>
 		<td>Order Number</td>
-		<td>946406</td>
-	</tr>
-	<tr>
-		<td>Oder Type</td>
-		<td>Pick-up Order</td>
+		<td>{$order.order_no}</td>
 	</tr>
 	<tr>
 		<td>Receiver</td>
-		<td>张三</td>
+		<td>{$order.name}</td>
 	</tr>
 	<tr>
 		<td>Contact Number</td>
-		<td>13500000000</td>
-	</tr>
-	<tr>
-		<td>Warehouse Address</td>
-		<td>4PX Wine Delivery Centre</td>
+		<td>{$order.tel}</td>
 	</tr>
 </table>
+
+<div class="title">包裹</div>
+{volist name="baoguo" id="vo"}
+<table>
+	<tr>
+		<td style="width: 150px">快递单号</td>
+		<td style="width: 100px">类型</td>
+		<td>Item Detail</td>
+		<td>仓库地址</td>
+	</tr>
+	<tr>
+		<td>{$vo.kdNo}</td>
+		<td>{eq name="expressID" value="0"}自提{else/}直邮{/eq}</td>
+		<td>
+			{volist name="vo.goods" id="f"}
+			<p>{$f.name} * {$f.number}</p>
+			{/volist}
+		</td>
+		<td>{$vo.address}</td>
+	</tr>
+</table>
+{/volist}
 
 <div class="title">Commodity details</div>
 <table>
 	<tr>
-		<td>QTY</td>
+		<td style="width: 150px">QTY</td>
 		<td>Item Detail</td>
 		<td>Total ($)</td>
 	</tr>
+	{volist name="goods" id="vo"}
 	<tr>
-		<td>1</td>
-		<td>[Delivery]Penfolds Grange 2015</td>
-		<td>9.9</td>
+		<td>{$vo.number}</td>
+		<td>{$vo.name}</td>
+		<td>{$vo.price}</td>
 	</tr>	
+	{/volist}	
 	<tr>
 		<td>Adujustment</td>
 		<td></td>
-		<td>$50</td>
+		<td>${$order.discount}</td>
 	</tr>
 	<tr>
 		<td>Total</td>
 		<td></td>
-		<td>$150</td>
+		<td>${$order.total}</td>
 	</tr>
 </table>
 <div class="intr">This is not a Tax invoice Please do not give it to the customer.</div>
 
+{notempty name="coupon"}
 <div class="title">Adjustment Report</div>
 <table>
 	<tr>
-		<td>Order ID</td>
+		<td style="width: 150px">Order ID</td>
 		<td>Date</td>
 		<td>Remarks</td>
 	</tr>
 	<tr>
-		<td>122222</td>
-		<td>2019/6/8</td>
-		<td>Merchant promotion商家优惠满500-50</td>
+		<td>{$order.order_no}</td>
+		<td>{$order.createTime|date="d/m/Y",###}</td>
+		<td>{$coupon.name} {$coupon.desc}</td>
 	</tr>
 </table>
-
+{/notempty}
 <hr>
+
 <p>Dear merchant, Please following instructions to process the order:</p>
 <p>For Pick-up order:</p>
 <p>1.Please prepare goods on the order list for customer collection.</p>
