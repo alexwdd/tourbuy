@@ -13,6 +13,8 @@ class Notify extends Base {
         $notice_id = input('param.notice_id');
         $merchant_trade_no = input('param.merchant_trade_no');
         $token = input('param.token');
+
+        if($merchant_trade_no==''){die;}
         file_put_contents("note".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."通知ID:" .$notice_id."订单:".$merchant_trade_no."token:".$token. "\r\n", FILE_APPEND);
 
         db('PayOrder')->where('payNo',$merchant_trade_no)->setField("status",1);
@@ -43,6 +45,11 @@ class Notify extends Base {
                             db("Goods")->where($map)->setDec("stock",$val['trueNumber']);
                         }                           
                     } 
+
+                    //发送邮件
+                    $this->orderEmail($list);
+
+
                     //发送短信
 
                     $this->saveJiangjin($list);             
@@ -50,4 +57,38 @@ class Notify extends Base {
             }
         }
 	}
+
+    public function orderEmail($order){
+        $shop = db("Shop")->where('id',$order['shopID'])->find();
+        dump($shop);
+        if($shop && $shop['email']!=''){
+            $this->assign('order',$order);
+
+            $goods = db("OrderCart")->where('orderID',$order['id'])->select();
+            $this->assign('goods',$goods);
+
+            if($order['couponID']>0){
+                $coupon = db("CouponLog")->where('id',$order['couponID'])->find();
+                $this->assign('coupon',$coupon);
+            }
+            
+
+            $baoguo = db('OrderBaoguo')->where('orderID',$order['id'])->select();
+            foreach ($baoguo as $key => $value) {
+                $baoguo[$key]['address'] = db("CityExpress")->where([
+                    'expressID'=>$value['expressID'],
+                    'cityID'=>$value['cityID']
+                ])->value("address");
+
+                $baoguo[$key]['goods'] = db("OrderDetail")->where('baoguoID',$value['id'])->select();
+            }
+            $this->assign('baoguo',$baoguo);
+
+            $content = $this->fetch("email/order");
+            //echo $content;die;
+            $email = $shop['email'];
+            $title = 'Hello '.$shop['name'].'! You have a new order from tourbuy';
+            sendEmail($email,$title,$content);
+        }        
+    }
 }
