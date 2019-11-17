@@ -1,3 +1,4 @@
+{__NOLAYOUT__}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,28 +12,28 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 </style>
 </head>
 <body>
+<p>Hi Penfolds,</p>
+<p>Please find settlement report for last week</p>
+<p>This settlement may take 2-3 business days to get through.</p>
+<p>If you have any concerns, please feel free to contact me.</p>
+<p>Thank you for your business.</p>
+<p>Best Regards.</p>
+
 <div class="title">Order information</div>
 <table>
 	<tr>
-		<td style="width: 150px">Merchant Name</td>
-		<td>{$order.sender}</td>
-	</tr>
-	<tr>
-		<td>Order Date</td>
-		<td>{$order.createTime|date="d/m/Y",###}</td>
-	</tr>
-	<tr>
-		<td>Order Number</td>
-		<td>{$order.order_no}</td>
-	</tr>
-	<tr>
-		<td>Receiver</td>
-		<td>{$order.name}</td>
-	</tr>
-	<tr>
-		<td>Contact Number</td>
-		<td>{$order.tel}</td>
-	</tr>
+		<td style="width: 150px">Date</td>
+		<td>Order ID</td>
+		<td>Type</td>
+		<td>User ID</td>
+		<td>Description</td>
+		<td>QTY</td>
+		<td>UP</td>
+		<td>TP</td>
+		<td>MSTL</td>
+		<td>Rate</td>
+		<td>Domestic freight fee</td>
+	</tr>	
 </table>
 
 <div class="title">包裹</div>
@@ -60,56 +61,61 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 <div class="title">Commodity details</div>
 <table>
 	<tr>
-		<td style="width: 150px">QTY</td>
-		<td>Item Detail</td>
-		<td>Total ($)</td>
-	</tr>
-	{volist name="goods" id="vo"}
-	<tr>
-		<td>{$vo.number}</td>
-		<td>{$vo.name}</td>
-		<td>{$vo.price}</td>
-	</tr>	
-	{/volist}	
-	<tr>
-		<td>Adujustment</td>
+		<td style="width: 150px">Disbursement Date</td>
 		<td></td>
-		<td>${$order.discount}</td>
 	</tr>
 	<tr>
-		<td>freight</td>
+		<td style="width: 150px">Delivery QTY</td>
 		<td></td>
-		<td>${$order.payment}</td>
 	</tr>
 	<tr>
-		<td>Total</td>
+		<td style="width: 150px">Delivery Amount</td>
 		<td></td>
-		<td>${$order.total}</td>
+	</tr>
+	<tr>
+		<td style="width: 150px">Pick-up QTY</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td style="width: 150px">Pick-up Amount</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td style="width: 150px">Subtotal</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td style="width: 150px">Domestic freight</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td style="width: 150px">Adjustments</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td style="width: 150px">Settlement Amount</td>
+		<td></td>
 	</tr>
 </table>
-<div class="intr">This is not a Tax invoice Please do not give it to the customer.</div>
 
-{notempty name="coupon"}
+
 <div class="title">Adjustment Report</div>
 <table>
 	<tr>
 		<td style="width: 150px">Order ID</td>
 		<td>Date</td>
+		<td>Amount</td>
 		<td>Remarks</td>
 	</tr>
 	<tr>
 		<td>{$order.order_no}</td>
 		<td>{$order.createTime|date="d/m/Y",###}</td>
 		<td>{$coupon.name} {$coupon.desc}</td>
+		<td>{$coupon.name} {$coupon.desc}</td>
 	</tr>
 </table>
-{/notempty}
-<hr>
 
-<p>Dear merchant, Please following instructions to process the order:</p>
-<p>For Pick-up order:</p>
-<p>1.Please prepare goods on the order list for customer collection.</p>
-<p>2.Please login to merchant's portal to change the order status from "pending" to "sent" once customer collected goods in person.</p>
+
 <p>Please login to Merchant's protal to see more details</p>
 <p>http://www.tourbuy.net/shop</p>
 </body>

@@ -59,9 +59,8 @@ class Notify extends Base {
 	}
 
     public function orderEmail($order){
-        $shop = db("Shop")->where('id',$order['shopID'])->find();
-        dump($shop);
-        if($shop && $shop['email']!=''){
+        $shop = db("Shop")->where('id',$order['shopID'])->find();   
+        if($shop && $shop['masterEmail']!=''){
             $this->assign('order',$order);
 
             $goods = db("OrderCart")->where('orderID',$order['id'])->select();

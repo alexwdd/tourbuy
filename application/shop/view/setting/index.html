@@ -1,5 +1,5 @@
 <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
-    {eq name="list.edit" value="0"}
+
     <div class="layui-form-item">
         <label class="layui-form-label">商铺名称</label>
         <div class="layui-form-mid">{$list.name}</div>
@@ -19,6 +19,14 @@
         <div class="layui-form-mid">{$list.bankAccount|default='无'}</div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">Trading Name</label>
+        <div class="layui-form-mid">{$list.tradingName|default='无'}</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">ABN</label>
+        <div class="layui-form-mid">{$list.abn|default='无'}</div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">BSB</label>
         <div class="layui-form-mid">{$list.bsb|default='无'}</div>
     </div>
@@ -26,7 +34,8 @@
         <label class="layui-form-label">Account Number</label>
         <div class="layui-form-mid">{$list.bankNumber|default='无'}</div>
     </div>
-
+    
+    {eq name="list.edit" value="0"}
     <div class="layui-form-item">
         <label class="layui-form-label">一句话描述</label>
         <div class="layui-form-mid">{$list.intr|default='无'}</div>
@@ -76,10 +85,7 @@
         <div class="layui-form-mid">{$list.masterTel|default='无'}</div>
 
         <label class="layui-form-label">店主邮箱</label>
-        <div class="layui-form-mid">{$list.masterEmail|default='无'}</div>
-
-        <label class="layui-form-label">CBN</label>
-        <div class="layui-form-mid">{$list.cbn|default='无'}</div>
+        <div class="layui-form-mid">{$list.masterEmail|default='无'}</div>        
     </div>
 
     <div class="layui-form-item">
@@ -113,33 +119,7 @@
         <div class="layui-form-mid">{$list.content}</div>
     </div>
 
-    {else/}
-    <div class="layui-form-item">
-        <label class="layui-form-label">商铺名称</label>
-        <div class="layui-form-mid">{$list.name}</div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">账户</label>
-        <div class="layui-form-mid">{$list.account}</div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">Bank Name</label>
-        <div class="layui-form-mid">{$list.bank|default='无'}</div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">Account Name</label>
-        <div class="layui-form-mid">{$list.bankAccount|default='无'}</div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">BSB</label>
-        <div class="layui-form-mid">{$list.bsb|default='无'}</div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">Account Number</label>
-        <div class="layui-form-mid">{$list.bankNumber|default='无'}</div>
-    </div>
+    {else/}    
 
     <div class="layui-form-item">
         <label class="layui-form-label">一句话描述</label>
@@ -211,11 +191,6 @@
         <label class="layui-form-label">店主邮箱</label>
         <div class="layui-input-inline">
             <input type="text" name="masterEmail" value="{$list.masterEmail}" placeholder="" autocomplete="off" class="layui-input" lay-verify="required"/>
-        </div>
-
-        <label class="layui-form-label">CBN</label>
-        <div class="layui-input-inline">
-            <input type="text" name="cbn" value="{$list.cbn}" placeholder="" autocomplete="off" class="layui-input" />
         </div>
     </div>
 
