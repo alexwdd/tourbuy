@@ -199,7 +199,7 @@ class Order extends Auth {
                 $result['cityID'] = $value['cityID'];
                 $result['shopName'] = $value['name'];
                 $result['shopTel'] = $value['tel'];
-                //保存订单        
+                //保存订单
                 $order_no = $this->saveShopOrder($address,$result);
                 array_push($orders,$order_no);
             }
@@ -387,8 +387,17 @@ class Order extends Auth {
 
             //删除购物车，保存订单记录                
             $history = [];
-            $ids = [];
+            $ids = [];            
             foreach ($orderData['cart'] as $key => $value) {
+                if($value['ziti']==1){
+                    $inprice = $value['ztInprice'];//强制自提的商品成本
+                }else{
+                    if($data['quhuoType']==1){
+                        $inprice = $value['ztInprice'];//订单是自提
+                    }else{
+                        $inprice = $value['inprice'];//订单直邮
+                    }
+                }                
                 array_push($history,[
                     'orderID'=>$orderID,
                     'cityID'=>$orderData['cityID'],
@@ -400,6 +409,8 @@ class Order extends Auth {
                     'name'=>$value['name'],
                     'picname'=>$value['picname'],
                     'price'=>$value['price'],
+                    'jiesuan'=>$value['jiesuan'],
+                    'inprice'=>$inprice,
                     'spec'=>$value['spec'],
                     'number'=>$value['number'],
                     'trueNumber'=>$value['trueNumber'],
@@ -439,8 +450,12 @@ class Order extends Auth {
 
             $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
             $cart[$key]['name'] = $goods['name'];
+            $cart[$key]['ziti'] = $goods['ziti'];
             $cart[$key]['say'] = $goods['say'];
             $cart[$key]['fid'] = $goods['fid'];
+            $cart[$key]['jiesuan'] = $goods['jiesuan'];
+            $cart[$key]['inprice'] = $goods['inprice'];
+            $cart[$key]['ztInprice'] = $goods['ztInprice'];
             $cart[$key]['picname'] = getRealUrl($goods['picname']);
             $cart[$key]['price'] = $result['price'];
             if($result['spec']){

@@ -90,6 +90,27 @@ class Settlement extends Admin {
     }
 
     public function email(){
+        $startDate = strtotime('2019-01-01');
+        $endDate = strtotime('2019-12-01')+86399;
+        $shop = db("Shop")->where('id',7)->find();
+        $this->assign('shop',$shop);
+
+        $map['createTime'] = array('between',array($startDate,$endDate));
+        $map['status'] = array('in',[1,2,3]);
+        $order = db("Order")->where($map)->order('id desc')->select();
+        foreach ($order as $key => $value) {
+            $goods = db("OrderCart")->where("orderID",$value['id'])->select();
+            foreach ($goods as $kk => $v) {                
+                if($v['jiesuan']==0){
+                    $rate = 0;
+                }else{
+                    $rate = floor(($v['inprice']/$v['jiesuan']*100));
+                }
+                $goods[$kk]['rate'] = $rate;
+            }            
+            $order[$key]['goods'] = $goods;
+        }
+        $this->assign('order',$order);
         $result = $this->fetch();
         return view();
     }

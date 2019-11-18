@@ -12,7 +12,7 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 </style>
 </head>
 <body>
-<p>Hi Penfolds,</p>
+<p>Hi {$shop.name},</p>
 <p>Please find settlement report for last week</p>
 <p>This settlement may take 2-3 business days to get through.</p>
 <p>If you have any concerns, please feel free to contact me.</p>
@@ -34,6 +34,25 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td>Rate</td>
 		<td>Domestic freight fee</td>
 	</tr>	
+	{volist name="order" id="vo"}
+	{volist name="vo.goods" id="item" key="k"}
+	<tr>
+		{eq name="k" value="1"}
+		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.createTime|date="d/m/Y",###}</td>
+		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.order_no}</td>
+		<td rowspan="<?php echo count($vo['goods']);?>">{eq name="vo.quhuoType" value="0"}直邮{else/}自提{/eq}</td>
+		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.memberID}</td>
+		{/eq}
+		<td>{$item.name}</td>
+		<td>{$item.number}</td>
+		<td>{$item.price}</td>
+		<td>{$item.jiesuan}</td>
+		<td>{$item.inprice}</td>
+		<td>{$item.rate}%</td>
+		<td>Domestic freight fee</td>
+	</tr>
+	{/volist}
+	{/volist}
 </table>
 
 <div class="title">包裹</div>

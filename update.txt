@@ -1,2 +1,2 @@
-cbn abn
-增加tradingName
+增加每周结算节点
+orderCart表增加 jiesuan inprice
