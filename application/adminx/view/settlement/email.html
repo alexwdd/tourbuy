@@ -40,80 +40,60 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		{eq name="k" value="1"}
 		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.createTime|date="d/m/Y",###}</td>
 		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.order_no}</td>
-		<td rowspan="<?php echo count($vo['goods']);?>">{eq name="vo.quhuoType" value="0"}直邮{else/}自提{/eq}</td>
+		<td rowspan="<?php echo count($vo['goods']);?>">{eq name="vo.quhuoType" value="0"}Delivery{else/}Pick-up{/eq}</td>
 		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.memberID}</td>
 		{/eq}
 		<td>{$item.name}</td>
 		<td>{$item.number}</td>
-		<td>{$item.price}</td>
 		<td>{$item.jiesuan}</td>
-		<td>{$item.inprice}</td>
+		<td>{$item.jiesuan * $item.trueNumber}</td>
+		<td>{$item.inprice * $item.trueNumber}</td>
 		<td>{$item.rate}%</td>
-		<td>Domestic freight fee</td>
+		{eq name="k" value="1"}
+		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.insideFee}</td>
+		{/eq}
 	</tr>
 	{/volist}
 	{/volist}
 </table>
-
-<div class="title">包裹</div>
-{volist name="baoguo" id="vo"}
-<table>
-	<tr>
-		<td style="width: 150px">快递单号</td>
-		<td style="width: 100px">类型</td>
-		<td>Item Detail</td>
-		<td>仓库地址</td>
-	</tr>
-	<tr>
-		<td>{$vo.kdNo}</td>
-		<td>{eq name="expressID" value="0"}自提{else/}直邮{/eq}</td>
-		<td>
-			{volist name="vo.goods" id="f"}
-			<p>{$f.name} * {$f.number}</p>
-			{/volist}
-		</td>
-		<td>{$vo.address}</td>
-	</tr>
-</table>
-{/volist}
 
 <div class="title">Commodity details</div>
 <table>
 	<tr>
 		<td style="width: 150px">Disbursement Date</td>
-		<td></td>
+		<td>{$count.time}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Delivery QTY</td>
-		<td></td>
+		<td>Delivery QTY</td>
+		<td>{$count.zhiyouNumber}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Delivery Amount</td>
-		<td></td>
+		<td>Delivery Amount</td>
+		<td>${$count.zhiyou}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Pick-up QTY</td>
-		<td></td>
+		<td>Pick-up QTY</td>
+		<td>{$count.zitiNumber}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Pick-up Amount</td>
-		<td></td>
+		<td>Pick-up Amount</td>
+		<td>${$count.ziti}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Subtotal</td>
-		<td></td>
+		<td>Subtotal</td>
+		<td>${$count.money}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Domestic freight</td>
-		<td></td>
+		<td>Domestic freight</td>
+		<td>${$count.insideFee}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Adjustments</td>
-		<td></td>
+		<td style="color: #f00">Adjustments</td>
+		<td style="color: #f00">-${$count.discount}</td>
 	</tr>
 	<tr>
-		<td style="width: 150px">Settlement Amount</td>
-		<td></td>
+		<td>Settlement Amount</td>
+		<td>${$count.total}</td>
 	</tr>
 </table>
 
@@ -126,12 +106,16 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td>Amount</td>
 		<td>Remarks</td>
 	</tr>
+	{volist name="order" id="vo"}
+	{notempty name="vo.coupon"}
 	<tr>
-		<td>{$order.order_no}</td>
-		<td>{$order.createTime|date="d/m/Y",###}</td>
-		<td>{$coupon.name} {$coupon.desc}</td>
-		<td>{$coupon.name} {$coupon.desc}</td>
+		<td>{$vo.order_no}</td>
+		<td>{$vo.coupon.createTime|date="d/m/Y",###}</td>
+		<td>{$vo.coupon.desc}</td>
+		<td>{$vo.coupon.name} {$vo.coupon.desc}</td>
 	</tr>
+	{/notempty}
+	{/volist}
 </table>
 
 

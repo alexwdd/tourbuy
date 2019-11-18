@@ -5,18 +5,17 @@ use app\common\controller\Base;
 
 class Notify extends Base {
 
-	public function _initialize(){
+    public function _initialize(){
         parent::_initialize();
     }
 
-	public function index(){
+    public function index(){
         $notice_id = input('param.notice_id');
         $merchant_trade_no = input('param.merchant_trade_no');
         $token = input('param.token');
 
         if($merchant_trade_no==''){die;}
         file_put_contents("note".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."通知ID:" .$notice_id."订单:".$merchant_trade_no."token:".$token. "\r\n", FILE_APPEND);
-
         db('PayOrder')->where('payNo',$merchant_trade_no)->setField("status",1);
         $order_no = db('PayOrder')->where('payNo',$merchant_trade_no)->value("order_no");
         $order_no = explode(",", $order_no);
@@ -56,10 +55,10 @@ class Notify extends Base {
                 }
             }
         }
-	}
+    }
 
     public function orderEmail($order){
-        $shop = db("Shop")->where('id',$order['shopID'])->find();   
+        $shop = db("Shop")->where('id',$order['shopID'])->find();
         if($shop && $shop['masterEmail']!=''){
             $this->assign('order',$order);
 
@@ -85,7 +84,7 @@ class Notify extends Base {
 
             $content = $this->fetch("email/order");
             //echo $content;die;
-            $email = $shop['email'];
+            $email = $shop['masterEmail'];
             $title = 'Hello '.$shop['name'].'! You have a new order from tourbuy';
             sendEmail($email,$title,$content);
         }        

@@ -298,6 +298,7 @@ class Order extends Auth {
         $data['money'] = $orderData['total'];
         $data['wallet'] = 0;
         $data['payment'] = $orderData['baoguo']['totalPrice'];
+        $data['insideFee'] = $orderData['baoguo']['totalInsideFee'];
         $data['goodsMoney'] = $orderData['goodsMoney'];
         $data['inprice'] = $orderData['inprice'];
         $data['ztInprice'] = $orderData['ztInprice'];

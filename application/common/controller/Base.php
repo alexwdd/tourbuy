@@ -238,12 +238,13 @@ class Base extends Controller {
            
         if(count($ziti)>0){
             $zitiBaoguo = [
-                'type'=>0,               //类型
+                'type'=>0,              //类型
                 'totalNumber'=>1,       //总数量
-                'totalWeight'=>0,        //商品总重量
+                'totalWeight'=>0,       //商品总重量
                 'totalWuliuWeight'=>0,  //包装后总重量
-                'totalPrice'=>0,          //商品中金额
+                'totalPrice'=>0,        //商品中金额
                 'yunfei'=>0,            //运费
+                'insideFee'=>0,         //境内运费
                 'extend'=>0,
                 'express'=>'自提',
                 'expressID'=>0,
@@ -258,12 +259,14 @@ class Base extends Controller {
         $totalPrice = 0;
         $totalExtend = 0;
         $totalInprice = 0;
+        $totalInsideFee = 0;
         foreach ($baoguoArr as $key => $value) {
             $totalWeight += $value['totalWeight'];
             $totalWuliuWeight += $value['totalWuliuWeight'];
             $totalPrice += $value['yunfei'];
             $totalExtend += $value['extend'];
             $totalInprice += $value['inprice'];
+            $totalInsideFee += $value['insideFee'];
         }
 
         $data = [
@@ -272,6 +275,7 @@ class Base extends Controller {
             'totalPrice'=>fix_number_precision($totalPrice,2),
             'totalExtend'=>fix_number_precision($totalExtend,2),
             'totalInprice'=>fix_number_precision($totalInprice,2),
+            'totalInsideFee'=>fix_number_precision($totalInsideFee,2),
             'baoguo'=>$baoguoArr,
         ];     
         return $data;

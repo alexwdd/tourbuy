@@ -523,15 +523,15 @@ function sendEmail($email,$title,$content){
             $request->setHtmlBody($content);       
     try {
         $response = $client->getAcsResponse($request);
-        print_r($response);
+        //print_r($response);
     }
     catch (ClientException  $e) {
-        print_r($e->getErrorCode());   
-        print_r($e->getErrorMessage());   
+        //print_r($e->getErrorCode());   
+        //print_r($e->getErrorMessage());   
     }
     catch (ServerException  $e) {        
-        print_r($e->getErrorCode());   
-        print_r($e->getErrorMessage());
+        //print_r($e->getErrorCode());   
+        //print_r($e->getErrorMessage());
     }
 }
 ?>
