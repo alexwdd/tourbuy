@@ -81,7 +81,6 @@ class Notify extends Base {
                 $baoguo[$key]['goods'] = db("OrderDetail")->where('baoguoID',$value['id'])->select();
             }
             $this->assign('baoguo',$baoguo);
-
             $content = $this->fetch("email/order");
             //echo $content;die;
             $email = $shop['masterEmail'];
