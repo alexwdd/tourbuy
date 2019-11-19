@@ -32,11 +32,14 @@ class Index extends Common
             if($cityID>0){
                 $map['cityID'] = $cityID;
             }
-            $jingpin = db("Goods")->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
+            $jingpin = db("Goods")->field('id,fid,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(20)->select();
             foreach ($jingpin as $key => $value) {
+                $result = $this->getGoodsPrice($value,0,$this->flash);
+                $jingpin[$key]['price'] = $result['price'];
+                $jingpin[$key]['rmb'] = round($result['price']*$this->rate,1);
+
                 $value['picname'] = getThumb($value["picname"],400,400);
-                $jingpin[$key]['picname'] = getRealUrl($value['picname']);
-                $jingpin[$key]['rmb'] = round($value['price']*$this->rate,1);
+                $jingpin[$key]['picname'] = getRealUrl($value['picname']);                
             }
 
             //推荐品牌
@@ -108,11 +111,15 @@ class Index extends Common
                 if($cityID>0){
                     $map['cityID'] = $cityID;
                 }
-                $goods = db('Goods')->field('id,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(8)->select();
+                $goods = db('Goods')->field('id,fid,name,picname,say,price,comm')->where($map)->order('sort asc,id desc')->limit(8)->select();
                 foreach ($goods as $k => $val) {
+
+                    $result = $this->getGoodsPrice($val,0,$this->flash);
+                    $goods[$k]['price'] = $result['price'];
+                    $goods[$k]['rmb'] = round($result['price']*$this->rate,1);
+
                     $val['picname'] = getThumb($val["picname"],400,400);
-                    $goods[$k]['picname'] = getRealUrl($val['picname']);
-                    $goods[$k]['rmb'] = round($val['price']*$this->rate,1);
+                    $goods[$k]['picname'] = getRealUrl($val['picname']);   
                 }
                 $cateGoods[$key]['goods'] = $goods;
 

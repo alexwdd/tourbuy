@@ -160,7 +160,7 @@ class Base extends Controller {
             $fid = $goods['fid'];
         }else{
             $fid = $goods['id'];
-        }  
+        }
         $flash = $this->checkInFlash($fid,$flashArr);//判断是否在今日抢购中
         $spec = [];
         if($goods['fid']==0){
@@ -480,8 +480,10 @@ class Base extends Controller {
         $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/index.html';
         if($shopID){
             $data['return_url'] = 'http://shop.tourbuy.net/pay/return/'.$order['out_trade_no'].'?shopID='.$shopID;
+            $data['redirect_url'] = 'http://shop.tourbuy.net/pay/return/'.$order['out_trade_no'].'?shopID='.$shopID;
         }else{
             $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
+            $data['redirect_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
         } 
         $data['return_target'] = 'WX';
         $str = 'merchant_id='.$config['SUPAY_ID'].'&authentication_code='.$config['SUPAY_KEY'].'&merchant_trade_no='.$data['merchant_trade_no'].'&total_amount='.$data['total_amount'];

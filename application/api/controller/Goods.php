@@ -189,11 +189,14 @@ class Goods extends Common {
                 $next = 0;
             }
 
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
+            $list = $obj->field('id,fid,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
 
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
-                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
+
+                $result = $this->getGoodsPrice($value,0,$this->flash);     
+                $list[$key]['price'] = $result['price'];
+                $list[$key]['rmb'] = round($result['price']*$this->rate,1);
             }
 
             $city = db("City")->cache(true)->field('id,name')->select();
@@ -241,12 +244,15 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
+            $list = $obj->field('id,fid,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
 
             foreach ($list as $key => $value) {
                 $value['banner'] = getThumb($value["picname"],760,300);
                 $list[$key]['picname'] = getRealUrl($value['picname']);
-                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
+                
+                $result = $this->getGoodsPrice($value,0,$this->flash);     
+                $list[$key]['price'] = $result['price'];
+                $list[$key]['rmb'] = round($result['price']*$this->rate,1);
             }
             
             $cate = db("GoodsCate")->field('id,name,path')->where('fid',$thisCate['id'])->order('sort asc,id asc')->select();
@@ -290,12 +296,15 @@ class Goods extends Common {
             }else{
                 $next = 0;
             }
-            $list = $obj->field('id,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
+            $list = $obj->field('id,fid,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($field.' '.$order)->select();
 
             foreach ($list as $key => $value) {
                 $value['banner'] = getThumb($value["picname"],760,300);
                 $list[$key]['picname'] = getRealUrl($value['picname']);
-                $list[$key]['rmb'] = round($value['price']*$this->rate,1);
+
+                $result = $this->getGoodsPrice($value,0,$this->flash);
+                $list[$key]['price'] = $result['price'];
+                $list[$key]['rmb'] = round($result['price']*$this->rate,1);
             }
             
             $cate = db("GoodsCate")->field('id,name,path')->where('fid',0)->order('sort asc,id asc')->select();

@@ -284,6 +284,7 @@ class Cart extends Auth {
                 unset($map);
                 $map['shopID'] = $value['id'];
                 $map['memberID'] = $this->user['id'];
+                $map['id'] = array('in',$ids);
                 $shopGoods = db("Cart")->where($map)->select();
                 if($couponIds){
                     $couponID = $this->getCouponID($couponIds,$value['id']);
