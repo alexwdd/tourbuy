@@ -47,6 +47,10 @@ class Cart extends Auth {
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
             if($this->user['id']>0){
+                $shopID = input('post.shopID');
+                if($shopID>0){
+                    $map['shopID'] = $shopID;
+                }
                 $map['memberID'] = $this->user['id'];
                 $cartNumber = db("Cart")->where($map)->count();
             }else{
