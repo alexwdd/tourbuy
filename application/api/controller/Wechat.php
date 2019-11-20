@@ -50,7 +50,6 @@ class Wechat extends Common {
                             'loginIP' => $request->ip()
                         );
                         db('LoginLog')->insert($log);
-
                         //生成token
                         $str = md5(uniqid(md5(microtime(true)),true)); 
                         $token = sha1($str);
