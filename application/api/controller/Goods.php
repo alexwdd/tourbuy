@@ -504,6 +504,7 @@ class Goods extends Common {
             $list['goods_img'] = $goods_img;
             
             $list['content'] = htmlspecialchars_decode($list['content']);
+            $list['content'] = str_replace("<img src=\"/","<img src=\"http://".$_SERVER['HTTP_HOST']."/",$list['content']);
 
             unset($map);
             if($this->user['id']>0){
