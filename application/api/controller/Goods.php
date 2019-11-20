@@ -686,7 +686,7 @@ class Goods extends Common {
                   ->water($qrcode,[570,1060])
                   ->text($this->user['nickname'],'simhei.ttf',36,'#666666',[200,1120])
                   ->text('为您推荐','simhei.ttf',24,'#666666',[200,1170])->save(".".config("UPLOAD_PATH")."poster.png");
-            returnJson(1,'success',['url'=>config('site.domain').config("UPLOAD_PATH")."poster.png"]);
+            returnJson(1,'success',['url'=>'http://'.$_SERVER['HTTP_HOST'].config("UPLOAD_PATH")."poster.png"]);
         }
     }
 
