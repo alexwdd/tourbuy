@@ -460,7 +460,9 @@ class Goods extends Common {
             foreach ($list['image'] as $key => $value) {
                 $value = getThumb($value,1000,1000);
                 $list['image'][$key] = getRealUrl($value);
-            }                  
+            }
+            $list['picname'] = getThumb($list['picname'],200,200); 
+            $list['picname'] = getRealUrl($list['picname']); 
        
             //参数规格
             if($list['fid']>0){

@@ -112,7 +112,7 @@ class Base extends Controller {
         $pack = db("Goods")->field('id,name,price')->where('fid',$fid)->select();
 
         //参数规格
-        $spec  = db('GoodsSpecPrice')->where("goods_id", $fid)->column("key,key_name,price,item_id");  
+        $spec  = db('GoodsSpecPrice')->where("goods_id", $fid)->column("key,key_name,price,spec_img,item_id");  
 
         //是否今日抢购
         if($flash = $this->checkInFlash($fid,$flashArr)){
