@@ -647,7 +647,8 @@ class Goods extends Common {
     public function poster(){
         if(request()->isPost()){
             if(!checkFormDate()){returnJson(0,'ERROR');}
-            $goodsID = input('post.goodsID');            
+            $goodsID = input('post.goodsID');
+            $shopID = input('post.shopID');
             if ($goodsID=='' || !is_numeric($goodsID)) {
                 returnJson(0,'参数错误');
             }
@@ -661,8 +662,11 @@ class Goods extends Common {
 
             $list['rmb'] = number_format($this->rate*$list['price'],1); 
             
-
-            $url = 'http://m.tourbuy.net/goodsDetail?id='.$list['id'].'&shareUser='.$this->user['id'];
+            if($shopID!=''){
+                $url = 'http://shop.tourbuy.net/goodsDetail?id='.$list['id'].'&shareUser='.$this->user['id'];
+            }else{
+                $url = 'http://m.tourbuy.net/goodsDetail?id='.$list['id'].'&shareUser='.$this->user['id'];
+            }            
 
             require_once EXTEND_PATH.'qrcode/qrcode.php';
             $value = input("param.url");//二维码数据

@@ -104,6 +104,18 @@ class Member extends Admin
         }else{
             unset($data['password']);
         }*/
+        if($data['tjID']>0){
+            $father = db("Member")->where('id',$data['tjID'])->find();
+            if($father){
+                $data['tjName'] = $father['nickname'];
+            }else{
+                $data['tjID'] = 0;
+                $data['tjName'] = '';
+            }
+        }else{
+            $data['tjID'] = 0;
+            $data['tjName'] = '';
+        }
         $this->allowField(true)->save($data,['id'=>$data['id']]);
         if($this->id > 0){
             return array('code'=>1,'msg'=>'操作成功');

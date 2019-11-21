@@ -84,7 +84,7 @@
                     </div>
                     <div class="layui-inline">
                         <button type="button" class="layui-btn" id="upload-single">{:lang('upload')}</button>
-                        <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
+                        Size:{:config('image_size')}M
                     </div>
                 </div>
 
@@ -248,7 +248,8 @@
                     <li><img src="{$vo}" /><input type="hidden" name="image[]" value="{$vo}" /><i class="layui-icon del-img-btn" data-url="{$vo}">&#x1006;</i></li>
                     {/volist}
                     <a href="javascript:;" class="insert-btn" id="upload-mult">+</a> 
-                </div>              
+                </div>
+                <p>Size:{:config('image_size')}M</p>
             </div>
             
             <!--套餐-->

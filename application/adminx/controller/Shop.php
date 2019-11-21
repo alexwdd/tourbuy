@@ -25,6 +25,12 @@ class Shop extends Admin {
 	public function pub() {
 		if(request()->isPost()){
 	        $data = input('post.');
+	        if($data['status']==0 && $data['id']!=''){
+	        	db("Flash")->where('shopID',$data['id'])->delete();
+                cache('flash', NULL);
+
+                db('Goods')->where('shopID',$data['id'])->setField('show',0);
+	        }
 	        return model('Shop')->saveData( $data );
 		}else{
 			$id = input('get.id');

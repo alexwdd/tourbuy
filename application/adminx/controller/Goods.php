@@ -58,6 +58,12 @@ class Goods extends Admin
                     $goods_id = $goods->getLastInsID();
                 }                
                 $goods->afterSave($goods_id);
+
+                //删除抢购
+                if($data['show']==0){
+                    db("Flash")->where('goodsID',$goods_id)->delete();
+                    cache('flash', NULL);
+                }
             }
             return $result;
         }else{
