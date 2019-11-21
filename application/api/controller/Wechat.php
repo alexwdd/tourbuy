@@ -50,20 +50,25 @@ class Wechat extends Common {
                             'loginIP' => $request->ip()
                         );
                         db('LoginLog')->insert($log);
-                        //生成token
-                        $str = md5(uniqid(md5(microtime(true)),true)); 
-                        $token = sha1($str);
-                        $userData = array(
-                            'token' => $token,
-                            'token_out' => time()+3600*config('TOKEN_HOUR')
-                        );
-                        $r = db('Member')->where(array("openid" => $data['openid']))->update($userData);
-                        if($r){
-                            $user['token'] = $token;
-                            returnJson(1,'success',['token'=>$token]);
+
+                        if($user['token_out']<time()){
+                            //生成token
+                            $str = md5(uniqid(md5(microtime(true)),true)); 
+                            $token = sha1($str);
+                            $userData = array(
+                                'token' => $token,
+                                'token_out' => time()+3600*config('TOKEN_HOUR')
+                            );
+                            $r = db('Member')->where(array("openid" => $data['openid']))->update($userData);
+                            if($r){
+                                $user['token'] = $token;
+                                returnJson(1,'success',['token'=>$token]);
+                            }else{
+                                returnJson(0,'登录失败');
+                            }
                         }else{
-                            returnJson(0,'登录失败');
-                        }
+                            returnJson(1,'success',['token'=>$user['token']]);
+                        }                        
                     }else{
                         if($shareUser!='' && is_numeric($shareUser)){
                             $father = db("Member")->where('id',$shareUser)->find();
