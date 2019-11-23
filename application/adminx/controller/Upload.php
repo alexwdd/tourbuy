@@ -21,7 +21,7 @@ class Upload extends Admin{
  	}
 
 	#保存图片
-	private function _saveimage($dir=NULL,$water=0,$thumb=0){
+	private function _saveimage($dir=NULL,$water=0,$thumb=1){
 		if(!checkFormDate()){
 	        return array('state'=>'非法提交');
 	    }
@@ -47,9 +47,13 @@ class Upload extends Admin{
 				$fname = config('UPLOAD_PATH').$dir.'/'.$fname;
 			}
 
-			$image = \think\Image::open('.'.$fname);
-			// 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.png
-			$image->thumb(config('IMAGE_MAX_WIDTH'), config('IMAGE_MAX_HEIGHT'))->save('.'.$fname);
+			if($thumb==1){
+				echo 'aaaaaaa';
+				$image = \think\Image::open('.'.$fname);
+				// 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.png
+				$image->thumb(config('IMAGE_MAX_WIDTH'), config('IMAGE_MAX_HEIGHT'))->save('.'.$fname);
+			}
+			
 			
 			$result = array(
 				'url' => $fname,   //保存后的文件路径

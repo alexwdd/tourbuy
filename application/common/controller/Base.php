@@ -453,8 +453,8 @@ class Base extends Controller {
         $data['product_title'] = urldecode('途买在线支付');
         $data['merchant_trade_no'] = $order['out_trade_no'];
         $data['currency'] = 'AUD';
-        //$data['total_amount'] = $order['money'];
-        $data['total_amount'] = 0.01;
+        $data['total_amount'] = $order['money'];
+        //$data['total_amount'] = 0.01;
         $data['create_time'] = urldecode(date("Y-m-d H:i:s",time()));
         $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/index.html';
         $data['return_url'] = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
@@ -474,8 +474,8 @@ class Base extends Controller {
         $data['product_title'] = '途买在线支付';
         $data['merchant_trade_no'] = $order['out_trade_no'];
         $data['currency'] = 'AUD';
-        //$data['total_amount'] = $order['money'];
-        $data['total_amount'] = 0.01;
+        $data['total_amount'] = $order['money'];
+        //$data['total_amount'] = 0.01;
         $data['create_time'] = date("Y-m-d H:i:s",time());
         $data['notification_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/www/notify/index.html';
         if($shopID){
