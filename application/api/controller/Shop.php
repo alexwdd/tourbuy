@@ -206,7 +206,8 @@ class Shop extends Auth {
                 'shop'=>$shop,
                 'cate'=>$cate,
                 'commend'=>$commend,    
-                'coupon'=>$list
+                'coupon'=>$list,
+                'userID'=>$this->user['id']
             ]);
         }
     }

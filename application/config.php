@@ -264,7 +264,7 @@ return [
     'expressModel'=>[
         ['id'=>1,'name'=>'EWE澳中','value'=>'EWE'],
         ['id'=>2,'name'=>'4PX红酒','value'=>'PX'],
-        ['id'=>3,'name'=>'樱桃专线','value'=>'Cherry'],
+        ['id'=>3,'name'=>'手动面单','value'=>'Cherry'],
     ],
 
     //包裹类型
@@ -287,7 +287,7 @@ return [
         array('id'=>1,'name'=>'红酒','max'=>6,'same'=>99,'can'=>[]),
     ),
     'Cherry_BAOGUO_TYPE' => array(         
-        array('id'=>1,'name'=>'樱桃','max'=>999,'same'=>99,'can'=>[]),
+        array('id'=>1,'name'=>'手动面单','max'=>999,'same'=>99,'can'=>[]),
     ),
 
     //财务类型

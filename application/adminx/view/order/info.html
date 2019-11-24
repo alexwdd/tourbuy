@@ -209,7 +209,7 @@
                     {eq name="f.type" value="0"}
                     <div class="hd">包裹ID【{$f.id}】 【自提】 【{eq name="f.hexiao" value="0"}<span style="color: #f00">未核销</span>{else/}已核销{/eq}】</div>
                     {else/}
-                    <div class="hd">包裹ID【{$f.id}】 身份证【{eq name="f.snStatus" value="0"}<span style="color: #f00">未上传</span>{else/}已上传{/eq}】 {$f.kuaidi} 运单号【{$f.kdNo|default="-"}】 【{eq name="f.flag" value="0"}<span style="color: #f00">未发货</span>{else/}已发货{/eq}】</div>
+                    <div class="hd">包裹ID【{$f.id}】 身份证【{eq name="f.snStatus" value="0"}<span style="color: #f00">未上传</span>{else/}已上传{/eq}】 {$f.kuaidi} 运单号【{$f.kdNo|default="-"}】 【{$list|getOrderStatus}】</div>
                     {/eq}
                     <table class="layui-table" style="margin: 0">
                         <colgroup>
@@ -246,8 +246,8 @@
                         </div>
                         {eq name="list.cancel" value="0"}
                         <div style="float: right">          
-                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal snBtn">上传身份证</button>
-                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal createBtn">生成运单</button>
+                        <!-- <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal snBtn">上传身份证</button>
+                        <button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal createBtn">生成运单</button> -->
                         <button type="button" data-url="{:url("Order/wuliu","id=".$f['id'])}" class="layui-btn wuliuBtn">运单信息</button>
                         </div>
                         {/eq}

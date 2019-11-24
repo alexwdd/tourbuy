@@ -103,8 +103,9 @@ class Order extends Auth {
                 $list['createTime'] = date("Y-m-d H:i:s",$list['createTime']);
                 $list['goods'] = $goods;
 
-                $baoguo = db("OrderBaoguo")->field('id,type,payment,weight,express,kdNo,eimg,image,status,hexiao')->where('orderID',$list['id'])->select();
+                $baoguo = db("OrderBaoguo")->field('id,type,payment,weight,express,expressID,kdNo,eimg,image,status,hexiao')->where('orderID',$list['id'])->select();
                 foreach ($baoguo as $key => $value) {
+                    $baoguo[$key]['url'] = db("Express")->where('id',$value['expressID'])->value("url");
                     $goods = db("OrderDetail")->field('name,number')->where('baoguoID',$value['id'])->select();
                     $number = 0;
                     foreach ($goods as $k => $val) {

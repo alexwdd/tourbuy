@@ -79,11 +79,15 @@ class Baoguo extends Admin {
         $map['status'] = 1;
         $list = db('OrderBaoguo')->where($map)->order('id desc')->select();
         foreach ($list as $key => $value) {
-        	db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
+        	//db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
         	$goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
 			$content = '';
-			foreach ($goods as $k => $val) {			
-				$goodsName = $val['short'];				
+			foreach ($goods as $k => $val) {
+                $goodsName = $val['short'];
+                if ($val['specID']>0) {
+                    $spec = db("GoodsSpecPrice")->where('item_id',$val['specID'])->value("key_name");
+                    $goodsName .= '('.$spec.')'; 
+                }								
 				if ($k==0) {
 					$content .= $goodsName.'*'.$val['number'];
 				}else{
@@ -98,7 +102,7 @@ class Baoguo extends Admin {
             ->setCellValue('A1', '编号')
             ->setCellValue('B1', '订单号')
             ->setCellValue('C1', '快递号')
-            ->setCellValue('D1', '姓名')
+            ->setCellValue('D1', '收件人')
             ->setCellValue('E1', '电话')
             ->setCellValue('F1', '地址')
             ->setCellValue('G1', '快递')
@@ -192,7 +196,7 @@ class Baoguo extends Admin {
                 }
                 $data['flag'] = 1;
                 $res = db("OrderBaoguo")->where($map)->update($data);
-                if ($res) {
+                /*if ($res) {
                     $orderID = db("OrderBaoguo")->where($map)->value('orderID');
                     $where['orderID'] = $orderID;
                     $where['flag'] = 0;
@@ -203,7 +207,7 @@ class Baoguo extends Admin {
                         $map['payStatus'] = array('in',[2,3]);
                         db("Order")->where($map)->setField("payStatus",4);
                     }
-                }
+                }*/
             }
             return array('code'=>0,'msg'=>$fname);
         }else{

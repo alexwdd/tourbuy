@@ -131,6 +131,7 @@ class Index extends Common
                 $map['comm'] = $value['id'];
                 $map['banner'] = array('neq','');
                 $map['group'] = array('elt',$this->user['group']);
+                $map['status'] = 1;
                 $shop = db("Shop")->field('id,banner')->where($map)->limit(5)->select();
                 foreach ($shop as $k => $val) {
                     $val['banner'] = getThumb($val["banner"],760,300);

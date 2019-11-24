@@ -285,6 +285,65 @@ class Account extends Auth {
         }
     }
 
+    public function teamCount(){       
+        if (request()->isPost()) {
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $map['tjID'] = $this->user['id'];
+            $number = db('Member')->where($map)->count();
+
+            unset($map);
+            $map['memberID'] = $this->user['id'];
+            $map['type'] = 2;
+            $total = db("Finance")->where($map)->sum('money');
+
+            $start = date("Y-m").'-01';
+            $end = date('Y-m-d H:i:s', strtotime("$start +1 day -1 second")); 
+            $start=strtotime($start);
+            $end=strtotime($end);
+            $map['createTime'] = array('between',array($start,$end));
+            $month = db("Finance")->where($map)->sum('money');
+
+            returnJson(1,'success',['total'=>$total,'number'=>$number,'month'=>$month]);
+        }
+    }
+
+    public function teamDetail(){
+        if (request()->isPost()) {
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $userid = input('post.userid');
+            if($userid==''){
+                returnJson(0,'参数错误');
+            }
+            $user = db("Member")->field('id,nickname')->where('id',$userid)->find();
+            if(!$user){
+                returnJson(0,'团队成员不存在');
+            }
+            $page = input('post.page/d',1); 
+            $pagesize =10;
+            $firstRow = $pagesize*($page-1); 
+
+            $obj = db('Order');
+            $map['payStatus'] = 1;
+            $map['tjID'] = $this->user['id'];
+            $count = $obj->where($map)->count();
+            $totalPage = ceil($count/$pagesize);
+            if ($page < $totalPage) {
+                $next = 1;
+            }else{
+                $next = 0;
+            }           
+            $list = $obj->field('id,total,order_no,bonus,createTime')->where($map)->limit($firstRow.','.$pagesize)->select();
+            foreach ($list as $key => $value) {
+                $goods = db("OrderCart")->where('orderID',$value['id'])->select();
+                $list[$key]['goods'] = $goods;
+                $list[$key]['createTime'] = date("Y-m-d H:i:s",$value['createTime']);
+            }
+            returnJson(1,'success',['next'=>$next,'total'=>$count,'data'=>$list,'user'=>$user]);
+        }
+    }
+
     //每日签到
     public function sign(){
         if (request()->isPost()) { 

@@ -446,7 +446,7 @@ class Goods extends Common {
             $map['id'] = $goodsID;
             $map['show'] = 1;
             $map['group'] = array('elt',$this->user['group']);
-            $list = db('Goods')->field('id,shopID,fid,name,picname,image,price,point,content,say,intr,comm,tehui,flash,baoyou,ziti')->where($map)->find();
+            $list = db('Goods')->field('id,shopID,fid,name,picname,expressID,image,price,point,content,say,intr,comm,tehui,flash,baoyou,ziti')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }
@@ -471,6 +471,16 @@ class Goods extends Common {
             }else{
                 $fid = $list['id'];
                 $filter_spec = $this->get_spec($fid);
+            }
+
+            //快递描述
+            $express = db("Express")->field('say,content')->where('id',$list['expressID'])->find();
+            if($express){
+                $list['express_say'] = $express['say'];
+                $list['express_con'] = htmlspecialchars_decode($express['content']);
+            }else{
+                $list['express_say'] = '';
+                $list['express_con'] = '';
             }            
             
             $result = $this->getGoodsDetail($list,$this->flash);

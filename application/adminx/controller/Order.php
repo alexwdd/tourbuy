@@ -226,6 +226,7 @@ class Order extends Admin {
 	public function wuliu(){
 		if (request()->isPost()) {
 			$id = input("param.id");
+			$data['express'] = input("param.express");
 			$data['kdNo'] = input("param.kdNo");
 			$data['eimg'] = input("param.eimg");
 			$data['image'] = input("param.image");
@@ -389,7 +390,7 @@ class Order extends Admin {
 		$list = db("OrderBaoguo")->where($map)->select();
 		$this->assign('list',$list);
 
-		unset($map);
+		/*unset($map);
 		$map['id'] = array('in',$ids);
 		$map['eimg'] = array('neq','');
 		$map['type'] = array('in',[1,2,3]);
@@ -417,7 +418,7 @@ class Order extends Admin {
         	}elseif($printNumber==0){
 	        	db("Order")->where($map)->setField("payStatus",3);
         	}
-		}
+		}*/
 		return view();
 	}
 }

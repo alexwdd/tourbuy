@@ -32,6 +32,14 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">查询网址</label>
+        <div class="layui-input-inline" style="width: 400px">
+            <input type="text" name="url" value="{$list.url}" autocomplete="off" class="layui-input"/>
+        </div>
+        <div class="layui-form-mid layui-word-aux">http开头完整网址</div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">模型</label>
         <div class="layui-input-inline">
             <select name="model" default="{$list.model}" lay-verify="required">
@@ -41,22 +49,43 @@
                 {/volist}
             </select>
         </div>
-        <div class="layui-form-mid layui-word-aux">/kg</div>
     </div>
-  
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">快递描述</label>
+        <div class="layui-input-inline" style="width: 400px">
+            <input type="text" name="say" value="{$list.say}" autocomplete="off" class="layui-input"/>
+        </div>
+        <div class="layui-form-mid layui-word-aux">商品详情页的一句话说明</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">详细说明</label>
+        <div class="layui-input-block">
+            <textarea name="content" id="container" lay-verify="content">{$list.content}</textarea>
+        </div>
+    </div>  
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('express/pub')}">
     </div>
     <input type="hidden" name="id" value="{$list.id}">
 </div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
 <script>
 layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index'], function() {    
-    var $ = layui.$;
+}).use(['index','tinymce'], function() {    
+    var $ = layui.$,
+        tinyConfig = layui.tinymce;
+
     $("html").css({"background":"#fff"});
+    tinymce.init(tinyConfig);
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    })
 })
 </script>

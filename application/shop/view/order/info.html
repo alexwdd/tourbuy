@@ -191,7 +191,7 @@
                     {eq name="f.type" value="0"}
                     <div class="hd">{:lang('package')} ID【{$f.id}】 【{:lang('goods-ziti')}】 【{eq name="f.hexiao" value="0"}<span style="color: #f00">{:lang('check-no')}</span>{else/}{:lang('check-yes')}{/eq}】</div>
                     {else/}
-                    <div class="hd">{:lang('package')} ID【{$f.id}】 {:lang('id-photo')}【{eq name="f.snStatus" value="0"}<span style="color: #f00">{:lang('upload-no')}</span>{else/}{:lang('upload-yes')}{/eq}】 {$f.kuaidi} {:lang('express-number')}【{$f.kdNo|default="-"}】 【{eq name="f.flag" value="0"}<span style="color: #f00">{:lang('nav-order-wait')}</span>{else/}{:lang('nav-order-send')}{/eq}】</div>
+                    <div class="hd">{:lang('package')} ID【{$f.id}】 {:lang('id-photo')}【{eq name="f.snStatus" value="0"}<span style="color: #f00">{:lang('upload-no')}</span>{else/}{:lang('upload-yes')}{/eq}】 {$f.kuaidi} {:lang('express-number')}【{$f.kdNo|default="-"}】 【{$list|getOrderStatus}】</div>
                     {/eq}
                     <table class="layui-table" style="margin: 0">
                         <colgroup>
