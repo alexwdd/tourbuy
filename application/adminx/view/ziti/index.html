@@ -14,11 +14,9 @@
                 <input type="text" name="keyword" placeholder="会员账号/姓名/手机" class="layui-input">
             </div>
 
-            <div class="layui-inline">
-                <label class="layui-form-mid">日期</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
-                </div>
+            <label class="layui-form-mid">日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
             </div>
 
             <div class="layui-input-inline" style="width: 100px">
@@ -26,6 +24,23 @@
                     <option value="">状态</option>
                     <option value="1">已核销</option>
                     <option value="0">未核销</option>
+                </select>
+            </div>
+
+            <label class="layui-form-mid">城市</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="cityID" id="cityID" lay-filter="city">
+                    <option value="">请选择</option>
+                    {volist name="city" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+
+            <label class="layui-form-mid">商家</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="shopID" id="shopID">
+                    <option value="">请选择</option>
                 </select>
             </div>
 
@@ -40,6 +55,9 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">   
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="toExp" data-tableId="lay-common-table">导出
+            </button>
         </div>
 
         <table id="lay-common-table" class="lay-common-table" lay-method="post" lay-url="{:url('ziti/index')}" lay-filter="lay-common-table"></table>
@@ -92,6 +110,24 @@ layui.config({
         range: true
     });
 
+    form.on('select(city)', function(data){
+        var cityID = data.value;
+        _html = '<option value=""></option>';
+        if(cityID){
+            var data = {cityID:cityID};
+            $.post('{:url('baoguo/getShop')}',data,function(res){                
+                for(var i=0; i<res.data.length; i++){
+                    _html += '<option value="'+res.data[i]['id']+'">'+res.data[i]['name']+'</option>';
+                }
+                $("#shopID").html(_html);
+                form.render();
+            },'json');
+        }else{
+            $("#shopID").html('');
+            form.render();
+        }
+    });
+
     $("#toExp").click(function(){
         var tableId = $(this).attr('data-tableId');
         var checkStatus = table.checkStatus(tableId),
@@ -100,10 +136,11 @@ layui.config({
         for (var i = 0; i < checkData.length; i++) {
             ids.push(checkData[i].id);
         };
-        type = $("#type").val();
-        flag = $("#flag").val();
+        cityID = $("#cityID").val();
+        shopID = $("#shopID").val();
         createDate = $("#createDate").val();
-        window.location.href = '{:url('baoguo/export')}?ids='+ids.join(",")+'&date='+createDate+'&flag='+flag+'&type='+type;
+        hexiao = $("#hexiao").val();
+        window.location.href = '{:url('ziti/export')}?ids='+ids.join(",")+'&date='+createDate+'&cityID='+cityID+'&shopID='+shopID+"&hexiao="+hexiao;
     })
 
     //执行实例

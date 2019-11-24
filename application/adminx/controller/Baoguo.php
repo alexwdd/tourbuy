@@ -79,7 +79,11 @@ class Baoguo extends Admin {
         $map['status'] = 1;
         $list = db('OrderBaoguo')->where($map)->order('id desc')->select();
         foreach ($list as $key => $value) {
-        	//db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
+        	//db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);           
+            $order = db('Order')->field("total,status,comment")->where('id',$value['orderID'])->find();
+
+            $list[$key]['total'] = $order['total'];
+            $list[$key]['status'] = getOrderStatus($order);
         	$goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
 			$content = '';
 			foreach ($goods as $k => $val) {
@@ -102,31 +106,37 @@ class Baoguo extends Admin {
             ->setCellValue('A1', '编号')
             ->setCellValue('B1', '订单号')
             ->setCellValue('C1', '快递号')
-            ->setCellValue('D1', '收件人')
-            ->setCellValue('E1', '电话')
-            ->setCellValue('F1', '地址')
-            ->setCellValue('G1', '快递')
-            ->setCellValue('H1', '商品')
-            ->setCellValue('I1', '发件人');
+            ->setCellValue('D1', '订单金额')
+            ->setCellValue('E1', '支付状态')
+            ->setCellValue('F1', '会员ID')
+            ->setCellValue('G1', '收件人')
+            ->setCellValue('H1', '电话')
+            ->setCellValue('I1', '地址')
+            ->setCellValue('J1', '快递')
+            ->setCellValue('K1', '商品')
+            ->setCellValue('L1', '发件人');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$num, $v['id'])                
                 ->setCellValue('B'.$num, ' '.$v['order_no'])                
                 ->setCellValue('C'.$num, $v['kdNo'])
-                ->setCellValue('D'.$num, $v['name'])                 
-                ->setCellValue('E'.$num, $v['tel'])
-                ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['county'].'/'.$v['addressDetail'])
-                ->setCellValue('G'.$num, $v['express'])
-                ->setCellValue('H'.$num, $v['goods'])
-                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderTel']);
+                ->setCellValue('D'.$num, $v['total'])                 
+                ->setCellValue('E'.$num, $v['status'])                 
+                ->setCellValue('F'.$num, $v['memberID'])                 
+                ->setCellValue('G'.$num, $v['name'])                 
+                ->setCellValue('H'.$num, $v['tel'])
+                ->setCellValue('I'.$num, $v['province'].'/'.$v['city'].'/'.$v['county'].'/'.$v['addressDetail'])
+                ->setCellValue('J'.$num, $v['express'])
+                ->setCellValue('K'.$num, $v['goods'])
+                ->setCellValue('L'.$num, $v['sender'].'/'.$v['senderTel']);
         }
 
-        $objPHPExcel->getActiveSheet()->setTitle('包裹');
+        $objPHPExcel->getActiveSheet()->setTitle('直邮包裹');
         $objPHPExcel->setActiveSheetIndex(0);
 
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="包裹'.date("Y-m-d",time()).'.xls"');
+        header('Content-Disposition: attachment;filename="直邮包裹'.date("Y-m-d",time()).'.xls"');
         header('Cache-Control: max-age=0');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output'); 
