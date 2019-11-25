@@ -447,31 +447,41 @@ class Order extends Auth {
                 returnJson(0,'商品【'.$goods['name'].'】已经下架');
             }
 
-            if ($goods['stock'] < $value['trueNumber']) {
-                returnJson(0,'商品【'.$goods['name'].'】库存不足，当前库存为'.$goods['stock']);
-            }
-
             $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
             $cart[$key]['name'] = $goods['name'];
-            $cart[$key]['ziti'] = $goods['ziti'];
+            $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['singleNumber'] = $goods['number'];
+            $cart[$key]['baoyou'] = $goods['baoyou'];
+            $cart[$key]['specification'] = $goods['specification'];
             $cart[$key]['say'] = $goods['say'];
             $cart[$key]['fid'] = $goods['fid'];
-            $cart[$key]['jiesuan'] = $goods['jiesuan'];
-            $cart[$key]['inprice'] = $goods['inprice'];
-            $cart[$key]['ztInprice'] = $goods['ztInprice'];
+            $cart[$key]['brandID'] = $goods['brandID'];
+            $cart[$key]['expressID'] = $goods['expressID'];
             $cart[$key]['picname'] = getRealUrl($goods['picname']);
+            $cart[$key]['jiesuan'] = $result['jiesuan'];
             $cart[$key]['price'] = $result['price'];
+            $cart[$key]['inprice'] = $result['inprice'];
+            $cart[$key]['ztInprice'] = $result['ztInprice'];
+            $cart[$key]['weight'] = $result['weight'];
+            $cart[$key]['wuliuWeight'] = $result['wuliuWeight'];
+            $cart[$key]['stock'] = $result['stock'];
+            $cart[$key]['spec'] = $result['spec'];
             if($result['spec']){
                 $cart[$key]['spec'] = $result['spec']['key_name'];
             }else{
                 $cart[$key]['spec'] = '';
             }
             $cart[$key]['total'] = $result['price'] * $value['number'];  
+            $cart[$key]['rmb'] = number_format($this->rate*$cart[$key]['total'],1);
+
+            if ($cart[$key]['stock'] < $value['trueNumber']) {
+                returnJson(0,'商品【'.$goods['name'].'】库存不足，当前库存为'.$cart[$key]['stock']);
+            }            
 
             $goodsMoney += $cart[$key]['total'];
-            $inprice += $goods['inprice'] * $value['trueNumber'];
-            $ztInprice += $goods['ztInprice'] * $value['trueNumber'];
-            $jiesuan += $goods['jiesuan'] * $value['trueNumber'];
+            $inprice += $cart[$key]['inprice'] * $value['trueNumber'];
+            $ztInprice += $cart[$key]['ztInprice'] * $value['trueNumber'];
+            $jiesuan += $cart[$key]['jiesuan'] * $value['trueNumber'];
             $point += $goods['point'] * $value['trueNumber'];
             $bonus += $goods['tjPoint'] * $value['trueNumber'];
         }

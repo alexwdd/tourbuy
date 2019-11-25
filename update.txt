@@ -1,1 +1,1 @@
-增加每周结算节点
+spec字段 jiesuan wuliuWeight

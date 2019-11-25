@@ -191,8 +191,10 @@ class Goods extends Admin
                     'key' => $k,
                     'key_name' => $v['key_name'],
                     'price' => $v['price'],
+                    'jiesuan' => $v['jiesuan'],
                     'store_count' => $v['store_count'],
                     'weight' => $v['weight'],
+                    'wuliuWeight' => $v['wuliuWeight'],
                     'spec_img' => $v['spec_img'],
                 ];                
                 if (!empty($specStock[$k])) {

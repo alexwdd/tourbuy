@@ -165,7 +165,7 @@ class Base extends Controller {
         $spec = [];
         if($goods['fid']==0){
             if($specID>0){//有规格选项
-                $spec = db("GoodsSpecPrice")->field('key_name,price')->where('item_id',$specID)->find(); 
+                $spec = db("GoodsSpecPrice")->field('key_name,price,jiesuan,weight,wuliuWeight,store_count')->where('item_id',$specID)->find(); 
                 if($flash){ //今日抢购      
                     $flash['spec'] = unserialize($flash['spec']); 
                     foreach ($flash['spec'] as $k => $val) {
@@ -176,13 +176,25 @@ class Base extends Controller {
                     }
                 }else{
                     $price = $spec['price'];
-                }                        
+                }
+                $stock = $spec['store_count'];
+                $jiesuan = $spec['jiesuan'];
+                $inprice = round(($spec['jiesuan']*(100-$goods['servePrice']))/100,2);
+                $ztInprice = round(($spec['jiesuan']*(100-$goods['ztServePrice']))/100,2);
+                $weight = $spec['weight'];
+                $wuliuWeight = $spec['wuliuWeight'];
             }else{
                 if($flash){
                     $price = $flash['price'];
                 }else{
                     $price = $goods['price'];
-                }                        
+                }
+                $jiesuan = $goods['jiesuan'];
+                $stock = $goods['stock'];
+                $inprice = $goods['inprice'];
+                $ztInprice = $goods['ztInprice'];
+                $weight = $goods['weight'];
+                $wuliuWeight = $goods['wuliuWeight'];
             }
         }else{//是套餐
             if($flash){
@@ -190,23 +202,27 @@ class Base extends Controller {
             }else{
                 $price = $goods['price'];
             }
+            $jiesuan = $goods['jiesuan'];
+            $stock = $goods['stock'];
+            $inprice = $goods['inprice'];
+            $ztInprice = $goods['ztInprice'];
+            $weight = $goods['weight'];
+            $wuliuWeight = $goods['wuliuWeight'];
         } 
-        return ['price'=>$price,'spec'=>$spec];
+        return ['price'=>$price,'jiesuan'=>$jiesuan,'inprice'=>$inprice,'ztInprice'=>$ztInprice,'weight'=>$weight,'wuliuWeight'=>$wuliuWeight,'stock'=>$stock,'spec'=>$spec];
     }
 
     //获取包裹
     public function getYunfeiJson($cart,$province=null,$quhuoType=0){
         foreach ($cart as $key => $value) {
-            $goods = db('Goods')->where('id',$value['goodsID'])->find(); 
+            /*$goods = db('Goods')->where('id',$value['goodsID'])->find(); 
             if($quhuoType==0){
                 $cart[$key]['ziti'] = $goods['ziti'];
             }else{
-                $cart[$key]['ziti'] = 1;                
-            }
-            $brand = db("Brand")->where('id',$goods['brandID'])->value("name");
+                $cart[$key]['ziti'] = 1;
+            }           
             $cart[$key]['name'] = $goods['name'];
-            $cart[$key]['short'] = $goods['short'];
-            $cart[$key]['brand'] = $brand;
+            $cart[$key]['short'] = $goods['short'];            
             $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $cart[$key]['weight'] = $goods['weight'];
             $cart[$key]['singleNumber'] = $goods['number'];
@@ -216,8 +232,11 @@ class Base extends Controller {
             $cart[$key]['ztInprice'] = $goods['ztInprice'];
             $cart[$key]['specification'] = $goods['specification'];
             $cart[$key]['jiesuan'] = $goods['jiesuan'];
-            $cart[$key]['expressID'] = $goods['expressID'];
-            $cart[$key]['extra'] = ($goods['jiesuan']/$goods['number'])*0.215 + 5;//附加费
+            $cart[$key]['expressID'] = $goods['expressID'];*/ 
+
+            $brand = db("Brand")->where('id',$value['brandID'])->value("name");
+            $cart[$key]['brand'] = $brand;
+            $cart[$key]['extra'] = ($value['jiesuan']/$value['singleNumber'])*0.215 + 5;//附加费
         }
         $ziti = [];
         $baoguoArr = [];
@@ -229,7 +248,6 @@ class Base extends Controller {
         }              
 
         $express = $this->getExpressGoods($cart);   
-
         foreach ($express as $key => $value) {
             $className = "\\pack\\".$value['express']['model'];
             $cart = new $className($value['goods'],$value['express']);

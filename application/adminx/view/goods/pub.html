@@ -233,12 +233,12 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">商品重量</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
+                        <input type="text" name="weight" id="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
 
                     <label class="layui-form-label">物流重量</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
+                        <input type="text" name="wuliuWeight" id="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
                 </div>
 
@@ -284,7 +284,7 @@
                     <tbody id="packBox">
                         <tr>
                             <td><b>名称</b></td>
-                            <td style="width: 80px"><b>价格</b></td>
+                            <td style="width: 80px"><b>平台售价</b></td>
                             <td style="width: 80px"><b>单品数量</b></td>
                             <td style="width: 60px"><a href="javascript:void(0)" class="layui-btn layui-btn-normal layui-btn-xs" id="addBtn">添加</a></td>
                         </tr>
@@ -523,9 +523,13 @@ layui.config({
     function ajaxGetSpecInput2(spec_arr){
         var goods_id = $("input[name='id']").val();
         var price = $("#price").val();
+        var jiesuan = $("#jiesuan").val();
+        var stock = $("#stock").val();
+        var weight = $("#weight").val();
+        var wuliuWeight = $("#wuliuWeight").val();
         $.ajax({
             type:'POST',
-            data:{spec_arr:spec_arr,goods_id:goods_id,price:price},
+            data:{spec_arr:spec_arr,goods_id:goods_id,price:price,jiesuan:jiesuan,weight:weight,wuliuWeight:wuliuWeight,stock:stock},
             url:"{:url('Goods/ajaxGetSpecInput')}",
             success:function(data){ 
                 $("#goods_spec_table2").html('').append(data);

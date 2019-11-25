@@ -323,11 +323,15 @@ class Goods extends Admin
     public function ajaxGetSpecInput(){
         $goods_id = input('goods_id/d') ? input('goods_id/d') : 0;
         $defPrice = input('price/f') ? input('price/f') : 0;
-        $str = $this->getSpecInput($goods_id ,input('post.spec_arr/a',[[]]),$defPrice);
+        $defStock = input('stock/d') ? input('stock/d') : 0;
+        $defJiesuan = input('jiesuan/f') ? input('jiesuan/f') : 0;
+        $defWeight = input('weight/f') ? input('weight/f') : 0;
+        $defWuliuWeight = input('wuliuWeight/f') ? input('wuliuWeight/f') : 0;
+        $str = $this->getSpecInput($goods_id ,input('post.spec_arr/a',[[]]),$defPrice,$defJiesuan,$defStock,$defWeight,$defWuliuWeight);
         exit($str);   
     }
 
-    public function getSpecInput($goods_id, $spec_arr, $defPrice)
+    public function getSpecInput($goods_id, $spec_arr, $defPrice,$defJiesuan,$defStock,$defWeight,$defWuliuWeight)
     {      
         // 排序
         foreach ($spec_arr as $k => $v)
@@ -345,7 +349,7 @@ class Goods extends Admin
                    
         $spec = db('ModelSpec')->column('id,name'); // 规格表
         $specItem = db('ModelSpecItem')->column('id,item,specID');//规格项
-        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,store_count,bar_code,weight,spec_img');//规格项                          
+        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,jiesuan,store_count,bar_code,weight,wuliuWeight,spec_img');//规格项
         $str = "<table class='layui-table' lay-size='sm' id='spec_input_tab'>";
         $str .="<thead><tr>";       
         // 显示第一行的数据
@@ -353,9 +357,11 @@ class Goods extends Admin
         {
             $str .=" <td>{$spec[$v]}</td>";
         }    
-        $str .="<td>价格</td>
+        $str .="<td>平台售价</td>
+               <td>门店价</td>
                <td>库存</td>
                <td>重量(kg)</td>
+               <td>物流重量(kg)</td>
                <td>规格图片</td>
              </tr></thead>";
         // 显示第二行开始 
@@ -373,11 +379,21 @@ class Goods extends Admin
             $item_name = implode(' ', $item_key_name);
             
             $keyGoodsSpecPrice[$item_key]['price'] ? false : $keyGoodsSpecPrice[$item_key]['price'] = $defPrice; // 价格默认为商品价格
-            $keyGoodsSpecPrice[$item_key]['store_count'] ? false : $keyGoodsSpecPrice[$item_key]['store_count'] = 0; //库存默认为0
+            $keyGoodsSpecPrice[$item_key]['jiesuan'] ? false : $keyGoodsSpecPrice[$item_key]['jiesuan'] = $defJiesuan;
+            $keyGoodsSpecPrice[$item_key]['weight'] ? false : $keyGoodsSpecPrice[$item_key]['weight'] = $defWeight;
+            $keyGoodsSpecPrice[$item_key]['wuliuWeight'] ? false : $keyGoodsSpecPrice[$item_key]['wuliuWeight'] = $defWuliuWeight;
+            $keyGoodsSpecPrice[$item_key]['store_count'] ? false : $keyGoodsSpecPrice[$item_key]['store_count'] = $defStock; //库存默认为0
 
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][price]' value='{$keyGoodsSpecPrice[$item_key][price]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][store_count]' value='{$keyGoodsSpecPrice[$item_key][store_count]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";            
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][weight]' value='{$keyGoodsSpecPrice[$item_key][weight]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/><input type='hidden' name='item[$item_key][key_name]' value='$item_name' /></td>";
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][price]' value='{$keyGoodsSpecPrice[$item_key][price]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /><input type='hidden' name='item[$item_key][key_name]' value='$item_name' /></td>";
+
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][jiesuan]' value='{$keyGoodsSpecPrice[$item_key][jiesuan]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
+
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][store_count]' value='{$keyGoodsSpecPrice[$item_key][store_count]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";   
+
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][weight]' value='{$keyGoodsSpecPrice[$item_key][weight]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";
+
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][wuliuWeight]' value='{$keyGoodsSpecPrice[$item_key][wuliuWeight]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";
+
             $str .="<td><div class='layui-inline' style='width:300px'><input class='layui-input' name='item[$item_key][spec_img]' value='{$keyGoodsSpecPrice[$item_key][spec_img]}'/></div> <div class='layui-inline'><button type='button' class='layui-btn upBtn'>上传</button></div></td>";
             $str .="</tr>";
         }

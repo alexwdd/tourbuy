@@ -239,11 +239,43 @@ class Cart extends Auth {
     public function package(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}
-            $list = db("Cart")->where('memberID',$this->user['id'])->order('typeID asc,trueNumber desc')->select();
-            if (!$list) {
+            $cart = db("Cart")->where('memberID',$this->user['id'])->order('typeID asc,trueNumber desc')->select();
+            if (!$cart) {
                 returnJson(0,'购物车中没有商品');
             }
-            $result = $this->getYunfeiJson($list);
+
+            foreach ($cart as $key => $value) {
+                $goods = db("Goods")->where('id',$value['goodsID'])->find();
+                if($quhuoType==0){
+                    $cart[$key]['ziti'] = $goods['ziti'];
+                }else{
+                    $cart[$key]['ziti'] = 1;
+                }
+                $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
+                $cart[$key]['name'] = $goods['name'];
+                $cart[$key]['short'] = $goods['short'];
+                $cart[$key]['singleNumber'] = $goods['number'];
+                $cart[$key]['baoyou'] = $goods['baoyou'];
+                $cart[$key]['specification'] = $goods['specification'];
+                $cart[$key]['say'] = $goods['say'];
+                $cart[$key]['brandID'] = $goods['brandID'];
+                $cart[$key]['expressID'] = $goods['expressID'];
+                $cart[$key]['picname'] = getRealUrl($goods['picname']);
+                $cart[$key]['jiesuan'] = $result['jiesuan'];
+                $cart[$key]['price'] = $result['price'];
+                $cart[$key]['inprice'] = $result['inprice'];
+                $cart[$key]['ztInprice'] = $result['ztInprice'];
+                $cart[$key]['weight'] = $result['weight'];
+                $cart[$key]['wuliuWeight'] = $result['wuliuWeight'];
+                $cart[$key]['stock'] = $result['stock'];
+                $cart[$key]['spec'] = $result['spec'];
+                $cart[$key]['total'] = $result['price'] * $value['number'];  
+                $cart[$key]['rmb'] = number_format($this->rate*$cart[$key]['total'],1); 
+
+                $goodsMoney += $cart[$key]['total'];
+                $point += $goods['point'] * $value['trueNumber'];
+            }
+            $result = $this->getYunfeiJson($cart);
             returnJson(1,'success',$result);
         } 
     }
@@ -294,8 +326,8 @@ class Cart extends Auth {
                     $couponID = $this->getCouponID($couponIds,$value['id']);
                 }    
                 $result = $this->getShopOrder($shopGoods,$value,$couponID,$quhuoType[$key]);
+                
                 $ziti = 1;
-
                 foreach ($result['cart'] as $k => $val) {
                     if($val['ziti']==0){
                         $ziti = 0;
@@ -355,20 +387,32 @@ class Cart extends Auth {
     }
 
     public function getShopOrder($cart,$shop,$couponID=null,$quhuoType=0){
-
-        $baoguo = $this->getYunfeiJson($cart,null,$quhuoType);
-
         $goodsMoney = 0;
         $point = 0;
         foreach ($cart as $key => $value) {
             $goods = db("Goods")->where('id',$value['goodsID'])->find();
-
+            if($quhuoType==0){
+                $cart[$key]['ziti'] = $goods['ziti'];
+            }else{
+                $cart[$key]['ziti'] = 1;
+            }
             $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
             $cart[$key]['name'] = $goods['name'];
-            $cart[$key]['ziti'] = $goods['ziti'];
+            $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['singleNumber'] = $goods['number'];
+            $cart[$key]['baoyou'] = $goods['baoyou'];
+            $cart[$key]['specification'] = $goods['specification'];
             $cart[$key]['say'] = $goods['say'];
+            $cart[$key]['brandID'] = $goods['brandID'];
+            $cart[$key]['expressID'] = $goods['expressID'];
             $cart[$key]['picname'] = getRealUrl($goods['picname']);
+            $cart[$key]['jiesuan'] = $result['jiesuan'];
             $cart[$key]['price'] = $result['price'];
+            $cart[$key]['inprice'] = $result['inprice'];
+            $cart[$key]['ztInprice'] = $result['ztInprice'];
+            $cart[$key]['weight'] = $result['weight'];
+            $cart[$key]['wuliuWeight'] = $result['wuliuWeight'];
+            $cart[$key]['stock'] = $result['stock'];
             $cart[$key]['spec'] = $result['spec'];
             $cart[$key]['total'] = $result['price'] * $value['number'];  
             $cart[$key]['rmb'] = number_format($this->rate*$cart[$key]['total'],1); 
@@ -376,7 +420,7 @@ class Cart extends Auth {
             $goodsMoney += $cart[$key]['total'];
             $point += $goods['point'] * $value['trueNumber'];
         }
-
+        $baoguo = $this->getYunfeiJson($cart,null,$quhuoType);
         //我的优惠券
         unset($map);
         $map['status'] = 0;

@@ -121,7 +121,7 @@ class EWE {
 	        	//$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
 	        	if($this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$this->express['price'];
+	        		$this->baoguoArr[$key]['yunfei'] = fix_number_precision($this->baoguoArr[$key]['totalWuliuWeight']*$this->express['price'],2);
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}	        	
