@@ -17,6 +17,7 @@ class Order extends Admin
         $order = input('post.order','desc');
         $status = input('post.status');        
         $keyword = input('post.keyword');
+        $tjID = input('post.tjID');
         $payType = input('post.payType');
         $send = input('post.send');
         $shopID = input('post.shopID');
@@ -28,6 +29,9 @@ class Order extends Admin
         }        
         if ($payType!='') {
             $map['payType'] = $payType;
+        }
+        if ($tjID!='') {
+            $map['tjID'] = $tjID;
         }
         if ($shopID!='') {
             $map['shopID'] = $shopID;

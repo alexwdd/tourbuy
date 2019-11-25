@@ -333,6 +333,7 @@ class Order extends Auth {
                 $detail['shopID'] = $data['shopID'];
                 $detail['order_no'] = $data['order_no'];
                 $detail['memberID'] = $this->user['id'];  
+                $detail['tjID'] = $this->user['tjID'];
                 $detail['payment'] = $value['yunfei'];
                 //$detail['wuliuInprice'] = $value['inprice'];//物流成本
                 $detail['wuliuInprice'] = 0;//物流成本

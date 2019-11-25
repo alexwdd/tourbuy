@@ -9,6 +9,10 @@
                 <input type="text" name="keyword" placeholder="收件人/发件人" class="layui-input layui-btn-small">
             </div>
 
+            <div class="layui-input-inline" style="width: 130px">
+                <input type="text" name="tjID" placeholder="推荐人编号" class="layui-input layui-btn-small">
+            </div>
+
             <label class="layui-form-mid">日期</label>
             <div class="layui-input-inline">
                 <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input" placeholder=" - "/>
@@ -77,7 +81,8 @@
         <div class="fsDatagridCols">
             <p checkbox="true"/>
             <p field="id" title="ID" width="80"/>  
-            <p field="memberID" title="会员ID" width="80"/> 
+            <p field="memberID" title="会员编号" width="90"/> 
+            <p field="tjID" title="推荐编号" width="90"/>
             <p field="shopName" title="商铺" width="150"/> 
             <p title="订单号" width="150" templet="#tplFlag"/> 
             <p title="出库" width="80" templet="#send"/>

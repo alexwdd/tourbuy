@@ -18,22 +18,8 @@ class EWE {
 	$cart中的trueNumber是实际单品数量，比如商品A单品数量是3个，如果购物车中有2个，单品数量总数是6，这里的trueNumber不是数据库中单个商品的trueNumber！！！
 	包裹的status属性如果是1就是该包裹不再跟别的包裹2次混编
 	*/
-	public function __construct($cart,$express,$province=null) {		
-		$this->express = $express;
-		foreach ($cart as $key => $value) {
-			unset($cart[$key]['memberID']);
-
-			if ($value['typeID']==1) {
-				array_push($this->daizhuangnaifen, $cart[$key]);
-				unset($cart[$key]);
-			}
-
-			if ($value['typeID']==2) {	
-				array_push($this->guanzhuangnaifen, $cart[$key]);
-				unset($cart[$key]);
-			}
-		}
-		$cart = array_values($cart);//创建索引
+	public function __construct($cart,$express,$province=null) {	
+		$this->express = $express;		
 		$this->cart = $cart;
 		$this->province = trim($province);
 		header("Content-type: text/html;charset=utf-8");
@@ -42,6 +28,21 @@ class EWE {
 	public function getBaoguo(){
 		//处理包邮
 		$this->setBaoyou();
+
+		foreach ($this->cart as $key => $value) {
+			unset($this->cart[$key]['memberID']);
+
+			if ($value['typeID']==1) {
+				array_push($this->daizhuangnaifen, $this->cart[$key]);
+				unset($this->cart[$key]);
+			}
+
+			if ($value['typeID']==2) {	
+				array_push($this->guanzhuangnaifen, $this->cart[$key]);
+				unset($this->cart[$key]);
+			}
+		}
+		$this->cart = array_values($this->cart);//创建索引
 
 		//处理一个不混
 		$this->singleBaoguo();

@@ -231,6 +231,13 @@
             <textarea name="content" class="layui-textarea" placeholder="选填">{$list.content}</textarea>
         </div>
     </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">客服</label>
+        <div class="layui-input-block">
+            <textarea name="kefu" id="container" lay-verify="content">{$list.kefu}</textarea>
+        </div>
+    </div>
     
     <hr>
 
@@ -240,16 +247,23 @@
     </div>
     {/eq}
 </div>
+<script src="{:RES}/tinymce/tinymce.min.js"></script>
 <script>
 layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index','myupload'], function() {    
+}).use(['index','myupload','tinymce'], function() {    
     var $ = layui.$,
+        tinyConfig = layui.tinymce
         myupload = layui.myupload;
 
     $("html").css({"background":"#fff"});
+    tinymce.init(tinyConfig);
+
+    $("#lay-common-submit").click(function(){
+        $("#container").val(tinyMCE.activeEditor.getContent());
+    })
 
     myupload.single({
         elem : '#upload-single',

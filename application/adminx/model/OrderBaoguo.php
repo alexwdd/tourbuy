@@ -15,7 +15,8 @@ class OrderBaoguo extends Admin
         $pageSize = input('post.limit',config('page.size'));
         $field = input('post.field','id');
         $order = input('post.order','desc');
-        $status = input('post.status');        
+        $status = input('post.status');
+        $tjID = input('post.tjID');
         $keyword = input('post.keyword');
         $payType = input('post.payType');
         $order_no = input('post.order_no');
@@ -36,7 +37,10 @@ class OrderBaoguo extends Admin
             $map['expressID'] = $expressID;
         }
         if ($keyword!='') {
-            $map['name|sender'] = $keyword;
+            $map['name|tel'] = $keyword;
+        }
+        if ($tjID!='') {
+            $map['tjID'] = $tjID;
         }
         if ($order_no!='') {
             $map['order_no'] = $order_no;

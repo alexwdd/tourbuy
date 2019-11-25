@@ -480,4 +480,24 @@ class Shop extends Auth {
             returnJson(1,'success',['data'=>$list]);
         }
     }
+
+    public function kefu(){
+        if (request()->isPost()) {                        
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $shopID = input('post.shopID');
+            if ($shopID=='' || !is_numeric($shopID)) {
+                returnJson(0,'参数错误');
+            }
+            
+            $map['id'] = $shopID;
+            $list = db('Shop')->field('kefu')->where($map)->find();
+            if ($list) {                
+                returnJson(1,'success',['data'=>$list['kefu']]);
+            }else{
+                returnJson(0,'信息不存在');
+            }
+           
+        }
+    }
 }
