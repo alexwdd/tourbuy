@@ -14,7 +14,9 @@ class About extends Common
             
             $map['id'] = $id;
             $list = db('Onepage')->field('title,content')->where($map)->find();
-            if ($list) {                
+            if ($list) {
+                $list['content'] = htmlspecialchars_decode($list['content']);
+                $list['content'] = str_replace("<img src=\"/","<img src=\"http://".$_SERVER['HTTP_HOST']."/",$list['content']);
                 returnJson(1,'success',['data'=>$list]);
             }else{
                 returnJson(0,'信息不存在');

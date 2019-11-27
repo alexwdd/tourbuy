@@ -492,7 +492,9 @@ class Shop extends Auth {
             
             $map['id'] = $shopID;
             $list = db('Shop')->field('kefu')->where($map)->find();
-            if ($list) {                
+            if ($list) {
+                $list['kefu'] = htmlspecialchars_decode($list['kefu']);
+                $list['kefu'] = str_replace("<img src=\"/","<img src=\"http://".$_SERVER['HTTP_HOST']."/",$list['kefu']);
                 returnJson(1,'success',['data'=>$list['kefu']]);
             }else{
                 returnJson(0,'信息不存在');
