@@ -91,7 +91,9 @@ class ModelSpec extends Admin
     }
     //更新
     public function edit(array $data = [])
-    {
+    {   
+        $old = db("ModelSpec")->where('id',$data['id'])->value("values");
+
         $this->allowField(true)->save($data,['id'=>$data['id']]);
         if($this->id > 0){
             $itemData = [];
@@ -101,8 +103,20 @@ class ModelSpec extends Admin
                     array_push($itemData, ['specID'=>$this->id,'item'=>$itemArr[$i]]);
                 }                
             }
-            db('ModelSpecItem')->where(array('specID'=>$data['id']))->delete();
-            db('ModelSpecItem')->insertAll($itemData);
+            
+            if($old != $data['values']){                
+                db('ModelSpecItem')->where(array('specID'=>$data['id']))->delete();
+                db('ModelSpecItem')->insertAll($itemData);
+                //更新商品属性
+                $goodsIds = db("Goods")->where('modelID',$data['mID'])->column('id');
+                if($goodsIds){
+                    db("Goods")->where('modelID',$data['mID'])->setField('modelID',0);
+                    //删除商品规格
+                    db("GoodsSpecPrice")->where('goods_id','in',$goodsIds)->delete();
+                    //删除抢购商品规格
+                    db("Flash")->where('goodsID','in',$goodsIds)->setField('spec','a:0:{}');
+                }                
+            }            
             return info('操作成功',1);
         }else{            
             return info('操作失败',0);

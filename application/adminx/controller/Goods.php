@@ -10,12 +10,16 @@ class Goods extends Admin
             $result       = model('Goods')->getList($this->admin);
             $cateArr      = db('GoodsCate')->column('id,name');
             $brandArr      = db('Brand')->column('id,name');
+            $modelArr      = db('GoodsModel')->column('id,name');
             foreach ($result['data'] as $key => $value) {
                 if (isset($cateArr[$value['cid']])) {
                     $result['data'][$key]['cate'] = $cateArr[$value['cid']];
                 }
                 if (isset($brandArr[$value['brandID']])) {
                     $result['data'][$key]['brand'] = $brandArr[$value['brandID']];
+                }
+                if (isset($modelArr[$value['modelID']])) {
+                    $result['data'][$key]['model'] = $modelArr[$value['modelID']];
                 }
             }
             echo json_encode($result);
@@ -327,11 +331,13 @@ class Goods extends Admin
         $defJiesuan = input('jiesuan/f') ? input('jiesuan/f') : 0;
         $defWeight = input('weight/f') ? input('weight/f') : 0;
         $defWuliuWeight = input('wuliuWeight/f') ? input('wuliuWeight/f') : 0;
-        $str = $this->getSpecInput($goods_id ,input('post.spec_arr/a',[[]]),$defPrice,$defJiesuan,$defStock,$defWeight,$defWuliuWeight);
+        $defServePrice = input('servePrice/f') ? input('servePrice/f') : 0;
+        $defZtServePrice = input('ztServePrice/f') ? input('ztServePrice/f') : 0;
+        $str = $this->getSpecInput($goods_id ,input('post.spec_arr/a',[[]]),$defPrice,$defJiesuan,$defStock,$defWeight,$defWuliuWeight,$defZtServePrice,$defServePrice);
         exit($str);   
     }
 
-    public function getSpecInput($goods_id, $spec_arr, $defPrice,$defJiesuan,$defStock,$defWeight,$defWuliuWeight)
+    public function getSpecInput($goods_id, $spec_arr, $defPrice,$defJiesuan,$defStock,$defWeight,$defWuliuWeight,$defZtServePrice,$defServePrice)
     {      
         // 排序
         foreach ($spec_arr as $k => $v)
@@ -349,7 +355,7 @@ class Goods extends Admin
                    
         $spec = db('ModelSpec')->column('id,name'); // 规格表
         $specItem = db('ModelSpecItem')->column('id,item,specID');//规格项
-        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,jiesuan,store_count,bar_code,weight,wuliuWeight,spec_img');//规格项
+        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,jiesuan,store_count,bar_code,weight,wuliuWeight,spec_img,servePrice,ztServePrice');//规格项
         $str = "<table class='layui-table' lay-size='sm' id='spec_input_tab'>";
         $str .="<thead><tr>";       
         // 显示第一行的数据
@@ -359,6 +365,8 @@ class Goods extends Admin
         }    
         $str .="<td>平台售价</td>
                <td>门店价</td>
+               <td>直邮服务费</td>
+               <td>自提服务费</td>
                <td>库存</td>
                <td>重量(kg)</td>
                <td>物流重量(kg)</td>
@@ -380,6 +388,8 @@ class Goods extends Admin
             
             $keyGoodsSpecPrice[$item_key]['price'] ? false : $keyGoodsSpecPrice[$item_key]['price'] = $defPrice; // 价格默认为商品价格
             $keyGoodsSpecPrice[$item_key]['jiesuan'] ? false : $keyGoodsSpecPrice[$item_key]['jiesuan'] = $defJiesuan;
+            $keyGoodsSpecPrice[$item_key]['ztServePrice'] ? false : $keyGoodsSpecPrice[$item_key]['ztServePrice'] = $defZtServePrice;
+            $keyGoodsSpecPrice[$item_key]['servePrice'] ? false : $keyGoodsSpecPrice[$item_key]['servePrice'] = $defServePrice;
             $keyGoodsSpecPrice[$item_key]['weight'] ? false : $keyGoodsSpecPrice[$item_key]['weight'] = $defWeight;
             $keyGoodsSpecPrice[$item_key]['wuliuWeight'] ? false : $keyGoodsSpecPrice[$item_key]['wuliuWeight'] = $defWuliuWeight;
             $keyGoodsSpecPrice[$item_key]['store_count'] ? false : $keyGoodsSpecPrice[$item_key]['store_count'] = $defStock; //库存默认为0
@@ -387,6 +397,10 @@ class Goods extends Admin
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][price]' value='{$keyGoodsSpecPrice[$item_key][price]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /><input type='hidden' name='item[$item_key][key_name]' value='$item_name' /></td>";
 
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][jiesuan]' value='{$keyGoodsSpecPrice[$item_key][jiesuan]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
+
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][servePrice]' value='{$keyGoodsSpecPrice[$item_key][servePrice]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
+
+            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][ztServePrice]' value='{$keyGoodsSpecPrice[$item_key][ztServePrice]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
 
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][store_count]' value='{$keyGoodsSpecPrice[$item_key][store_count]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";   
 

@@ -50,14 +50,14 @@ class PX {
 			}
 		}
 
-		if($goodsNumber<=12){
+		if($goodsNumber < 12){
 			$aveMoney = 15/$num;
 		}else{
 			$aveMoney = 0;
 		}
 		//$aveMoney = (ceil($goodsNumber/12)*15)/$num; //每个包裹的平均运费
  		foreach ($this->baoguoArr as $key => $value) {
- 			if($goodsNumber<=12){
+ 			if($goodsNumber < 12){
  				$this->baoguoArr[$key]['insideFee'] = 15;
  			}else{
  				$this->baoguoArr[$key]['insideFee'] = 0;

@@ -1,1 +1,4 @@
-spec字段 jiesuan wuliuWeight
+规格增加 服务费比例
+
+servePrice
+ztServePrice

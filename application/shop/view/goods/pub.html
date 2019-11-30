@@ -207,12 +207,12 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">{:lang('goods-weight')}</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
+                        <input type="text" name="weight" id="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
 
                     <label class="layui-form-label">{:lang('goods-express-weight')}</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
+                        <input type="text" name="wuliuWeight" id="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>
                 </div>
 
@@ -471,10 +471,13 @@ layui.config({
 
     function ajaxGetSpecInput2(spec_arr){
         var goods_id = $("input[name='id']").val();
-        var price = $("#price").val();
+        var jiesuan = $("#jiesuan").val();
+        var stock = $("#stock").val();
+        var weight = $("#weight").val();
+        var wuliuWeight = $("#wuliuWeight").val();
         $.ajax({
             type:'POST',
-            data:{spec_arr:spec_arr,goods_id:goods_id,price:price},
+            data:{spec_arr:spec_arr,goods_id:goods_id,jiesuan:jiesuan,weight:weight,wuliuWeight:wuliuWeight,stock:stock},
             url:"{:url('Goods/ajaxGetSpecInput')}",
             success:function(data){ 
                 $("#goods_spec_table2").html('').append(data);

@@ -154,7 +154,7 @@ class Goods extends Admin
         $validate = validate('Goods');
         if(!$validate->check($data)) {
             return info($validate->getError());
-        }    
+        }
         $this->allowField(true)->save($data,['id'=>$data['id']]);
         if($this->id > 0){
             return info('操作成功',1,'',$data);
@@ -195,6 +195,8 @@ class Goods extends Admin
                     'store_count' => $v['store_count'],
                     'weight' => $v['weight'],
                     'wuliuWeight' => $v['wuliuWeight'],
+                    'servePrice' => $v['servePrice'],
+                    'ztServePrice' => $v['ztServePrice'],
                     'spec_img' => $v['spec_img'],
                 ];                
                 if (!empty($specStock[$k])) {
