@@ -38,7 +38,7 @@ class Sms extends Base {
 
             $verify = rand(1000, 9999);//获取随机验证码
             if (strlen($mobile)==11) {         
-                ali_sms($mobile,$verify);
+                ali_sms($mobile,$verify,'SMS_179225756');
             }else{
                 $content = 'Your verification code is '.$verify.'.';
                 au_sms($mobile,$content);                

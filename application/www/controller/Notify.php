@@ -50,11 +50,25 @@ class Notify extends Base {
 
 
                     //发送短信
+                    $this->orderSms($list);
 
                     $this->saveJiangjin($list);             
                 }
             }
         }
+    }
+
+    public function orderSms($order){
+        $shop = db("Shop")->where('id',$order['shopID'])->find();
+        
+        if(check_mobile($shop['masterTel'])){
+            if($order['quhuoType']==0){
+                $content = 'You have a new delivery order: '.$order['order_no'].'.  Please prepare goods and send to Warehouse.';
+            }else{
+                $content = 'You have a Pick-up order: '.$order['order_no'].'. Please prepare goods for customer collection.';
+            }            
+            au_sms($shop['masterTel'],$content);
+        }        
     }
 
     public function orderEmail($order){

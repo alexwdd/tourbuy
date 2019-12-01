@@ -1,0 +1,47 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('file')}</label>
+        <div class="layui-input-inline" style="width:400px">
+            <input type="text" id="excel" name="excel" class="layui-input">
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="upload-file">{:lang('upload')}</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('goods/import')}">
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index','upload'], function() {    
+    var $ = layui.$,
+        upload = layui.upload;
+    $("html").css({"background":"#fff"});
+    var uploadInst = upload.render({
+        elem: '#upload-file',
+        exts:'xls',
+        url: '{:url('upload/file')}',
+        acceptMime: 'application/vnd.ms-excel',
+        before: function(obj) {
+            layer.load(2); //上传loading
+        },
+        done: function(res){
+            layer.closeAll(); //关闭loading
+            //如果上传失败
+            if (res.code != 1) {
+                return layer.msg(res.msg);
+            }
+            //上传成功
+            $("#excel").val(res.data.url);
+        },
+        error: function(){
+          //请求异常回调
+        }
+    });
+})
+</script>

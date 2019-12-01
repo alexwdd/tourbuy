@@ -38,6 +38,7 @@ return [
     'nothing'=>'无',
     'date'=>'日期',
     'export'=>'导出',
+    'import'=>'导入',
     'number'=>'数量',
     'price'=>'价格',
     'package'=>'包裹',
@@ -45,6 +46,7 @@ return [
     'confirm'=>'确定吗？',
     'goods'=>'商品',
     'day'=>'天',
+    'file'=>'文件',
 
     'nav-home'=>'主页',
     'nav-info'=>'店铺资料',

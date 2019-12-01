@@ -514,6 +514,7 @@ class Goods extends Admin
                 $data['sellNumber'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
                 $data['keyword'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
                 $data['say'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
+                $data['shopID'] = trim($sheet->getCellByColumnAndRow(25, $i)->getValue());
 
                 if ($goodsID!='' && $goodsID>0) {
                     $where['id'] = $goodsID;
@@ -521,7 +522,21 @@ class Goods extends Admin
                     $res = db("Goods")->where($where)->find();
                 }
 
+                $shop = db("Shop")->field('name,group,cityID')->where('id',$data['shopID'])->find();
+                if($shop){
+                    $data['shopName'] = $shop['name'];
+                    $data['cityID'] = $shop['cityID'];
+                    $data['group'] = $shop['group'];
+                }else{
+                    $data['shopID'] = 0;
+                    $data['shopName'] = '';
+                    $data['cityID'] = 0;
+                    $data['group'] = 0;
+                }                
+
                 if ($res) {
+                    $data['inprice'] = ($data['jiesuan'] * (100-$res['servePrice']))/100;
+                    $data['ztInprice'] = ($data['jiesuan'] * (100-$res['ztServePrice']))/100;
                     $obj->where('id',$goodsID)->update($data);
                 }else{
                     $data['sort'] = 50;
@@ -566,7 +581,8 @@ class Goods extends Admin
             ->setCellValue('V1', '税率(%)')
             ->setCellValue('W1', '初始销量')
             ->setCellValue('X1', '关键词')
-            ->setCellValue('Y1', '特色描述');
+            ->setCellValue('Y1', '特色描述')
+            ->setCellValue('Z1', '商铺ID');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
@@ -594,7 +610,8 @@ class Goods extends Admin
                 ->setCellValue('V'.$num, $v['gst'])
                 ->setCellValue('W'.$num, $v['sellNumber'])
                 ->setCellValue('X'.$num, $v['keyword'])
-                ->setCellValue('Y'.$num, $v['say']);
+                ->setCellValue('Y'.$num, $v['say'])
+                ->setCellValue('Z'.$num, $v['shopID']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('商品');

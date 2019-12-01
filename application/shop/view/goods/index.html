@@ -49,6 +49,10 @@
             {eq name="admin.submit" value="1"}
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('goods/pub')}" topWidth="80%" topHeight="80%" topTitle="{:lang('add')}">{:lang('add')}</button>
 
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('goods/import')}" topWidth="80%" topHeight="80%" topTitle="{:lang('import')}">{:lang('import')}</button>
+            
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="expBtn">{:lang('export')}</button>
+
             <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('goods/del')}">{:lang('delete')}</button>
             {/eq}
         </div>
@@ -65,7 +69,8 @@
             <p field="brand" title="{:lang('goods-brand')}" width="150"/>            
             <p title="{:lang('goods-ziti')}" width="60" templet="#ziti"/>            
             <p title="{:lang('goods-baoyou')}" width="60" templet="#baoyou"/>            
-            <p field="price" title="{:lang('goods-price')}" width="80"/>
+            <p field="price" title="{:lang('goods-price')}" width="90"/>
+            <p field="jiesuan" title="{:lang('goods-shop-price')}" width="90"/>
             <p field="inprice" title="{:lang('goods-inprice')}" width="80"/>
             <p field="point" title="{:lang('goods-point')}" width="80"/> 
             <p field="weight" title="{:lang('goods-weight')}" width="80"/>
@@ -124,6 +129,9 @@ layui.config({
 }).extend({
     index: 'lib/index' //主入口模块
 }).use(['index'],function(){
-
+    var $ = layui.$;
+    $("#expBtn").click(function(){
+        window.location.href = '{:url('goods/export')}';
+    });
 });
 </script>
