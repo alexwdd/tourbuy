@@ -57,10 +57,9 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">            
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('goods/pub')}" topWidth="80%" topHeight="80%" topTitle="新增">添加</button>
-
-            <!-- <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="selectOpen" data-tableId="lay-common-table" url="{:url('goods/push')}" topWidth="500px" topHeight="400px" topTitle="商品推送">推送</button> -->
-
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('goods/import')}" topWidth="80%" topHeight="80%" topTitle="导入">导入</button>
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="expBtn">全部导出</button>
             <button class="layui-btn layui-btn-sm layui-btn-danger tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('goods/del')}">删除</button>
         </div>
 
@@ -136,6 +135,9 @@ layui.config({
 }).extend({
     index: 'lib/index' //主入口模块
 }).use(['index'],function(){
-
+    var $ = layui.$;
+    $("#expBtn").click(function(){
+        window.location.href = '{:url('goods/export')}';
+    });
 });
 </script>

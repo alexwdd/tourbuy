@@ -382,6 +382,7 @@ class Cart extends Auth {
                 'rmb'=>$rmb,
                 'shop'=>$shop,
                 'dikou'=>$dikou,
+                'mobile'=>$this->user['mobile'],
             ]);
         }
     }

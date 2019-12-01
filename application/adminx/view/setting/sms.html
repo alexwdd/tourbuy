@@ -1,0 +1,97 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form">
+			<div class="layui-tab" style="margin-bottom: 10px">
+				<ul class="layui-tab-title">
+					{foreach name="group_list" item="vo" key="k"}
+		         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'sms'"}class="layui-this"{/if}>{$vo}</li></a>
+		         	{/foreach}
+				</ul>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">短信</label>
+				<div class="layui-input-block">
+						<input type="radio" name="isSms" value="1" title="开启" {php}if($config['isSms']==='1')echo 'checked';{/php}>
+					<input type="radio" name="isSms" value="0" title="关闭" {php}if($config['isSms']==='0')echo 'checked';{/php}>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">MessageBird AccessKey</label>
+				<div class="layui-input-block">
+					<input type="text" name="au_key" value="{$config.au_key}" class="layui-input">
+				</div>		
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">MessageBird 签名</label>
+				<div class="layui-input-block">
+					<input type="text" name="au_sign" value="{$config.au_sign}" class="layui-input">
+				</div>		
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">阿里云<br/>appkey</label>
+				<div class="layui-input-block">
+					<input type="text" name="ali_key" value="{$config.ali_key}" class="layui-input">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">阿里云<br/>secretKey</label>
+				<div class="layui-input-block">
+					<input type="text" name="ali_secret" value="{$config.ali_secret}" class="layui-input">
+				</div>
+			</div>	
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">阿里签名</label>
+				<div class="layui-input-inline">
+					<input type="text" name="ali_sign" value="{$config.ali_sign}" class="layui-input">
+				</div>
+			</div>	
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">注册超时</label>
+				<div class="layui-input-inline">
+					<input type="text" name="out_time" value="{$config.out_time}" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">分钟</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">发送间隔</label>
+				<div class="layui-input-inline">
+					<input type="text" name="diffTime" value="{$config.diffTime}" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">分钟</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">每日次数</label>
+				<div class="layui-input-inline">
+					<input type="text" name="dayNumber" value="{$config.dayNumber}" class="layui-input">
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <button class="layui-btn" lay-submit lay-filter="lay-common-submit"  url="{:url('Setting/insert')}">保存</button>
+            </div>
+            <input type="hidden" name="inc_type" value="{$inc_type}">
+		</form>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function() {    
+    var $ = layui.$;
+
+})
+</script>

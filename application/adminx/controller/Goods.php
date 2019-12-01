@@ -365,8 +365,8 @@ class Goods extends Admin
         }    
         $str .="<td>平台售价</td>
                <td>门店价</td>
-               <td>直邮服务费</td>
-               <td>自提服务费</td>
+               <td>直邮服务费%</td>
+               <td>自提服务费%</td>
                <td>库存</td>
                <td>重量(kg)</td>
                <td>物流重量(kg)</td>
@@ -441,7 +441,7 @@ class Goods extends Admin
             set_time_limit(0);
             ini_set("memory_limit", "512M"); 
             
-            $file = input('post.file');
+            $file = input('post.excel');
             $objReader = \PHPExcel_IOFactory::createReader ( 'Excel5' );
             $objReader->setReadDataOnly(true);
             $objPHPExcel = $objReader->load('.'.$file);
@@ -455,140 +455,83 @@ class Goods extends Admin
             $error = '';
             for ( $i = 2; $i <= $highestRow; $i++) {
                 $goodsID = trim($sheet->getCellByColumnAndRow(0, $i)->getValue());
+                
+                unset($data);               
+                $data['name'] = trim($sheet->getCellByColumnAndRow(1, $i)->getValue());
+                $data['en'] = trim($sheet->getCellByColumnAndRow(2, $i)->getValue());
+                $data['short'] = trim($sheet->getCellByColumnAndRow(3, $i)->getValue());
+                $data['intr'] = trim($sheet->getCellByColumnAndRow(4, $i)->getValue());
+                $cid = trim($sheet->getCellByColumnAndRow(5, $i)->getValue());
+                $cid1 = trim($sheet->getCellByColumnAndRow(6, $i)->getValue());
+                if ($cid>0 && $cid!='') {
+                    $path = db('GoodsCate')->where('id',$cid)->value("path");
+                    if ($path) {
+                        $data['cid'] = $cid;
+                        $data['path'] = $path;
+                    }else{
+                        $data['cid'] = 0;
+                        $data['path'] = '';
+                    }                    
+                }else{
+                    $data['cid'] = 0;
+                    $data['path'] = '';
+                }
+                
+                if ($cid1>0 && $cid1!='') {
+                    $path1 = db('GoodsCate')->where('id',$cid1)->value("path");
+                    if ($path1) {
+                        $data['cid1'] = $cid1;
+                        $data['path1'] = $path1;
+                    }else{
+                        $data['cid1'] = 0;
+                        $data['path1'] = '';
+                    }                    
+                }else{
+                    $data['cid1'] = 0;
+                    $data['path1'] = '';
+                }                 
+                $data['brandID'] = trim($sheet->getCellByColumnAndRow(7, $i)->getValue());
+
+                $typeArr = trim($sheet->getCellByColumnAndRow(8, $i)->getValue());
+                $typeArr = explode("-",$typeArr);
+                $data['expressID'] = $typeArr[0];
+                $data['typeID'] = $typeArr[1];
+
+                $data['price'] = trim($sheet->getCellByColumnAndRow(9, $i)->getValue());
+                $data['jiesuan'] = trim($sheet->getCellByColumnAndRow(10, $i)->getValue());
+                $data['servePrice'] = trim($sheet->getCellByColumnAndRow(11, $i)->getValue());
+                $data['ztServePrice'] = trim($sheet->getCellByColumnAndRow(12, $i)->getValue());
+                $data['weight'] = trim($sheet->getCellByColumnAndRow(13, $i)->getValue());
+                $data['wuliuWeight'] = trim($sheet->getCellByColumnAndRow(14, $i)->getValue());
+                $data['endDate'] = trim($sheet->getCellByColumnAndRow(15, $i)->getValue());
+                $data['number'] = trim($sheet->getCellByColumnAndRow(16, $i)->getValue());
+
+                $data['baoyou'] = trim($sheet->getCellByColumnAndRow(17, $i)->getValue());
+                $data['show'] = trim($sheet->getCellByColumnAndRow(18, $i)->getValue());
+                $data['ziti'] = trim($sheet->getCellByColumnAndRow(19, $i)->getValue());
+                $data['stock'] = trim($sheet->getCellByColumnAndRow(20, $i)->getValue());
+                $data['gst'] = trim($sheet->getCellByColumnAndRow(21, $i)->getValue());
+                $data['sellNumber'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
+                $data['keyword'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
+                $data['say'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
+
                 if ($goodsID!='' && $goodsID>0) {
-                    $res = db("Goods")->where('id',$goodsID)->find();
+                    $where['id'] = $goodsID;
+                    $map['fid'] = 0;
+                    $res = db("Goods")->where($where)->find();
                 }
 
                 if ($res) {
-                    unset($data);               
-                    $data['name'] = trim($sheet->getCellByColumnAndRow(1, $i)->getValue());
-                    $data['short'] = trim($sheet->getCellByColumnAndRow(2, $i)->getValue());
-                    $data['intr'] = trim($sheet->getCellByColumnAndRow(3, $i)->getValue());
-                    $cid = trim($sheet->getCellByColumnAndRow(4, $i)->getValue());
-                    $cid1 = trim($sheet->getCellByColumnAndRow(5, $i)->getValue());
-                    if ($cid>0 && $cid!='') {
-                        $path = db('GoodsCate')->where('id',$cid)->value("path");
-                        if ($path) {
-                            $data['cid'] = $cid;
-                            $data['path'] = $path;
-                        }else{
-                            $data['cid'] = 0;
-                            $data['path'] = '';
-                        }                    
-                    }else{
-                        $data['cid'] = 0;
-                        $data['path'] = '';
-                    }
-                    
-                    if ($cid1>0 && $cid1!='') {
-                        $path1 = db('GoodsCate')->where('id',$cid1)->value("path");
-                        if ($path1) {
-                            $data['cid1'] = $cid1;
-                            $data['path1'] = $path1;
-                        }else{
-                            $data['cid1'] = 0;
-                            $data['path1'] = '';
-                        }                    
-                    }else{
-                        $data['cid1'] = 0;
-                        $data['path1'] = '';
-                    }                 
-                    $data['brandID'] = trim($sheet->getCellByColumnAndRow(6, $i)->getValue());
-                    $data['typeID'] = trim($sheet->getCellByColumnAndRow(7, $i)->getValue());
-                    $data['price'] = trim($sheet->getCellByColumnAndRow(8, $i)->getValue());
-                    $data['price1'] = trim($sheet->getCellByColumnAndRow(9, $i)->getValue());
-                    $data['weight'] = trim($sheet->getCellByColumnAndRow(10, $i)->getValue());
-                    $data['wuliuWeight'] = trim($sheet->getCellByColumnAndRow(11, $i)->getValue());
-                    $data['endDate'] = trim($sheet->getCellByColumnAndRow(12, $i)->getValue());
-                    $data['number'] = trim($sheet->getCellByColumnAndRow(13, $i)->getValue());
-                    $data['max'] = trim($sheet->getCellByColumnAndRow(14, $i)->getValue());
-                    $data['show'] = trim($sheet->getCellByColumnAndRow(15, $i)->getValue());
-                    $data['comm'] = trim($sheet->getCellByColumnAndRow(16, $i)->getValue());
-                    $data['empty'] = trim($sheet->getCellByColumnAndRow(17, $i)->getValue());
-                    $data['gst'] = trim($sheet->getCellByColumnAndRow(18, $i)->getValue());
-                    $data['sellNumber'] = trim($sheet->getCellByColumnAndRow(19, $i)->getValue());
-                    $data['keyword'] = trim($sheet->getCellByColumnAndRow(20, $i)->getValue());
-                    $data['inprice'] = trim($sheet->getCellByColumnAndRow(21, $i)->getValue());
-                    $data['say'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
-                    $data['wuliu'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
-                    $data['en'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
                     $obj->where('id',$goodsID)->update($data);
-
-                    unset($map);
-                    $map['goodsID'] = $goodsID;
-                    $map['base'] = 1;
-
-                    unset($data['sellNumber']);
-                    unset($data['inprice']);
-                    db('GoodsIndex')->where($map)->update($data);
                 }else{
-                    unset($data);               
-                    $data['name'] = trim($sheet->getCellByColumnAndRow(1, $i)->getValue());
-                    $data['short'] = trim($sheet->getCellByColumnAndRow(2, $i)->getValue());
-                    $data['intr'] = trim($sheet->getCellByColumnAndRow(3, $i)->getValue());
-                    $cid = trim($sheet->getCellByColumnAndRow(4, $i)->getValue());
-                    $cid1 = trim($sheet->getCellByColumnAndRow(5, $i)->getValue());
-                    if ($cid>0 && $cid!='') {
-                        $path = db('GoodsCate')->where('id',$cid)->value("path");
-                        if ($path) {
-                            $data['cid'] = $cid;
-                            $data['path'] = $path;
-                        }else{
-                            $data['cid'] = 0;
-                            $data['path'] = '';
-                        }                    
-                    }else{
-                        $data['cid'] = 0;
-                        $data['path'] = '';
-                    }
-
-                    if ($cid1>0 && $cid1!='') {
-                        $path1 = db('GoodsCate')->where('id',$cid1)->value("path");
-                        if ($path1) {
-                            $data['cid1'] = $cid1;
-                            $data['path1'] = $path1;
-                        }else{
-                            $data['cid1'] = 0;
-                            $data['path1'] = '';
-                        }                    
-                    }else{
-                        $data['cid1'] = 0;
-                        $data['path1'] = '';
-                    }                
-                    $data['brandID'] = trim($sheet->getCellByColumnAndRow(6, $i)->getValue());
-                    $data['typeID'] = trim($sheet->getCellByColumnAndRow(7, $i)->getValue());
-                    $data['price'] = trim($sheet->getCellByColumnAndRow(8, $i)->getValue());
-                    $data['price1'] = trim($sheet->getCellByColumnAndRow(9, $i)->getValue());
-                    $data['weight'] = trim($sheet->getCellByColumnAndRow(10, $i)->getValue());
-                    $data['wuliuWeight'] = trim($sheet->getCellByColumnAndRow(11, $i)->getValue());
-                    $data['endDate'] = trim($sheet->getCellByColumnAndRow(12, $i)->getValue());
-                    $data['number'] = trim($sheet->getCellByColumnAndRow(13, $i)->getValue());
-                    $data['max'] = trim($sheet->getCellByColumnAndRow(14, $i)->getValue());
-                    $data['show'] = trim($sheet->getCellByColumnAndRow(15, $i)->getValue());
-                    $data['comm'] = trim($sheet->getCellByColumnAndRow(16, $i)->getValue());
-                    $data['empty'] = trim($sheet->getCellByColumnAndRow(17, $i)->getValue());
-                    $data['gst'] = trim($sheet->getCellByColumnAndRow(18, $i)->getValue());
-                    $data['sellNumber'] = trim($sheet->getCellByColumnAndRow(19, $i)->getValue());
-                    $data['keyword'] = trim($sheet->getCellByColumnAndRow(20, $i)->getValue());
-                    $data['inprice'] = trim($sheet->getCellByColumnAndRow(21, $i)->getValue());
-                    $data['say'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
-                    $data['wuliu'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
-                    $data['en'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
                     $data['sort'] = 50;
                     $data['updateTime'] = time();
                     $data['createTime'] = time();
                     $goodsID = $obj->insertGetId($data);
-                    $data['goodsID'] = $goodsID;
-                    $data['base'] = 1;
-                    unset($data['updateTime']);
-                    unset($data['createTime']);
-                    unset($data['sellNumber']);
-                    unset($data['inprice']);
-                    db('GoodsIndex')->insert($data);
                 }
             }
             
-            $msg = '共'.($highestRow-1).'条数据，成功导入'.$total.'条，错误信息'.$error;
+            $msg = '共'.($highestRow-1).'条数据，成功导入';
             return info($msg,1);
         }else{
             return view();
@@ -596,62 +539,62 @@ class Goods extends Admin
     }
 
     public function export(){
-        $list = db('Goods')->order('id desc')->select();
+        $list = db('Goods')->where('fid',0)->order('id desc')->select();
         $objPHPExcel = new \PHPExcel();    
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', '编号')
             ->setCellValue('B1', '名称')
-            ->setCellValue('C1', '短名称')
-            ->setCellValue('D1', '描述')
-            ->setCellValue('E1', '分类1(数字)')
-            ->setCellValue('F1', '分类2(数字)')
-            ->setCellValue('G1', '品牌(数字)')
-            ->setCellValue('H1', '包裹类型(数字)')
-            ->setCellValue('I1', '价格')
-            ->setCellValue('J1', '会员价')
-            ->setCellValue('K1', '商品重量(kg)')
-            ->setCellValue('L1', '物流重量(kg)')
-            ->setCellValue('M1', '保质期')
-            ->setCellValue('N1', '单品数量')
-            ->setCellValue('O1', '每日限购')
-            ->setCellValue('P1', '状态(0隐藏1显示)')
-            ->setCellValue('Q1', '本周特价(0否1是)')
-            ->setCellValue('R1', '售罄(0否1是)')
-            ->setCellValue('S1', '含税(0否1是)')
-            ->setCellValue('T1', '初始销量')
-            ->setCellValue('U1', '关键词')
-            ->setCellValue('V1', '进货价')
-            ->setCellValue('W1', '特色描述')
-            ->setCellValue('X1', '快递')
-            ->setCellValue('Y1', '英文');
+            ->setCellValue('C1', '英文')
+            ->setCellValue('D1', '短名称')
+            ->setCellValue('E1', '描述')
+            ->setCellValue('F1', '分类1(数字)')
+            ->setCellValue('G1', '分类2(数字)')
+            ->setCellValue('H1', '品牌(数字)')
+            ->setCellValue('I1', '包裹类型(快递ID-包裹类型ID)')
+            ->setCellValue('J1', '平台售价')
+            ->setCellValue('K1', '门店价')
+            ->setCellValue('L1', '直邮服务费%')
+            ->setCellValue('M1', '自提服务费%')
+            ->setCellValue('N1', '商品重量(kg)')
+            ->setCellValue('O1', '物流重量(kg)')
+            ->setCellValue('P1', '保质期')
+            ->setCellValue('Q1', '单品数量')
+            ->setCellValue('R1', '包邮')
+            ->setCellValue('S1', '状态(0隐藏1显示)')
+            ->setCellValue('T1', '强制自提(0否1是)')
+            ->setCellValue('U1', '库存(数字)')
+            ->setCellValue('V1', '税率(%)')
+            ->setCellValue('W1', '初始销量')
+            ->setCellValue('X1', '关键词')
+            ->setCellValue('Y1', '特色描述');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$num, $v['id'])                
                 ->setCellValue('B'.$num, $v['name'])                
-                ->setCellValue('C'.$num, $v['short'])
-                ->setCellValue('D'.$num, $v['intr'])                 
-                ->setCellValue('E'.$num, $v['cid'])
-                ->setCellValue('F'.$num, $v['cid1'])
-                ->setCellValue('G'.$num, $v['brandID'])
-                ->setCellValue('H'.$num, $v['typeID'])
-                ->setCellValue('I'.$num, $v['price'])
-                ->setCellValue('J'.$num, $v['price1'])
-                ->setCellValue('K'.$num, $v['weight'])
-                ->setCellValue('L'.$num, $v['wuliuWeight'])
-                ->setCellValue('M'.$num, $v['endDate'])
-                ->setCellValue('N'.$num, $v['number'])
-                ->setCellValue('O'.$num, $v['max'])
-                ->setCellValue('P'.$num, $v['show'])
-                ->setCellValue('Q'.$num, $v['comm'])
-                ->setCellValue('R'.$num, $v['empty'])
-                ->setCellValue('S'.$num, $v['gst'])
-                ->setCellValue('T'.$num, $v['sellNumber'])
-                ->setCellValue('U'.$num, $v['keyword'])
-                ->setCellValue('V'.$num, $v['inprice'])
-                ->setCellValue('W'.$num, $v['say'])
-                ->setCellValue('X'.$num, $v['wuliu'])
-                ->setCellValue('Y'.$num, $v['en']);
+                ->setCellValue('C'.$num, $v['en'])                
+                ->setCellValue('D'.$num, $v['short'])
+                ->setCellValue('E'.$num, $v['intr'])                 
+                ->setCellValue('F'.$num, $v['cid'])
+                ->setCellValue('G'.$num, $v['cid1'])
+                ->setCellValue('H'.$num, $v['brandID'])
+                ->setCellValue('I'.$num, $v['expressID'].'-'.$v['typeID'])
+                ->setCellValue('J'.$num, $v['price'])
+                ->setCellValue('K'.$num, $v['jiesuan'])
+                ->setCellValue('L'.$num, $v['servePrice'])
+                ->setCellValue('M'.$num, $v['ztServePrice'])
+                ->setCellValue('N'.$num, $v['weight'])
+                ->setCellValue('O'.$num, $v['wuliuWeight'])
+                ->setCellValue('P'.$num, $v['endDate'])
+                ->setCellValue('Q'.$num, $v['number'])
+                ->setCellValue('R'.$num, $v['baoyou'])
+                ->setCellValue('S'.$num, $v['show'])
+                ->setCellValue('T'.$num, $v['ziti'])
+                ->setCellValue('U'.$num, $v['stock'])
+                ->setCellValue('V'.$num, $v['gst'])
+                ->setCellValue('W'.$num, $v['sellNumber'])
+                ->setCellValue('X'.$num, $v['keyword'])
+                ->setCellValue('Y'.$num, $v['say']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('商品');

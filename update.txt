@@ -1,4 +1,18 @@
-规格增加 服务费比例
+反开发票
 
-servePrice
-ztServePrice
+
+名称：Tourbuy
+化魄📚:
+You have a new delivery order: XXXXXX.  Please prepare goods and send to Warehouse. 
+
+化魄📚:
+You have a Pick-up order: XXXXX. Please prepare goods for customer collection. 
+
+化魄📚:
+这个两个是通知商家的
+
+化魄📚:
+Your Verification Number is XXXXX
+
+化魄📚:
+这个是第一次购买货物需要验证手机的

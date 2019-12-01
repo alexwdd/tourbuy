@@ -13,12 +13,13 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		if($this->admin['administrator']==1){
-                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+            if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
             }else{
-                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
-            }
-            $this->assign('shop', $shop);
+                $city = db("City")->select();
+            }            
+            $this->assign('city', $city);
+
 	    	return view();
     	}
 	}
@@ -33,12 +34,12 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		if($this->admin['administrator']==1){
-                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
             }else{
-                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
-            }
-            $this->assign('shop', $shop);
+                $city = db("City")->select();
+            }            
+            $this->assign('city', $city);
     		$this->assign('url',url('order/nopay'));
 	    	return view('normal');
     	}
@@ -54,12 +55,12 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		if($this->admin['administrator']==1){
-                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
             }else{
-                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
-            }
-            $this->assign('shop', $shop);
+                $city = db("City")->select();
+            }            
+            $this->assign('city', $city);
     		$this->assign('url',url('order/peing'));
 	    	return view('normal');
     	}
@@ -75,12 +76,12 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		if($this->admin['administrator']==1){
-                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
             }else{
-                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
-            }
-            $this->assign('shop', $shop);
+                $city = db("City")->select();
+            }            
+            $this->assign('city', $city);
     		$this->assign('url',url('order/fahuo'));
 	    	return view('normal');
     	}
@@ -96,12 +97,12 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		if($this->admin['administrator']==1){
-                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
             }else{
-                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
-            }
-            $this->assign('shop', $shop);
+                $city = db("City")->select();
+            }            
+            $this->assign('city', $city);
     		$this->assign('url',url('order/close'));
 	    	return view('normal');
     	}
@@ -117,12 +118,12 @@ class Order extends Admin {
 			$result = model('Order')->getList($map);			
 			echo json_encode($result);
     	}else{
-    		if($this->admin['administrator']==1){
-                $shop = db('Shop')->field('id,name')->order("py asc")->select();
+    		if($this->admin['administrator']==0){
+                $city = db("City")->where('id',$this->admin['cityID'])->select();
             }else{
-                $shop = db('Shop')->field('id,name')->where('cityID',$this->admin['cityID'])->order("py asc")->select();
-            }
-            $this->assign('shop', $shop);
+                $city = db("City")->select();
+            }            
+            $this->assign('city', $city);
     		$this->assign('url',url('order/check'));
 	    	return view('normal');
     	}
@@ -421,5 +422,114 @@ class Order extends Admin {
 		}*/
 		return view();
 	}
+
+	public function export(){
+    	$cityID = input('get.cityID');
+    	$shopID = input('get.shopID');
+    	$payType = input('get.payType');
+    	$status = input('get.status');
+        $createDate = input('get.date');
+    	$ids = input('get.ids');
+
+    	if ($shopID!='') {
+            $map['shopID'] = $shopID;
+        }
+
+        if($this->admin['administrator']==0){
+            $map['cityID'] = $this->admin['cityID'];
+        }else{
+            if ($cityID!='') {
+                $map['cityID'] = $cityID;
+            }
+        }
+
+        if ($ids!='') {
+            $map['id'] = array('in',$ids);;
+        }        
+        if ($createDate!='') {
+            $date = explode(" - ", $createDate);
+            $startDate = $date[0];
+            $endDate = $date[1];
+            $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
+        }
+        if($status!=''){
+        	$map['status'] = $status;
+        }
+        if($payType!=''){
+        	$map['payType'] = $payType;
+        }
+        
+        $list = db('Order')->where($map)->order('id desc')->select();
+        foreach ($list as $key => $value) {    
+        	$goods = db("OrderCart")->where("orderID",$value['id'])->select();
+			$content = '';
+			foreach ($goods as $k => $val) {
+                $goodsName = $val['name'];
+                if ($val['spec']>0) {
+                    $goodsName .= '('.$val['spec'].')'; 
+                }								
+				if ($k==0) {
+					$content .= $goodsName.'*'.$val['number'];
+				}else{
+					$content .= ";".$goodsName.'*'.$val['number'];
+				}				
+			}
+			$list[$key]['goods'] = $content;
+			$lirun = $value['total'] - $value['wallet'] - $value['inprice']; 
+			$list[$key]['lirun'] = sprintf("%.2f",$lirun);
+        }
+
+        $objPHPExcel = new \PHPExcel();    
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', '编号')
+            ->setCellValue('B1', '订单号')            
+            ->setCellValue('C1', '会员ID')
+            ->setCellValue('D1', '推荐人ID')
+            ->setCellValue('E1', '收件人')
+            ->setCellValue('F1', '电话')
+            ->setCellValue('G1', '地址')
+            ->setCellValue('H1', '商品')
+            ->setCellValue('I1', '发件人')
+            ->setCellValue('J1', '订单金额')
+            ->setCellValue('K1', '订单状态')
+            ->setCellValue('L1', '支付方式')
+            ->setCellValue('M1', '积分抵扣')
+            ->setCellValue('N1', '实付金额')
+            ->setCellValue('O1', '成本')
+            ->setCellValue('P1', '运费')
+            ->setCellValue('Q1', '优惠')
+            ->setCellValue('R1', '利润');
+        foreach($list as $k => $v){
+            $num=$k+2;
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$num, $v['id'])                
+                ->setCellValue('B'.$num, ' '.$v['order_no'])                
+                ->setCellValue('C'.$num, $v['memberID'])
+                ->setCellValue('D'.$num, $v['tjID'])                 
+                ->setCellValue('E'.$num, $v['name'])                 
+                ->setCellValue('F'.$num, $v['tel'])                 
+                ->setCellValue('G'.$num, $v['province'].'/'.$v['city'].'/'.$v['county'].'/'.$v['addressDetail'])                 
+                ->setCellValue('H'.$num, $v['goods'])
+                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderTel'])
+                ->setCellValue('J'.$num, $v['total'])
+                ->setCellValue('K'.$num, $v['status'])
+                ->setCellValue('L'.$num, $v['payType'])
+                ->setCellValue('M'.$num, $v['wallet'])
+                ->setCellValue('N'.$num, $v['money'])
+                ->setCellValue('O'.$num, $v['inprice'])
+                ->setCellValue('P'.$num, $v['payment'])
+                ->setCellValue('Q'.$num, $v['discount'])
+                ->setCellValue('R'.$num, $v['lirun']);
+        }
+
+        $objPHPExcel->getActiveSheet()->setTitle('订单');
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="订单'.date("Y-m-d",time()).'.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output'); 
+    }
 }
 ?>

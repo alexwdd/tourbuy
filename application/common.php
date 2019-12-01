@@ -222,7 +222,7 @@ function getRealUrl($value){
 
 // 手机号检测
 function check_mobile($mobile){
-    $mobilepreg = '/^1[3|4|5|6|7|8|9][0-9]{9}$/';
+    $mobilepreg = '/^1[3|4|5|6|7|8|9][0-9]{9}$|^04[0-9]{8}$/';
     if (!preg_match($mobilepreg, $mobile)) {
         return false;
     }else {
@@ -532,6 +532,61 @@ function sendEmail($email,$title,$content){
     catch (ServerException  $e) {        
         //print_r($e->getErrorCode());   
         //print_r($e->getErrorMessage());
+    }
+}
+
+function au_sms($mobile,$content){
+    $mobile = substr_replace($mobile,"",0,1);
+    $config = tpCache("sms");
+    $messageBird = new \MessageBird\Client($config['au_key']);
+    $message = new \MessageBird\Objects\Message();
+    $message->originator = $config['au_sign'];
+    //$message->recipients = ['61410867533'];
+    $message->recipients = ['61'.$mobile];
+    $message->body = $content;
+    $result = $messageBird->messages->create($message);
+}
+
+//发短信验证码
+function ali_sms($mobile, $code , $templat) {
+    require_once EXTEND_PATH.'alisms/aliyun-php-sdk-core/Config.class.php';
+    require_once EXTEND_PATH.'alisms/SendSmsRequest.class.php';
+    $config = tpCache("sms");
+    //此处需要替换成自己的AK信息
+    $accessKeyId = $config['ali_key'];
+    $accessKeySecret = $config['ali_secret'];
+    //短信API产品名
+    $product = "Dysmsapi";
+    //短信API产品域名
+    $domain = "dysmsapi.aliyuncs.com";
+    //暂时不支持多Region
+    $region = "cn-hangzhou";
+    
+    //初始化访问的acsCleint
+    $profile = DefaultProfile::getProfile($region, $accessKeyId, $accessKeySecret);
+    DefaultProfile::addEndpoint("cn-hangzhou", "cn-hangzhou", $product, $domain);
+    $acsClient= new DefaultAcsClient($profile);
+    
+    $request = new Alisms\SendSmsRequest;
+    //$request = new SendSmsRequest;
+    
+    //必填-短信接收号码
+    $request->setPhoneNumbers($mobile);
+    //必填-短信签名
+    $request->setSignName($config['ali_sign']);
+    //必填-短信模板Code
+    $request->setTemplateCode($templat);
+    //选填-假如模板中存在变量需要替换则为必填(JSON格式)
+    $request->setTemplateParam("{\"code\":\"$code\"}");
+    //选填-发送短信流水号
+    //$request->setOutId("1234");
+    
+    //发起访问请求
+    $acsResponse = $acsClient->getAcsResponse($request);
+    if ($acsResponse->Code=='OK'){        
+        return true;        
+    }else{
+        return false;
     }
 }
 ?>

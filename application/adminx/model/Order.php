@@ -20,6 +20,7 @@ class Order extends Admin
         $tjID = input('post.tjID');
         $payType = input('post.payType');
         $send = input('post.send');
+        $cityID = input('post.cityID');
         $shopID = input('post.shopID');
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
@@ -32,6 +33,9 @@ class Order extends Admin
         }
         if ($tjID!='') {
             $map['tjID'] = $tjID;
+        }
+        if ($cityID!='') {
+            $map['cityID'] = $cityID;
         }
         if ($shopID!='') {
             $map['shopID'] = $shopID;

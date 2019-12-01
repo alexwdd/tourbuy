@@ -18,15 +18,22 @@
                 <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input" placeholder=" - "/>
             </div> 
 
-            <label class="layui-form-mid">店铺</label>
-            <div class="layui-input-inline">
-                <select name="shopID">
-                    <option value="">--请选择--</option>
-                    {volist name="shop" id="vo"}
+            <label class="layui-form-mid">城市</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="cityID" id="cityID" lay-filter="city">
+                    <option value="">请选择</option>
+                    {volist name="city" id="vo"}
                     <option value="{$vo.id}">{$vo.name}</option>
                     {/volist}
                 </select>
-            </div>         
+            </div>
+
+            <label class="layui-form-mid">商家</label>
+            <div class="layui-input-inline" style="width: 120px">
+                <select name="shopID" id="shopID">
+                    <option value="">请选择</option>
+                </select>
+            </div>
 
             <div class="layui-input-inline" style="width: 100px">
                 <select name="payType">
@@ -182,14 +189,33 @@ layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
     index: 'lib/index' //主入口模块
-}).use(['index','laydate'],function(){
+}).use(['index','laydate','table'],function(){
     var form = layui.form,
         laydate = layui.laydate,
+        table = layui.table,
         $ = layui.$;
 
     laydate.render({
         elem: '#createDate',
         range: true
+    });
+
+    form.on('select(city)', function(data){
+        var cityID = data.value;
+        _html = '<option value=""></option>';
+        if(cityID){
+            var data = {cityID:cityID};
+            $.post('{:url('baoguo/getShop')}',data,function(res){                
+                for(var i=0; i<res.data.length; i++){
+                    _html += '<option value="'+res.data[i]['id']+'">'+res.data[i]['name']+'</option>';
+                }
+                $("#shopID").html(_html);
+                form.render();
+            },'json');
+        }else{
+            $("#shopID").html('');
+            form.render();
+        }
     });
 });
 </script>
