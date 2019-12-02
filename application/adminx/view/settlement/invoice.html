@@ -1,0 +1,98 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>邮件</title>
+<style>
+.title{font-size: 16px; font-weight: bold; padding: 10px 0}
+.intr{font-size: 12px;}
+table{border-collapse: collapse;border: none;width:100%;}
+td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
+</style>
+</head>
+<body>
+<h1>TAX INVOICE</h1>
+<h2>TOURBUY PTY LTD</h2>
+<table>
+	<tr>
+		<td></td>
+		<td>DATE:</td>
+		<td>2019/9/13</td>
+	</tr>
+	<tr>
+		<td>ABN : 68 608 001 823</td>
+		<td>INVOICE #</td>
+		<td>S20191149236</td>
+	</tr>
+	<tr>
+		<td>Address: 177 GILBERT ST,ADELAIDE,SA,5000</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>FOR:</td>
+		<td>Tourbuy Weekly Sales</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>TO:</td>
+		<td>{$shop.name}</td>
+	</tr>
+	<tr>
+		<td>Settlement will be tendered to the following account:</td>
+		<td>Trading As:</td>
+		<td>{$shop.tradingName}</td>
+	</tr>
+	<tr>
+		<td>Bank Name:</td>
+		<td>ABN:</td>
+		<td>{$shop.abn}</td>
+	</tr>
+	<tr>
+		<td>Account Name : {$shop.bank}</td>
+		<td>EMAIL:</td>
+		<td>penfoles@gmail.com</td>
+	</tr>
+	<tr>
+		<td>BSB : 015-237</td>
+		<td>ADDRESS:</td>
+		<td>151 magill Road, Firle SA 5070</td>
+	</tr>
+	<tr>
+		<td>Account Number : 409623553</td>
+		<td>CONTACT NUMBER:</td>
+		<td>04 3388 7799</td>
+	</tr>
+	<tr>
+		<td colspan="2">Weekly Sales For The Period From 2019/09/02 To 2019/09/08</td>
+		<td>${$count.totalTp}</td>
+	</tr>
+	<tr>
+		<td colspan="2">Domestic freight fee</td>
+		<td>${$count.insideFee}</td>
+	</tr>
+	<tr>
+		<td colspan="2">Adujustments</td>
+		<td>${$count.discount}</td>
+	</tr>
+	<tr>
+		<td colspan="2">Tourbuy Commission Deduction</td>
+		<td>$111</td>
+	</tr>
+	<tr>
+		<td colspan="2">Weekly Settlement Will Be Tendered To You</td>
+		<td>$111</td>
+	</tr>
+	<tr>
+		<td colspan="2">TOTAL AMOUNT WITH GST</td>
+		<td>$111</td>
+	</tr>
+	<tr>
+		<td colspan="2">INCLUDED  GST</td>
+		<td>$111</td>
+	</tr>
+</table>
+</body>
+</html>

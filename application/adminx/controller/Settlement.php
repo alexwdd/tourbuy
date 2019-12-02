@@ -51,7 +51,12 @@ class Settlement extends Admin {
         }
     }
 
-    public function email($shop,$startDate,$endDate){
+    //public function email($shop,$startDate,$endDate){
+    public function email(){
+        $shop = db("Shop")->where('id',13)->find();
+        $startDate = '2019-11-1';
+        $endDate = '2019-11-30';
+
         $start = strtotime($startDate);
         $end = strtotime($endDate)+86399;
         $this->assign('shop',$shop);
@@ -71,7 +76,8 @@ class Settlement extends Admin {
             'money'=>0,
             'insideFee'=>0,
             'discount'=>0,
-            'total'=>0
+            'total'=>0,
+            'totalTp'=>0
         ];
         foreach ($order as $key => $value) {
             if($value['couponID']>0){
@@ -79,7 +85,7 @@ class Settlement extends Admin {
             }
 
             $goods = db("OrderCart")->where("orderID",$value['id'])->select();
-            foreach ($goods as $k => $val) {                
+            foreach ($goods as $k => $val) {
                 if($val['jiesuan']==0){
                     $rate = 0;
                 }else{
@@ -91,6 +97,7 @@ class Settlement extends Admin {
                 }else{
                     $count['zhiyou'] += $val['inprice']*$val['trueNumber'];
                 }
+                $count['totalTp'] += $val['jiesuan']*$val['trueNumber'];
             }            
             $order[$key]['goods'] = $goods;
 
@@ -100,7 +107,7 @@ class Settlement extends Admin {
                 $count['zhiyouNumber']++;
             }
             $count['insideFee'] += $value['insideFee'];
-            $count['discount'] += $value['discount'];
+            $count['discount'] += $value['discount'];            
         }
         $this->assign('order',$order);
 
@@ -108,6 +115,8 @@ class Settlement extends Admin {
         $count['total'] = $count['money'] + $count['insideFee'] - $count['discount'];
         $this->assign('count',$count);
         $result = $this->fetch('email');
+        $invoice = $this->fetch('invoice');
+        echo $invoice;die;
 
         //保存结算详情
         $count['content'] = $result;
