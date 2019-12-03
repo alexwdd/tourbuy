@@ -98,6 +98,7 @@ class Settlement extends Admin {
                     $count['zhiyou'] += $val['inprice']*$val['trueNumber'];
                 }
                 $count['totalTp'] += $val['jiesuan']*$val['trueNumber'];
+                $count['totalIprice'] += $val['inprice']*$val['trueNumber'];
             }            
             $order[$key]['goods'] = $goods;
 
@@ -114,6 +115,8 @@ class Settlement extends Admin {
         $count['money'] = $count['ziti'] + $count['zhiyou'];
         $count['total'] = $count['money'] + $count['insideFee'] - $count['discount'];
         $this->assign('count',$count);
+        $this->assign('start',$start);
+        $this->assign('end',$end);
         $result = $this->fetch('email');
         $invoice = $this->fetch('invoice');
         echo $invoice;die;
