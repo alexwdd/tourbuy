@@ -100,6 +100,59 @@ class Index extends Admin {
         }
     }
 
+    public function phb(){
+        $createDate = input('post.createDate');
+        $pageSize = input('post.limit',20);
+        $field = input('post.field','num');
+        $order = input('post.order','desc');
+
+        if ($createDate!='') {
+            $date = explode(" - ", $createDate);
+            $startDate = $date[0];
+            $endDate = $date[1];            
+        }else{
+            $endDate = date('Y-m-d');
+            $starDate = date("Y-m-d",strtotime("-30 day"));
+        }
+        $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
+
+        $obj = db('OrderDetail');        
+        $total = $obj->where($map)->group('goodsID')->count();
+
+        $pages = ceil($total/$pageSize);
+        $pageNum = input('post.page',1);
+        $firstRow = $pageSize*($pageNum-1);
+
+        $list = $obj->field('goodsID,name,sum(number) as num')->where($map)->group('goodsID')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
+
+        $data = array(
+                'code'=>0,
+                'count'=>$total,
+                'data'=>$list
+            );
+        echo json_encode($data);        
+    }
+
+    public function stock(){
+        $pageSize = input('post.limit',20);
+        $field = input('post.field','id');
+        $order = input('post.order','desc');
+
+        $obj = db('Goods');        
+        $total = $obj->count();
+
+        $pages = ceil($total/$pageSize);
+        $pageNum = input('post.page',1);
+        $firstRow = $pageSize*($pageNum-1); 
+        $list = $obj->where($map)->field('id,name,short,stock')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
+        $data = array(
+                'code'=>0,
+                'count'=>$total,
+                'data'=>$list
+            );
+        echo json_encode($data);
+    }
+
     public function getMenu(){
         if ($this->admin['administrator']!=1){
             $nodeArr = db('Access')->where(array('role_id'=>$this->admin['group']))->column('node_id');

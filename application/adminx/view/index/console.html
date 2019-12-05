@@ -56,22 +56,28 @@
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="layui-card-header">
-                <div style="float: left;">商品销量排行</div>
+                <div style="float: left;">商品销量排行(默认30天)</div>
                 <form class="layui-form" style="float: right;">
                     <div class="layui-input-inline">
-                        <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder="选择日期"/>
+                        <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input" placeholder="选择日期"/>
                     </div>
                     <div style="float: right; margin-left: 10px">
-                        <button class="layui-btn layui-btn-sm" id="myBtn" type="button">查询</button>           
+                        <button class="layui-btn layui-btn-sm" id="myBtn" type="button">查询</button>
                     </div>
                 </form>
             </div>
             <div class="layui-card-body">
                 <table class="layui-hide" id="webPhb" lay-filter="webPhb"></table> 
                 <script>
-                layui.use(['table','element'], function(){
+                layui.use(['table','laydate','element'], function(){
+                    var $ = layui.$;
+                    var laydate = layui.laydate;
                     var table = layui.table;
                     var element = layui.element;
+                    laydate.render({
+                        elem: '#createDate',
+                        range: true
+                    });
                     var phbTable = table.render({
                         elem: '#webPhb',
                         url:'{:url('index/phb')}',
@@ -108,38 +114,29 @@
                 });
                 </script>
             </div>
-        </div>            
+        </div>      
     </div>
 
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="layui-card-header">
-                <div style="float: left;">商品库存排行</div>
-                <form class="layui-form" style="float: right;">
-                    <div class="layui-input-inline">
-                        <input type="text" name="createDate1" id="createDate1" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder="选择日期"/>
-                    </div>
-                    <div style="float: right; margin-left: 10px">
-                        <button class="layui-btn" id="myBtn1" type="button">查询</button>
-                    </div>
-                </form>
-            </div>
+            <div class="layui-card-header">商品库存排行</div>
             <div class="layui-card-body">
-                <table class="layui-hide" id="shopPhb" lay-filter="shopPhb"></table> 
+                <table class="layui-hide" id="stock" lay-filter="stock"></table> 
                 <script>
                 layui.use(['table','element'], function(){
+                    var $ = layui.$;
                     var table = layui.table;
                     var element = layui.element;
-                    var shopTable = table.render({
-                        elem: '#shopPhb',
-                        url:'{:url('index/shopphb')}',
+                    var stockTable = table.render({
+                        elem: '#stock',
+                        url:'{:url('index/stock')}',
                         method:'post',
                         autoSort: false,
                         cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-                        where: {createDate:$("#createDate").val()},
+                        //where: {createDate:$("#createDate").val()},
                         cols: [[
                             {field:'name', title: '商品名称'},
-                            {field:'num', width:100, title: '销量',sort:true}
+                            {field:'stock', width:100, title: '库存',sort:true}
                         ]],
                         done: function(res){
                             return false;
@@ -149,20 +146,14 @@
                         }
                     });
 
-                    table.on('sort(shopPhb)', function(obj){ //
-                        shopTable.reload({
+                    table.on('sort(stock)', function(obj){ //
+                        stockTable.reload({
                             where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
                                 field: obj.field //排序字段
                                 ,order: obj.type //排序方式
                             }
                         });
                     });
-
-                    $("#myBtn1").click(function(){
-                        shopTable.reload({
-                            where:{createDate:$("#createDate1").val()}
-                        });
-                    })
                 });
                 </script>
             </div>

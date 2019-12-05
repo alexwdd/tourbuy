@@ -189,7 +189,7 @@ class Goods extends Common {
                 $next = 0;
             }
 
-            $list = $obj->field('id,fid,name,picname,price,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
+            $list = $obj->field('id,fid,name,picname,price,marketPrice,say,comm,tehui,flash,baoyou,ziti')->where($map)->limit($firstRow.','.$pagesize)->order($order.' '.$desc)->select();
 
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getRealUrl($value['picname']);
