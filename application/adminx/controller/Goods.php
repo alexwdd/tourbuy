@@ -49,6 +49,10 @@ class Goods extends Admin
                 $this->error('请选择包裹类型');
             }
 
+            if($data['tehui']==1 && $data['marketPrice']==''){
+                $this->error('请输入商品原价');
+            }
+
             if($data['expressID']==5 && $data['typeID']==1 && $data['specification']==''){
                 $this->error('红酒类商品必须填写货物规格');
             }

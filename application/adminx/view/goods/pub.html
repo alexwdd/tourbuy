@@ -148,7 +148,7 @@
                     <label class="layui-form-label">标签</label>
                     <div class="layui-input-block">  
                         <input type="checkbox" name="comm" value="1" lay-skin="primary" title="推荐" {php}if($list['comm']=='1')echo 'checked';{/php}>  
-                        <input type="checkbox" name="jingpin" value="1" lay-skin="primary" title="精品" {php}if($list['jingpin']=='1')echo 'checked';{/php}>            
+                        <input type="checkbox" name="jingpin" value="1" lay-skin="primary" title="精品" {php}if($list['jingpin']=='1')echo 'checked';{/php}>
                         <input type="checkbox" name="tehui" value="1" lay-skin="primary" title="特惠" {php}if($list['tehui']=='1')echo 'checked';{/php}>
                      </div>
                 </div>
@@ -176,6 +176,11 @@
                     <div class="layui-input-inline" style="width: 100px">
                         <input type="text" name="price" id="price" value="{$list.price}" lay-verify="required" autocomplete="off" class="layui-input" />
                     </div>  
+
+                    <label class="layui-form-label" style="width:100px">原价</label>
+                    <div class="layui-input-inline" style="width: 100px">
+                        <input type="text" name="marketPrice" id="marketPrice" value="{$list.marketPrice}" placeholder="特惠 必填" autocomplete="off" class="layui-input" />
+                    </div>
 
                     <label class="layui-form-label">门店价</label>
                     <div class="layui-input-inline" style="width: 100px">
