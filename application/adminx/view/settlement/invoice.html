@@ -23,7 +23,7 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 	<tr>
 		<td>ABN : 68 608 001 823</td>
 		<td style="text-align: right;">INVOICE #</td>
-		<td>S20191149236</td>
+		<td>S<?php echo date("Ymd").$shop['id'];?></td>
 	</tr>
 	<tr>
 		<td>Address : 177 GILBERT ST,ADELAIDE,SA,5000</td>
@@ -83,15 +83,15 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 	</tr>
 	<tr>
 		<td colspan="2">Weekly Settlement Will Be Tendered To You</td>
-		<td>${$count.totalIprice + $count.insideFee + $count.discount}</td>
+		<td>${$amount}</td>
 	</tr>
 	<tr>
 		<td colspan="2">TOTAL AMOUNT WITH GST</td>
-		<td>$111</td>
+		<td>${$amount}</td>
 	</tr>
 	<tr>
 		<td colspan="2">INCLUDED  GST</td>
-		<td>$111</td>
+		<td>${$gst}</td>
 	</tr>
 </table>
 </body>

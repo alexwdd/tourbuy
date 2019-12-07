@@ -23,6 +23,9 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">
             <button class="layui-btn layui-btn-sm layui-btn-normal tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('settlement/pub')}" topWidth="80%" topHeight="80%" topTitle="结算">结算</button>
+
+            <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="action" data-tableId="lay-common-table" url="{:url('settlement/send')}" alert="1" alertMsg="确定要重新发送吗？">重发邮件</button>
+
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="refresh" data-tableId="lay-common-table">刷新</button>
         </div>
 
@@ -33,14 +36,16 @@
             <p field="endDate" title="截止日期" width="120" />  
             <p field="name" title="店铺" width="200"/>     
             <p field="total" title="结算金额" width="90"/>            
+            <p field="gst" title="GST" width="90"/>            
             <p field="money" title="订单金额" width="90"/>            
             <p field="insideFee" title="境内运费" width="90"/>            
             <p field="discount" title="优惠券" width="90"/>            
             <p field="createTime" title="创建日期" width="180" sort="true"/>
-            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
+            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="140"/>
         </div>
         <script type="text/html" id="barDemo">        
             <a class="layui-btn layui-btn-xs" target="_blank" href="{:url('settlement/view')}?id={{d.id}}">详情</a>
+            <a class="layui-btn layui-btn-xs" target="_blank" href="{:url('settlement/invoice')}?id={{d.id}}">发票</a>
         </script>
     </div>
 </div>

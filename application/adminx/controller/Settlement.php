@@ -51,12 +51,7 @@ class Settlement extends Admin {
         }
     }
 
-    //public function email($shop,$startDate,$endDate){
-    public function email(){
-        $shop = db("Shop")->where('id',13)->find();
-        $startDate = '2019-11-1';
-        $endDate = '2019-11-30';
-
+    public function email($shop,$startDate,$endDate){
         $start = strtotime($startDate);
         $end = strtotime($endDate)+86399;
         $this->assign('shop',$shop);
@@ -114,39 +109,85 @@ class Settlement extends Admin {
 
         $count['money'] = $count['ziti'] + $count['zhiyou'];
         $count['total'] = $count['money'] + $count['insideFee'] - $count['discount'];
+
+        $amount = $count['totalIprice'] + $count['insideFee'] + $count['discount'];
+        $gst = $amount - ($amount/1.1);
         $this->assign('count',$count);
+        $this->assign('amount',round($amount,2));
+        $this->assign('gst',round($gst,2));
         $this->assign('start',$start);
         $this->assign('end',$end);
         $result = $this->fetch('email');
         $invoice = $this->fetch('invoice');
-        echo $invoice;die;
 
+        $title = 'TOURBUY SETTLEMENT REPORT FOR '.$shop['name'].' FROM  '.date("d/m/Y",$start).'-'.date("d/m/Y",$end);
+        $invoiceTitle = $shop['name'].' TAX INVOICE For Tourbuy From '.date("d/m/Y",$start).'-'.date("d/m/Y",$end);
+    
         //保存结算详情
         $count['content'] = $result;
+        $count['invoice'] = $invoice;
+        $count['amount'] = $amount;
+        $count['gst'] = $gst;
         $count['createTime'] = time();
         $count['shopID'] = $shop['id'];
         $count['name'] = $shop['name'];
+        $count['title'] = $title;
+        $count['invoiceTitle'] = $invoiceTitle;
         unset($count['time']);
         db('Settlement')->insert($count);
 
         //发送邮件
         if($shop['masterEmail']!=''){
-            $email = $shop['masterEmail'];
-            $title = 'TOURBUY SETTLEMENT REPORT FOR '.$shop['name'].' FROM  '.date("d/m/Y",$start).'-'.date("d/m/Y",$end);
-            sendEmail($email,$title,$result);
+            $email = $shop['masterEmail'];            
+            sendEmail($email,$title,$result);            
+            sendEmail($email,$invoiceTitle,$invoice);
+        }
+    }
+
+    public function send(){
+        $id = explode(",",input('post.id'));
+        $status = input("param.status");
+        if (count($id)==0) {
+            $this->error('请选择要取消的数据');
+        }else{
+            foreach ($id as $key => $value) {
+                $con = db("Settlement")->where('id',$value)->find();
+                if($con){
+                    $shop = db("Shop")->where('id',$con['shopID'])->find();
+                    if($shop['masterEmail']!=''){
+                        $email = $shop['masterEmail'];
+                        sendEmail($email,$con['title'],$con['content']);
+                        sendEmail($email,$con['invoiceTitle'],$con['invoice']);
+                    }
+                }
+                
+            }
+            $this->success("操作成功");
         }
     }
 
     public function view(){
         $id = input('get.id');
         if ($id!='' || is_numeric($id)) {
-            $list = model('Settlement')->find($id);
-            if (!$list) {
+            $content = db('Settlement')->where('id',$id)->value('content');
+            if (!$content) {
                 $this->error('信息不存在');
             }
         }
-        $this->assign('list', $list);
+        $this->assign('content', $content);
         return view();
+    }
+
+    public function invoice(){
+        $id = input('get.id');
+        if ($id!='' || is_numeric($id)) {
+            $content = db('Settlement')->where('id',$id)->value('invoice');
+            if (!$content) {
+                $this->error('信息不存在');
+            }
+        }
+        $this->assign('content', $content);
+        return view('view');
     }
 }
 ?>
