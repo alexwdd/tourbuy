@@ -446,11 +446,11 @@ class Goods extends Common {
             $map['id'] = $goodsID;
             $map['show'] = 1;
             $map['group'] = array('elt',$this->user['group']);
-            $list = db('Goods')->field('id,shopID,fid,name,picname,expressID,image,price,point,content,say,intr,comm,tehui,flash,baoyou,ziti')->where($map)->find();
+            $list = db('Goods')->field('id,shopID,fid,name,picname,expressID,image,price,marketPrice,point,content,say,intr,comm,tehui,flash,baoyou,ziti')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
             }
-            $list['marketPrice'] = $list['price'];
+            //$list['marketPrice'] = $list['price'];
             
             if ($list['image']=='') {
                 $list['image'] = array($list['picname']);            

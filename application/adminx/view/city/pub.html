@@ -5,12 +5,22 @@
         <div class="layui-input-inline">
             <input type="text" name="name" value="{$list.name}" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"/>
         </div>
-    </div>
 
-    <div class="layui-form-item">
         <label class="layui-form-label">英文名称</label>
         <div class="layui-input-inline">
             <input type="text" name="en" value="{$list.en}" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">EWE用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="ewe_username" value="{$list.ewe_username}" lay-verify="required" class="layui-input">
+        </div>
+
+        <label class="layui-form-label">EWE密码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="ewe_password" value="{$list.ewe_password}" lay-verify="required" class="layui-input">
         </div>
     </div>
 
@@ -28,7 +38,7 @@
             <input type="text" name="address[]" value="{$vo.address}" placeholder="仓库地址" autocomplete="off" class="layui-input" style="margin-top: 5px" />
             {/volist}
         </div>
-    </div>
+    </div>            
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="lay-common-submit" id="lay-common-submit" value="确认添加" iframe="1" url="{:url('city/pub')}">

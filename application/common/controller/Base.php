@@ -551,7 +551,8 @@ class Base extends Controller {
 
     //创建EWE电子面单
     public function createEweOrder($order){
-        $config = tpCache("kuaidi");
+        //$config = tpCache("kuaidi");
+        $config = db("City")->field('ewe_username,ewe_password')->where('id',$order['cityID'])->find();
         $goods = db("OrderDetail")->where("baoguoID",$order['id'])->select();
         $items = [];
         foreach ($goods as $k => $val) {      
