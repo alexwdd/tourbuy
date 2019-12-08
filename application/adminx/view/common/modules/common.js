@@ -135,12 +135,13 @@ layui.define(['form','table','laydate'],function(exports) {
 
     //表单提交
     form.on('submit(lay-common-submit)', function(obj) { 
+        var gLoad = layer.load(2);
         var iframe = $(obj.elem).attr('iframe');        
         admin.req({
             url: $(obj.elem).attr('url'),            
             data: obj.field,
             method:'post',
-            done: function(res) {
+            done: function(res) {                
                 //登入成功的提示与跳转
                 layer.msg(res.msg, {
                     offset: '15px',
@@ -160,6 +161,9 @@ layui.define(['form','table','laydate'],function(exports) {
                         }
                     }                    
                 });
+            },
+            success:function(res){
+                layer.close(gLoad);
             }
         });
 

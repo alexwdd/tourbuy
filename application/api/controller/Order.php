@@ -366,6 +366,7 @@ class Order extends Auth {
                             'baoguoID'=>$baoguoID,
                             'goodsID'=>$val['goodsID'],
                             'specID'=>$val['specID'],
+                            'spec'=>$val['spec'],
                             'name'=>$val['name'],
                             'brand'=>$val['brand'],
                             'short'=>$val['short'],

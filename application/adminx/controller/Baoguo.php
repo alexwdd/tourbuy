@@ -88,9 +88,9 @@ class Baoguo extends Admin {
 			$content = '';
 			foreach ($goods as $k => $val) {
                 $goodsName = $val['short'];
-                if ($val['specID']>0) {
-                    $spec = db("GoodsSpecPrice")->where('item_id',$val['specID'])->value("key_name");
-                    $goodsName .= '('.$spec.')'; 
+                if ($val['spec']!='') {
+                    //$spec = db("GoodsSpecPrice")->where('item_id',$val['specID'])->value("key_name");
+                    $goodsName .= '('.$val['spec'].')'; 
                 }								
 				if ($k==0) {
 					$content .= $goodsName.'*'.$val['number'];

@@ -17,6 +17,7 @@ class Settlement extends Admin {
     public function pub() {
         if(request()->isPost()){
             set_time_limit(1800);
+            $this->error("请选择起止日期");die;
             $startDate = input('post.startDate');
             $endDate = input('post.endDate');
             if($startDate=='' || $endDate==''){
