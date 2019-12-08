@@ -13,10 +13,9 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 </head>
 <body>
 <h1>TAX INVOICE</h1>
-<h2>TOURBUY PTY LTD</h2>
 <table>
 	<tr>
-		<td></td>
+		<td>TOURBUY PTY LTD</td>
 		<td style="text-align: right;">DATE:</td>
 		<td><?php echo date("Y/m/d");?></td>
 	</tr>
@@ -86,8 +85,12 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td>${$amount}</td>
 	</tr>
 	<tr>
+		<td colspan="2" style="height: 100px"></td>
+		<td></td>
+	</tr>
+	<tr>
 		<td colspan="2">TOTAL AMOUNT WITH GST</td>
-		<td>${$amount}</td>
+		<td>${$count.totalTp - $count.totalIprice}</td>
 	</tr>
 	<tr>
 		<td colspan="2">INCLUDED  GST</td>

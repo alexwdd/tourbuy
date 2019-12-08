@@ -475,7 +475,7 @@ class Order extends Admin {
 				}				
 			}
 			$list[$key]['goods'] = $content;
-			$lirun = $value['total'] - $value['wallet'] - $value['inprice']; 
+			$lirun = $value['total'] - $value['wallet'] - $value['inprice'] - $value['payment']; 
 			$list[$key]['lirun'] = sprintf("%.2f",$lirun);
         }
 

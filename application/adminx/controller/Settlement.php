@@ -17,7 +17,6 @@ class Settlement extends Admin {
     public function pub() {
         if(request()->isPost()){
             set_time_limit(1800);
-            $this->error("请选择起止日期");die;
             $startDate = input('post.startDate');
             $endDate = input('post.endDate');
             if($startDate=='' || $endDate==''){
@@ -28,11 +27,11 @@ class Settlement extends Admin {
                 $this->error("起止日期错误");
             }
 
-            $res = db("SettlementLog")->find();
+            $res = db("SettlementLog")->order('id desc')->find();
             if($res){
                 if(strtotime($startDate) <= strtotime($res['endDate'])){
                     $this->error("起止日期错误，上次结算截止日期".$res['endDate']);
-                }                
+                }
             }
             $list = db("Shop")->field('id,name,masterEmail')->select();
             foreach ($list as $key => $value) {
@@ -112,7 +111,8 @@ class Settlement extends Admin {
         $count['total'] = $count['money'] + $count['insideFee'] - $count['discount'];
 
         $amount = $count['totalIprice'] + $count['insideFee'] + $count['discount'];
-        $gst = $amount - ($amount/1.1);
+        $gst = round(($count['totalTp']-$count['totalIprice']),2);
+        $gst = $gst - ($gst/1.1);
         $this->assign('count',$count);
         $this->assign('amount',round($amount,2));
         $this->assign('gst',round($gst,2));
@@ -140,8 +140,8 @@ class Settlement extends Admin {
         //发送邮件
         if($shop['masterEmail']!=''){
             $email = $shop['masterEmail'];            
-            sendEmail($email,$title,$result);            
-            sendEmail($email,$invoiceTitle,$invoice);
+            //sendEmail($email,$title,$result);            
+            //sendEmail($email,$invoiceTitle,$invoice);
         }
     }
 
