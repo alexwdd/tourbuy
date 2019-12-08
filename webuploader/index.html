@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>视频上传</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/webuploader.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<style>
+.file-item{float: left; position: relative; width: 110px;height: 110px; margin: 0 20px 20px 0; padding: 4px;}
+.file-item .info{overflow: hidden;}
+.uploader-list{width: 100%; overflow: hidden;}
+</style>
+</head>
+<body>
+<div class="container" style="margin: 10px;">
+	<div class="row main">
+        <div id="uploadfile">
+            <!--用来存放文件信息-->
+            <div id="thelist" class="uploader-list"></div>
+            <div class="form-group form-inline">
+                <div id="picker" style="float:left">选择文件</div> &nbsp;
+                <button id="ctlBtn" class="btn btn-default" style="padding:8px 15px;">开始上传</button>
+            </div>
+        </div>
+	</div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/webuploader.min.js"></script>
+<script>
+$(function(){
+	var $list = $('#thelist'),
+        $btn = $('#ctlBtn');
+    var uploader = WebUploader.create({
+        resize: false, // 不压缩image     
+        swf: 'js/uploader.swf', // swf文件路径
+        server: 'upload.php', // 文件接收服务端。
+        pick: '#picker', // 选择文件的按钮。可选
+        chunked: true, //是否要分片处理大文件上传
+        chunkSize:2*1024*1024, //分片上传，每片2M，默认是5M
+        accept: {
+            title: '文件上传',
+            extensions: 'mp3,mp4',
+            mimeTypes: 'video/mp4,audio/mpeg'
+        }
+    });
+    // 当有文件被添加进队列的时候
+    uploader.on( 'fileQueued', function( file ) {
+        $list.append( '<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">等待上传...</p>' +
+        '</div>' );
+    });
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+            $percent = $li.find('.progress .progress-bar');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<div class="progress progress-striped active">' +
+              '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+              '</div>' +
+            '</div>').appendTo( $li ).find('.progress-bar');
+        }
+        
+        if(percentage<1){
+            $li.find('p.state').text('上传进度' + Math.floor(percentage * 100 * 100)/100 + '%');
+        }else{
+            $li.find('p.state').text('文件保存中...');
+        }
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+    // 文件上传成功
+    uploader.on( 'uploadSuccess', function( file,response ) {
+        $("#mp4", window.parent.document).val(response.filePath);
+        $( '#'+file.id ).find('p.state').text('已上传');
+    });
+
+    // 文件上传失败，显示上传出错
+    uploader.on( 'uploadError', function( file ) {
+        $( '#'+file.id ).find('p.state').text('上传出错');
+    });
+    // 完成上传完
+    uploader.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').fadeOut();
+        parent.layer.closeAll();
+    });
+
+    $btn.on('click', function () {
+        if ($(this).hasClass('disabled')) {
+            return false;
+        }
+        uploader.upload();
+    });
+
+});
+</script>
+</body>
+</html>

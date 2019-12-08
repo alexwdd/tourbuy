@@ -15,7 +15,7 @@ class Notify extends Base {
         $token = input('param.token');
 
         if($merchant_trade_no==''){die;}
-        file_put_contents("note".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."通知ID:" .$notice_id."订单:".$merchant_trade_no."token:".$token. "\r\n", FILE_APPEND);
+        //file_put_contents("note".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."通知ID:" .$notice_id."订单:".$merchant_trade_no."token:".$token. "\r\n", FILE_APPEND);
         db('PayOrder')->where('payNo',$merchant_trade_no)->setField("status",1);
         $order_no = db('PayOrder')->where('payNo',$merchant_trade_no)->value("order_no");
         $order_no = explode(",", $order_no);

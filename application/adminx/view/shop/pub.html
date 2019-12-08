@@ -129,9 +129,19 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">视频地址</label>
+        <label class="layui-form-label">本地视频</label>
+        <div class="layui-input-inline" style="width: 500px">
+            <input type="text" name="mp4" id="mp4" value="{$list.mp4}" placeholder="mp4格式" autocomplete="off" class="layui-input" />
+        </div>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn mp4Btn">上传</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">网络视频</label>
         <div class="layui-input-block">
-            <input type="text" name="mp4" value="{$list.mp4}" placeholder="mp4格式" autocomplete="off" class="layui-input" />
+            <textarea name="mp4Url" class="layui-textarea" placeholder="网络视频优先级高于本地视频，选填">{$list.mp4Url}</textarea>
         </div>
     </div>
 
@@ -304,6 +314,17 @@ layui.config({
     $("#lay-common-submit").click(function(){
         $("#container").val(tinyMCE.activeEditor.getContent());
     })
+
+    $(".mp4Btn").click(function(){
+        layer.open({
+            type: 2,
+            title: '上传文件',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['600px', '300px'],
+            content: '/webuploader/index.html'
+        }); 
+    });
 
     myupload.single({
         elem : '#upload-single',
