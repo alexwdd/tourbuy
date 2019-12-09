@@ -129,9 +129,9 @@ class EWE {
 	        }
 	        $this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$this->express['inprice'];
 	        
-	        if ($this->inExtendArea()) {
+	        /*if ($this->inExtendArea()) {
 	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
-	        }
+	        }*/
 		}
 		return $this->baoguoArr;
 	}
