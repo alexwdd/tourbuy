@@ -368,6 +368,7 @@ class Order extends Auth {
                             'specID'=>$val['specID'],
                             'spec'=>$val['spec'],
                             'name'=>$val['name'],
+                            'en'=>$val['en'],
                             'brand'=>$val['brand'],
                             'short'=>$val['short'],
                             'specification'=>$val['specification'],
@@ -412,6 +413,7 @@ class Order extends Auth {
                     'fid'=>$value['fid'],
                     'specID'=>$value['specID'],
                     'name'=>$value['name'],
+                    'en'=>$value['en'],
                     'picname'=>$value['picname'],
                     'price'=>$value['price'],
                     'jiesuan'=>$value['jiesuan'],
@@ -452,6 +454,7 @@ class Order extends Auth {
             $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);
             $cart[$key]['name'] = $goods['name'];
             $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['en'] = $goods['en'];
             $cart[$key]['singleNumber'] = $goods['number'];
             $cart[$key]['baoyou'] = $goods['baoyou'];
             $cart[$key]['specification'] = $goods['specification'];
@@ -699,7 +702,7 @@ class Order extends Auth {
             }elseif($payType==2){
                 $result = $this->getWeixinUrl($order,$shopID);
                 if($result['result']=='SUCCESS'){
-                    returnJson(1,'success',['url'=>$result['QRCodeURL']]);
+                    returnJson(1,'success',['url'=>$result['qrcodeURL']]);
                 }else{
                     returnJson(0,'发起支付失败');
                 }

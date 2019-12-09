@@ -71,13 +71,23 @@ class Notify extends Base {
         }        
     }
 
+    public function test(){
+        $order = db("Order")->order('id desc')->find();
+        $this->orderEmail($order);
+    }
+
     public function orderEmail($order){
         $shop = db("Shop")->where('id',$order['shopID'])->find();
         if($shop && $shop['masterEmail']!=''){
             $this->assign('order',$order);
 
             $goods = db("OrderCart")->where('orderID',$order['id'])->select();
+            $total = 0;
+            foreach ($goods as $key => $value) {
+                $total += $value['jiesuan'] * $value['number'];
+            }
             $this->assign('goods',$goods);
+            $this->assign('total',$total);
 
             if($order['couponID']>0){
                 $coupon = db("CouponLog")->where('id',$order['couponID'])->find();
@@ -96,7 +106,7 @@ class Notify extends Base {
             }
             $this->assign('baoguo',$baoguo);
             $content = $this->fetch("email/order");
-            //echo $content;die;
+            echo $content;die;
             $email = $shop['masterEmail'];
             $title = 'Hello '.$shop['name'].'! You have a new order from tourbuy';
             sendEmail($email,$title,$content);

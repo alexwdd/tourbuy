@@ -13,7 +13,10 @@ class Article extends Admin {
 			foreach ($result['data'] as $key => $value) {
 				if (isset($cateArr[$value['cid']])) {
 					$result['data'][$key]['cate'] = $cateArr[$value['cid']];
-				}                
+				}
+				if($value['url']==''){
+					$result['data'][$key]['url'] = 'http://m.tourbuy.net/article?id='.$value['id'];
+				}				
             }
             echo json_encode($result);
     	}else{
