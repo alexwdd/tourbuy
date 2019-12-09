@@ -82,9 +82,9 @@ class PX {
         		$this->baoguoArr[$key]['yunfei'] = 0;
         	}
 
-        	/*$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['inprice'];
+        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalNumber']*$danjia['inprice'];
 		        
-	        if ($this->inExtendArea()) {
+	        /*if ($this->inExtendArea()) {
 	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
 	        }*/
 		}

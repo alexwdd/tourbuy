@@ -24,11 +24,17 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">邮费</label>
+        <label class="layui-form-label">平台邮费</label>
         <div class="layui-input-inline">
             <input type="number" step="0.01" name="price" value="{$list.price}" lay-verify="required" autocomplete="off" class="layui-input"/>
         </div>
         <div class="layui-form-mid layui-word-aux">/kg</div>
+
+        <label class="layui-form-label">物流成本</label>
+        <div class="layui-input-inline">
+            <input type="number" step="0.01" name="inprice" value="{$list.inprice}" lay-verify="required" autocomplete="off" class="layui-input"/>
+        </div>
+        <div class="layui-form-mid layui-word-aux">/(kg or 个)</div>
     </div>
 
     <div class="layui-form-item">

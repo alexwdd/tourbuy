@@ -301,6 +301,7 @@ class Order extends Auth {
         $data['wallet'] = 0;
         $data['payment'] = $orderData['baoguo']['totalPrice'];
         $data['insideFee'] = $orderData['baoguo']['totalInsideFee'];
+        $data['wuliuInprice'] = $orderData['baoguo']['totalInprice'];
         $data['goodsMoney'] = $orderData['goodsMoney'];
         $data['inprice'] = $orderData['inprice'];
         $data['ztInprice'] = $orderData['ztInprice'];
@@ -335,8 +336,7 @@ class Order extends Auth {
                 $detail['memberID'] = $this->user['id'];  
                 $detail['tjID'] = $this->user['tjID'];
                 $detail['payment'] = $value['yunfei'];
-                //$detail['wuliuInprice'] = $value['inprice'];//物流成本
-                $detail['wuliuInprice'] = 0;//物流成本
+                $detail['wuliuInprice'] = $value['inprice'];//物流成本
                 $detail['type'] = $value['type'];
                 $detail['weight'] = $value['totalWuliuWeight'];
                 $detail['express'] = $value['express'];
@@ -457,6 +457,7 @@ class Order extends Auth {
             $cart[$key]['specification'] = $goods['specification'];
             $cart[$key]['say'] = $goods['say'];
             $cart[$key]['fid'] = $goods['fid'];
+            $cart[$key]['ziti'] = $goods['ziti'];
             $cart[$key]['brandID'] = $goods['brandID'];
             $cart[$key]['expressID'] = $goods['expressID'];
             $cart[$key]['picname'] = getRealUrl($goods['picname']);

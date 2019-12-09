@@ -49,6 +49,7 @@ class Cherry {
         	}else{
         		$this->baoguoArr[$key]['yunfei'] = 0;
         	}
+        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$this->express['inprice'];
 		}
 		return $this->baoguoArr;
 	}
