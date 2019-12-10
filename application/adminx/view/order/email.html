@@ -1,0 +1,11 @@
+{empty name="list"}
+<h1>暂无信息</h1>
+{else/}
+<div class="layui-card">
+    <div class="layui-card-header">{$list.title}</div>
+    <div class="layui-card-body">
+    	<p>日期：{$list.createTime|date="Y-m-d H:i:s",###}</p>
+    	{$list.content}
+    </div>
+</div>
+{/empty}

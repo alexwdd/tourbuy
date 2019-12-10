@@ -129,6 +129,17 @@ class Order extends Admin {
     	}
 	}
 
+	#添加
+	public function email() {
+		$id = input('get.id');
+		if ($id=='' || !is_numeric($id)) {
+			$this->error("参数错误");
+		}
+		$list = db('OrderEmail')->where('orderID',$id)->find();
+		$this->assign('list', $list);
+		return view();
+	}
+
     //订单详情
 	public function info(){
 		if(request()->isPost()){

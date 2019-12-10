@@ -103,7 +103,7 @@
             <p title="收件人" width="160" templet="#shoujianren"/>
             <p title="发件人" width="160" templet="#fajianren"/>            
             <p field="createTime" title="创建日期" width="180" sort="true"/>
-            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
+            <p fixed="right" align="center" toolbar="#barDemo" title="操作" width="120"/>
         </div>
 
         <script type="text/html" id="send">
@@ -159,6 +159,7 @@
 
         <script type="text/html" id="barDemo">        
             <a class="layui-btn layui-btn-xs" lay-event="edit" url="{:url('order/info')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="订单详情" data-tableId="lay-common-table">详情</a>
+            <a class="layui-btn layui-btn-xs" lay-event="view" url="{:url('order/email')}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="邮件详情">邮件</a>
         </script>
     </div>
 </div>

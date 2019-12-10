@@ -106,10 +106,18 @@ class Notify extends Base {
             }
             $this->assign('baoguo',$baoguo);
             $content = $this->fetch("email/order");
-            echo $content;die;
             $email = $shop['masterEmail'];
             $title = 'Hello '.$shop['name'].'! You have a new order from tourbuy';
-            sendEmail($email,$title,$content);
+
+            $data['title'] = $title;
+            $data['content'] = $content;
+            $data['shopID'] = $order['shopID'];
+            $data['orderID'] = $order['id'];
+            $data['createTime'] = time();
+            $res = db("OrderEmail")->insert($data);
+            if($res){
+                sendEmail($email,$title,$content);
+            }
         }        
     }
 }

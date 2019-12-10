@@ -70,6 +70,9 @@
 
             <button class="layui-btn layui-btn-sm layui-btn-primary tools-btn" data-type="add" data-tableId="lay-common-table" url="{:url('baoguo/import')}" topWidth="700px" topHeight="300px" topTitle="单号导入">单号导入</button>
 
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="toExp1" data-tableId="lay-common-table">物流导出
+            </button>
+
             <!-- 
             <button class="layui-btn layui-btn-sm layui-btn-warm tools-btn" data-type="selectOpen" window="1" data-tableId="lay-common-table" url="{:url('baoguo/mprint')}">批量打印</button>
             
@@ -207,6 +210,20 @@ layui.config({
         shopID = $("#shopID").val();
         createDate = $("#createDate").val();
         window.location.href = '{:url('baoguo/export')}?ids='+ids.join(",")+'&date='+createDate+'&cityID='+cityID+'&shopID='+shopID;
+    })
+
+    $("#toExp1").click(function(){
+        var tableId = $(this).attr('data-tableId');
+        var checkStatus = table.checkStatus(tableId),
+            checkData = checkStatus.data; //得到选中的数据
+        var ids = [];
+        for (var i = 0; i < checkData.length; i++) {
+            ids.push(checkData[i].id);
+        };
+        cityID = $("#cityID").val();
+        shopID = $("#shopID").val();
+        createDate = $("#createDate").val();
+        window.location.href = '{:url('baoguo/exportExpress')}?ids='+ids.join(",")+'&date='+createDate+'&cityID='+cityID+'&shopID='+shopID;
     })
 
     //执行实例
