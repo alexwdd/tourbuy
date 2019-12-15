@@ -805,6 +805,36 @@ class Order extends Auth {
         }
     }
 
+    public function updatePersonSn(){
+        if (request()->isPost()) {
+            //if(!checkFormDate()){returnJson(0,'ERROR');}
+
+            $id = input('post.id');
+            $sn = input('post.sn');
+            if ($id=='') {
+                returnJson(0,'参数错误');
+            }
+            if ($sn=='') {
+                returnJson(0,'请输入身份证号码');
+            }
+
+            $map['id'] = $id;
+            $map['memberID'] = $this->user['id'];
+            $list = db("Order")->where($map)->find();
+            if(!$list){
+                returnJson(0,'订单不存在');
+            } 
+            $data['sn'] = $sn;
+            $res = db("Order")->where('id',$id)->update($data);
+            if($res){
+                db("OrderBaoguo")->where('orderID',$id)->update($data); 
+                returnJson(1,'success');
+            }else{
+                returnJson(0,'照片保存失败');
+            }
+        }
+    }
+
     public function baoguo(){
         if (request()->isPost()) { 
             if(!checkFormDate()){returnJson(0,'ERROR');}

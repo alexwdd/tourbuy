@@ -666,7 +666,6 @@ class Base extends Controller {
                 'ITEMS'=>$items,
             ]
         ]; 
-        dump($data);
         //$url = 'http://sandbox.transrush.com.au/agent/createPickupItem';//测试环境
         $url = 'http://www.transrush.com.au/agent/createPickupItem';     //生产环境
         $ch = curl_init($url);

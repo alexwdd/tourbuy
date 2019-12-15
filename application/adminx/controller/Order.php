@@ -476,7 +476,7 @@ class Order extends Admin {
 			$content = '';
 			foreach ($goods as $k => $val) {
                 $goodsName = $val['name'];
-                if ($val['spec']>0) {
+                if ($val['spec']!='') {
                     $goodsName .= '('.$val['spec'].')'; 
                 }								
 				if ($k==0) {
