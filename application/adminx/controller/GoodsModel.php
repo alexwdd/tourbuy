@@ -86,5 +86,45 @@ class GoodsModel extends Admin {
 			}
 		}
 	}
+
+	public function specPrice(){
+		if (request()->isPost()) {
+			$result = model('GoodsSpecPrice')->getList();
+			foreach ($result['data'] as $key => $value) {
+				$result['data'][$key]['id'] = $value['item_id'];	
+            }
+			echo json_encode($result);
+    	}else{
+	    	return view();
+    	}
+	}
+
+	public function pubSpecPrice() {
+		if(request()->isPost()){
+	        $data = input('post.');	        
+	        return model('GoodsSpecPrice')->edit( $data );
+		}else{
+			$item_id = input('get.item_id');
+			if ($item_id!='' || is_numeric($item_id)) {
+				$list = model('GoodsSpecPrice')->find($item_id);
+			}
+			$this->assign('list', $list);
+			return view();
+		}
+	}
+
+	#删除
+	public function delSpecPrice() {
+		$id = explode(",",input('post.id'));
+		if (count($id)==0) {
+			$this->error('请选择要删除的数据');
+		}else{
+			if(model('GoodsSpecPrice')->del($id)){
+				$this->success("操作成功");
+			}else{
+				$this->error('操作失败');
+			}
+		}
+	}
 }
 ?>

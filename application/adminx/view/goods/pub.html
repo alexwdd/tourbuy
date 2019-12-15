@@ -333,6 +333,22 @@
 </div>
 <script src="{:RES}/tinymce/tinymce.min.js"></script>
 <script>
+    //规格参数 设置进价
+function getInprice(obj){
+    var $ = layui.$
+    var p = $(obj).parent().parent();
+    var jiesuan = p.find(".spec-js").val();
+    var servePrice = p.find(".serBtn").val();
+    var ztServePrice = p.find(".ztBtn").val();
+    if(jiesuan!='' && servePrice!=''){
+        inprice = (jiesuan *(100-servePrice) / 100);
+        p.find(".inprice").val(inprice.toFixed(2));
+    }  
+    if(jiesuan!='' && ztServePrice!=''){
+        ztInprice = (jiesuan *(100-ztServePrice) / 100);
+        p.find(".ztInprice").val(ztInprice.toFixed(2));
+    }    
+}
 layui.config({
     base: '{:RES}/' //静态资源所在路径
 }).extend({
@@ -359,6 +375,7 @@ layui.config({
     $("#jiesuan").on("input propertychange",function(){
         setInprice();
     });
+
     function setInprice(){
         var jiesuan = $("#jiesuan").val();
         var servePrice = $("#servePrice").val();

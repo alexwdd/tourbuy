@@ -359,7 +359,7 @@ class Goods extends Admin
                    
         $spec = db('ModelSpec')->column('id,name'); // 规格表
         $specItem = db('ModelSpecItem')->column('id,item,specID');//规格项
-        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,jiesuan,store_count,bar_code,weight,wuliuWeight,spec_img,servePrice,ztServePrice');//规格项
+        $keyGoodsSpecPrice = db('GoodsSpecPrice')->where('goods_id = '.$goods_id)->column('key,key_name,price,jiesuan,store_count,bar_code,weight,wuliuWeight,spec_img,servePrice,ztServePrice,ztInprice,inprice');//规格项
         $str = "<table class='layui-table' lay-size='sm' id='spec_input_tab'>";
         $str .="<thead><tr>";       
         // 显示第一行的数据
@@ -370,7 +370,9 @@ class Goods extends Admin
         $str .="<td>平台售价</td>
                <td>门店价</td>
                <td>直邮服务费%</td>
+               <td>直邮进价</td>
                <td>自提服务费%</td>
+               <td>自提进价</td>
                <td>库存</td>
                <td>重量(kg)</td>
                <td>物流重量(kg)</td>
@@ -400,11 +402,15 @@ class Goods extends Admin
 
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][price]' value='{$keyGoodsSpecPrice[$item_key][price]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /><input type='hidden' name='item[$item_key][key_name]' value='$item_name' /></td>";
 
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][jiesuan]' value='{$keyGoodsSpecPrice[$item_key][jiesuan]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
+            $str .="<td><input class='layui-input spec-ipt spec-js' name='item[$item_key][jiesuan]' value='{$keyGoodsSpecPrice[$item_key][jiesuan]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
 
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][servePrice]' value='{$keyGoodsSpecPrice[$item_key][servePrice]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
+            $str .="<td><input class='layui-input spec-ipt serBtn' name='item[$item_key][servePrice]' value='{$keyGoodsSpecPrice[$item_key][servePrice]}' onkeyup='getInprice(this)' onpaste='getInprice(this)' /></td>";
 
-            $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][ztServePrice]' value='{$keyGoodsSpecPrice[$item_key][ztServePrice]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")' /></td>";
+            $str .="<td><input class='layui-input spec-ipt inprice' name='item[$item_key][inprice]' value='{$keyGoodsSpecPrice[$item_key][inprice]}' readonly/></td>";
+
+            $str .="<td><input class='layui-input spec-ipt ztBtn' name='item[$item_key][ztServePrice]' value='{$keyGoodsSpecPrice[$item_key][ztServePrice]}' onkeyup='getInprice(this)' onpaste='getInprice(this)' /></td>";
+
+            $str .="<td><input class='layui-input spec-ipt ztInprice' name='item[$item_key][ztInprice]' value='{$keyGoodsSpecPrice[$item_key][ztInprice]}' readonly/></td>";
 
             $str .="<td><input class='layui-input spec-ipt' name='item[$item_key][store_count]' value='{$keyGoodsSpecPrice[$item_key][store_count]}' onkeyup='this.value=this.value.replace(/[^\d.]/g,\"\")' onpaste='this.value=this.value.replace(/[^\d.]/g,\"\")'/></td>";   
 

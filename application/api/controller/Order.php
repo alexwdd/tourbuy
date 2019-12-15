@@ -367,6 +367,7 @@ class Order extends Auth {
                             'goodsID'=>$val['goodsID'],
                             'specID'=>$val['specID'],
                             'spec'=>$val['spec'],
+                            'spec_en'=>$val['spec_en'],
                             'name'=>$val['name'],
                             'en'=>$val['en'],
                             'brand'=>$val['brand'],
@@ -419,6 +420,7 @@ class Order extends Auth {
                     'jiesuan'=>$value['jiesuan'],
                     'inprice'=>$inprice,
                     'spec'=>$value['spec'],
+                    'spec_en'=>$value['spec_en'],
                     'number'=>$value['number'],
                     'trueNumber'=>$value['trueNumber'],
                     'createTime'=>time()
@@ -474,8 +476,10 @@ class Order extends Auth {
             $cart[$key]['spec'] = $result['spec'];
             if($result['spec']){
                 $cart[$key]['spec'] = $result['spec']['key_name'];
+                $cart[$key]['spec_en'] = $result['spec']['en'];
             }else{
                 $cart[$key]['spec'] = '';
+                $cart[$key]['spec_en'] = '';
             }
             $cart[$key]['total'] = $result['price'] * $value['number'];  
             $cart[$key]['rmb'] = number_format($this->rate*$cart[$key]['total'],1);

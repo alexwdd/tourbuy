@@ -197,6 +197,8 @@ class Goods extends Admin
                     'wuliuWeight' => $v['wuliuWeight'],
                     'servePrice' => $v['servePrice'],
                     'ztServePrice' => $v['ztServePrice'],
+                    'inprice' => $v['inprice'],
+                    'ztInprice' => $v['ztInprice'],
                     'spec_img' => $v['spec_img'],
                 ];                
                 if (!empty($specStock[$k])) {

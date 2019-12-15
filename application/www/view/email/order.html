@@ -53,7 +53,7 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td>{eq name="expressID" value="0"}Delivery{else/}Pick Up{/eq}</td>
 		<td>
 			{volist name="vo.goods" id="f"}
-			<p>{$f.en} * {$f.number}</p>
+			<p>{$f.en}{notempty name="f.spec_en"}({$f.spec_en}){/notempty} * {$f.number}</p>
 			{/volist}
 		</td>
 		<td>{$vo.address}</td>
@@ -71,7 +71,7 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 	{volist name="goods" id="vo"}
 	<tr>
 		<td>{$vo.number}</td>
-		<td>{$vo.en}</td>
+		<td>{$vo.en}{notempty name="vo.spec_en"}({$vo.spec_en}){/notempty}</td>
 		<td>${$vo.jiesuan}</td>
 	</tr>	
 	{/volist}	

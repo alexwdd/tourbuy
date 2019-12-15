@@ -43,7 +43,7 @@ td{border: solid #CCC 1px; padding: 5px; font-size: 14px}
 		<td rowspan="<?php echo count($vo['goods']);?>">{eq name="vo.quhuoType" value="0"}Delivery{else/}Pick-up{/eq}</td>
 		<td rowspan="<?php echo count($vo['goods']);?>">{$vo.memberID}</td>
 		{/eq}
-		<td>{$item.name}{notempty name="item.spec"}({$item.spec}){/notempty}</td>
+		<td>{$item.en}{notempty name="item.spec_en"}({$item.spec_en}){/notempty}</td>
 		<td>{$item.number}</td>
 		<td>{$item.jiesuan}</td>
 		<td>{$item.jiesuan * $item.trueNumber}</td>

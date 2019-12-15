@@ -165,7 +165,7 @@ class Base extends Controller {
         $spec = [];
         if($goods['fid']==0){
             if($specID>0){//有规格选项
-                $spec = db("GoodsSpecPrice")->field('key_name,price,jiesuan,servePrice,ztServePrice,weight,wuliuWeight,store_count')->where('item_id',$specID)->find(); 
+                $spec = db("GoodsSpecPrice")->field('key_name,en,price,jiesuan,servePrice,ztServePrice,weight,wuliuWeight,store_count,inprice,ztInprice')->where('item_id',$specID)->find(); 
                 if($flash){ //今日抢购      
                     $flash['spec'] = unserialize($flash['spec']); 
                     foreach ($flash['spec'] as $k => $val) {
@@ -179,8 +179,10 @@ class Base extends Controller {
                 }
                 $stock = $spec['store_count'];
                 $jiesuan = $spec['jiesuan'];
-                $inprice = round(($spec['jiesuan']*(100-$spec['servePrice']))/100,2);
-                $ztInprice = round(($spec['jiesuan']*(100-$spec['ztServePrice']))/100,2);
+                /*$inprice = round(($spec['jiesuan']*(100-$spec['servePrice']))/100,2);
+                $ztInprice = round(($spec['jiesuan']*(100-$spec['ztServePrice']))/100,2);*/
+                $inprice = $spec['inprice'];
+                $ztInprice = $spec['ztInprice'];
                 $weight = $spec['weight'];
                 $wuliuWeight = $spec['wuliuWeight'];
             }else{
