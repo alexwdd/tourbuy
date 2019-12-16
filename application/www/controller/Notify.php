@@ -20,7 +20,7 @@ class Notify extends Base {
         db('PayOrder')->where('payNo',$merchant_trade_no)->setField("status",1);
         $order_no = db('PayOrder')->where('payNo',$merchant_trade_no)->value("order_no");
         $order_no = explode(",", $order_no);
-
+        echo 'success';
         foreach ($order_no as $key => $value) {
             $map['order_no'] = $value;
             $list = db('Order')->where($map)->find();
