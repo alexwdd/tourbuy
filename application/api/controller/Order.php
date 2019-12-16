@@ -706,7 +706,7 @@ class Order extends Auth {
             }elseif($payType==2){
                 $result = $this->getWeixinUrl($order,$shopID);
                 if($result['result']=='SUCCESS'){
-                    returnJson(1,'success',['url'=>$result['qrcodeURL']]);
+                    returnJson(1,'success',['url'=>$result['QRCodeURL']]);
                 }else{
                     returnJson(0,'发起支付失败');
                 }
