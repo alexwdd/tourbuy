@@ -618,10 +618,10 @@ class Order extends Auth {
 
             $map['order_no'] = array('in',$order_no);
             $map['memberID'] = $this->user['id'];
-            $map['status'] = 0;
-            $list = db("Order")->field('id,order_no,total,money')->where($map)->select();
+            //$map['status'] = 0;
+            $list = db("Order")->field('id,order_no,payStatus,total,money')->where($map)->select();
             if(!$list){
-                returnJson(0,'订单不存在，或已完成支付');
+                returnJson(0,'订单不存在');
             }
 
             $total = 0;
@@ -645,7 +645,6 @@ class Order extends Auth {
             }*/
             returnJson(1,'success',[
                 'data'=>$list,
-                //'wallet'=>$fina,
                 'info'=>[
                     //'type'=>$type,
                     'rate'=>$rate,
