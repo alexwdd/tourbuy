@@ -450,7 +450,11 @@ class Order extends Auth {
             $goods = db("Goods")->where('id',$value['goodsID'])->find();
 
             if (!$goods) {
-                returnJson(0,'商品【'.$goods['name'].'】已经下架');
+                returnJson(0,'商品【'.$value['goodsID'].'】已经下架');
+            }
+
+            if ($value['number'] > $goods['max'] && $goods['max']>0) {
+                returnJson(0,'商品【'.$goods['name'].'】限购'.$goods['max'].'件');
             }
 
             $result = $this->getGoodsPrice($goods,$value['specID'],$this->flash);

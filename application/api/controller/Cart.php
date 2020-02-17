@@ -24,6 +24,12 @@ class Cart extends Auth {
                     $goods = db("Goods")->where('id',$val['goodsID'])->find();
                     $result = $this->getGoodsPrice($goods,$val['specID'],$this->flash);
 
+                    if($goods['max']==0){
+                        $shopGoods[$k]['max'] = 999;
+                    }else{
+                        $shopGoods[$k]['max'] = $goods['max'];
+                    }
+
                     $shopGoods[$k]['name'] = $goods['name'];
                     $shopGoods[$k]['say'] = $goods['say'];
                     $shopGoods[$k]['ziti'] = $goods['ziti'];

@@ -405,9 +405,13 @@ class Goods extends Common {
             $map['id'] = $goodsID;
             $map['show'] = 1;
             $map['group'] = array('elt',$this->user['group']);
-            $list = db('Goods')->field('id,fid,name,picname,price,comm,tehui,flash,baoyou,ziti')->where($map)->find();
+            $list = db('Goods')->field('id,fid,name,picname,price,comm,tehui,flash,baoyou,ziti,max')->where($map)->find();
             if (!$list) {
                 returnJson('-1','不存在的商品');
+            }
+
+            if($list['max'] <= 0){
+                $list['max'] = 999;
             }
             $list['marketPrice'] = $list['price'];
             $list['picname'] = getThumb($list["picname"],200,200);

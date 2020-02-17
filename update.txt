@@ -1,1 +1,1 @@
-pm_goods_spec_price 增加en 增加inprice ztInprice
+pm_goods 增加max字段
