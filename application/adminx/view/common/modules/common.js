@@ -97,8 +97,8 @@ layui.define(['form','table','laydate'],function(exports) {
             }
         },
         __username: function(value) {
-            if (!checkWordLong(value,2,8)) {
-                return '请输入用户名2-8个字符';
+            if (!checkWordLong(value,2,20)) {
+                return '请输入用户名2-20个字符';
             }
         },
         _password: function(value) {
