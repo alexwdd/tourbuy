@@ -99,37 +99,44 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">分类一</label>
-                    <div class="layui-input-inline">
-                        <select name="cid" id="cid" {gt name="list.cid" value="0"}default="{$list['cid']},{$list['path']}"{/gt} lay-verify="required">
-                        <option value="">请选择</option>
-                        {volist name="cate" id="vo"}
-                        <option value="{$vo['id']},{$vo['path']}">{php}
-                            for($i=0; $i<$vo['count']*2; $i++){
-                               echo '&nbsp;&nbsp;';            
-                            }
-                        {/php}{$vo['name']}</option>
-                        {/volist}
-                        </select>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">分类一</label>
+                        <div class="layui-input-inline">
+                            <select name="cid" id="cid" {gt name="list.cid" value="0"}default="{$list['cid']},{$list['path']}"{/gt} lay-verify="required">
+                            <option value="">请选择</option>
+                            {volist name="cate" id="vo"}
+                            <option value="{$vo['id']},{$vo['path']}">{php}
+                                for($i=0; $i<$vo['count']*2; $i++){
+                                   echo '&nbsp;&nbsp;';            
+                                }
+                            {/php}{$vo['name']}</option>
+                            {/volist}
+                            </select>
+                        </div>
                     </div>
-                    <label class="layui-form-label">分类二</label>
-                    <div class="layui-input-inline">
-                        <select name="cid1" id="cid1" {gt name="list.cid1" value="0"}default="{$list['cid1']},{$list['path1']}"{/gt}>
-                        <option value="">请选择</option>
-                        {volist name="cate" id="vo"}
-                        <option value="{$vo['id']},{$vo['path']}">{php}
-                            for($i=0; $i<$vo['count']*2; $i++){
-                               echo '&nbsp;&nbsp;';            
-                            }
-                        {/php}{$vo['name']}</option>
-                        {/volist}
-                        </select>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">分类二</label>
+                        <div class="layui-input-block">
+                            <select name="cid1" id="cid1" {gt name="list.cid1" value="0"}default="{$list['cid1']},{$list['path1']}"{/gt}>
+                            <option value="">请选择</option>
+                            {volist name="cate" id="vo"}
+                            <option value="{$vo['id']},{$vo['path']}">{php}
+                                for($i=0; $i<$vo['count']*2; $i++){
+                                   echo '&nbsp;&nbsp;';            
+                                }
+                            {/php}{$vo['name']}</option>
+                            {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">排序</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sort" id="sort" value="{$list.sort|default=50}" class="layui-input">
+                        </div>
                     </div>
 
-                    <label class="layui-form-label">排序</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="sort" id="sort" value="{$list.sort|default=50}" class="layui-input">
-                    </div>
+                    <div class="layui-input-block">直接选择三级分类，可选两个。</div>
                 </div>
 
                 <div class="layui-form-item">
