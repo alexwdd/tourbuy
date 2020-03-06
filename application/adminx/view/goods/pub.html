@@ -94,6 +94,7 @@
                     </div>
                     <div class="layui-inline">
                         <button type="button" class="layui-btn" id="upload-single">上传图片</button>
+                        <i class="layui-icon showImage" tag="picname">&#xe64a;</i>
                         最大{:config('image_size')}M
                     </div>
                 </div>
@@ -378,6 +379,19 @@ layui.config({
     $("html").css({"background":"#fff"});
     tinymce.init(tinyConfig);
 
+    $(".showImage").click(function(){
+        let tag = $(this).attr('tag');
+        let url = $("#"+tag).val();
+        if(url!="" && url!=undefined){
+            layer.open({
+            type: 1,
+            title:"查看图片",
+            skin: 'layui-layer-rim', //加上边框
+            area: ['80%', '80%'], //宽高
+            content: '<img src="'+url+'" style="max-width:100%"/>'
+            });
+        }
+    })
 
     $("#servePrice").on("input propertychange",function(){
         setInprice();

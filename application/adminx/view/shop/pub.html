@@ -324,6 +324,20 @@ layui.config({
         $("#container").val(tinyMCE.activeEditor.getContent());
     })
 
+    $(".showImage").click(function(){
+        let tag = $(this).attr('tag');
+        let url = $("#"+tag).val();
+        if(url!="" && url!=undefined){
+            layer.open({
+            type: 1,
+            title:"查看图片",
+            skin: 'layui-layer-rim', //加上边框
+            area: ['80%', '80%'], //宽高
+            content: '<img src="'+url+'" style="max-width:100%"/>'
+            });
+        }
+    })
+
     $(".mp4Btn").click(function(){
         layer.open({
             type: 2,
