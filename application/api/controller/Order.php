@@ -713,6 +713,13 @@ class Order extends Auth {
                 }else{
                     returnJson(0,'发起支付失败');
                 }
+            }elseif($payType==3){
+                $result = $this->getPoliUrl($order,$shopID);
+                if($result['Success']){
+                    returnJson(1,'success',['url'=>$result['NavigateURL']]);
+                }else{
+                    returnJson(0,'发起支付失败');
+                }
             }else{
                 returnJson(0,'支付方式错误');
             }                     

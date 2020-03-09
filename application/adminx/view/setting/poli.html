@@ -1,0 +1,45 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form">
+			<div class="layui-tab" style="margin-bottom: 10px">
+				<ul class="layui-tab-title">
+					{foreach name="group_list" item="vo" key="k"}
+		         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'poli'"}class="layui-this"{/if}>{$vo}</li></a>
+		         	{/foreach}
+				</ul>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">商户号</label>
+				<div class="layui-input-block">
+					<input type="text" name="POLI_ID" value="{$config.POLI_ID}" class="layui-input">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">授权码</label>
+				<div class="layui-input-block">
+					<input type="text" name="POLI_KEY" value="{$config.POLI_KEY}" class="layui-input">
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <button class="layui-btn" lay-submit lay-filter="lay-common-submit"  url="{:url('Setting/insert')}">保存</button>
+            </div>
+            <input type="hidden" name="inc_type" value="{$inc_type}">
+		</form>
+    </div>
+</div>
+<script>
+layui.config({
+    base: '{:RES}/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function() {    
+    var $ = layui.$;
+
+})
+</script>

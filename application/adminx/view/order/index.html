@@ -42,6 +42,7 @@
                     <option value="1">支付宝</option>
                     <option value="2">微信</option>
                     <option value="3">积分抵扣</option>
+                    <option value="4">澳洲网银</option>
                 </select>
             </div>  
 
@@ -129,6 +130,8 @@
             微信
             {{# }else if(d.payType==3){ }}
             积分抵扣
+            {{# }else if(d.payType==4){ }}
+            澳洲网银
             {{# } }}
         </script>
 

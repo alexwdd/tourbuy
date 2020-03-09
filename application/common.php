@@ -122,6 +122,9 @@ function getPayType($v){
     if ($v==3) {
         $name = '积分抵扣';
     }
+    if ($v==4) {
+        $name = '澳洲网银';
+    }
     return $name;
 }
 

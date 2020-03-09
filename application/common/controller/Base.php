@@ -516,6 +516,55 @@ class Base extends Controller {
         return $result;     
     }
 
+    public function getPoliUrl($order,$shopID=null){
+        $config = tpCache("poli");
+
+        if($shopID){
+            $success_url = 'http://shop.tourbuy.net/pay/return/'.$order['out_trade_no'].'?shopID='.$shopID;
+            $home_url = 'http://shop.tourbuy.net/?shopID='.$shopID;
+        }else{
+            $success_url = 'http://m.tourbuy.net/pay/return/'.$order['out_trade_no'];
+            $home_url = 'http://m.tourbuy.net';
+        }
+
+        $json_builder = '{
+            "Amount":"'. $order['money'] .'",
+            "CurrencyCode":"AUD",
+            "MerchantReference":"'. $order['out_trade_no'] .'",
+            "MerchantReferenceFormat":"",
+            "MerchantData":'.time().',
+            "MerchantHomepageURL":"'.$home_url.'",
+            "SuccessURL":"'.$success_url.'",
+            "FailureURL":"'.$success_url.'",
+            "CancellationURL":"'.$success_url.'",
+            "NotificationURL":"http://'.$_SERVER['HTTP_HOST'].'/www/poli/index.html",
+            "Timeout":"900",
+            "SelectedFICode":"",
+            "CompanyCode":"0",
+        }';
+
+        $auth = base64_encode($config['POLI_ID'].":".$config['POLI_KEY']);
+
+        $header = array();
+        $header[] = 'Content-Type: application/json';
+        $header[] = 'Authorization: Basic '.$auth;
+        $ch = curl_init("https://poliapi.apac.paywithpoli.com/api/v2/Transaction/Initiate");
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER ,false);
+        curl_setopt($ch,CURLOPT_CAPATH ,'https://raw.githubusercontent.com/bagder/ca-bundle/master/');
+        curl_setopt( $ch, CURLOPT_CAINFO, "ca-bundle.crt");
+        curl_setopt( $ch, CURLOPT_SSLVERSION, 4);
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt( $ch, CURLOPT_HEADER, 0);
+        curl_setopt( $ch, CURLOPT_POST, 1);
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_builder);
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec( $ch );
+        curl_close ($ch);
+        $result = json_decode($response, true);
+        return $result;     
+    }
+
     public function getCodeStatus($code,$mobile){
         $map['account'] = $mobile;
         //$map['regcode'] = $code;
